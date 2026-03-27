@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head
+<body>
+
+<div class="dashboard">
+
+  <h1>Welcome to FitTracker</h1>
+
+  <div class="cards">
+
+    <div class="card" onclick="go('tracker.html')">
+      <h2>Nutrition Tracker</h2>
+      <p>Track calories & macros</p>
+    </div>
+
+    <div class="card" onclick="go('workout.html')">
+      <h2>Workout Builder</h2>
+      <p>Create workout plans</p>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function go(page){
+  window.location = page;
+}
+</script>
+
+</body>
+</html>

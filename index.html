@@ -1,0 +1,32 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FitTracker — Login</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="container">
+    <div class="card">
+      <div class="logo">LOGO</div>
+      <h1>Welcome</h1>
+      <p class="subtitle">Track your fitness. Reach your goals.</p>
+      <form id="login-form" class="form" novalidate>
+        <input id="email" type="email" placeholder="Email" required>
+        <input id="password" type="password" placeholder="Password" required>
+        <button id="login-btn" type="submit">Log in</button>
+        <p class="hint">Demo: <code>demo@fittracker.app</code> / <code>Passw0rd!</code></p>
+        <p id="error" class="error" hidden></p>
+      </form>
+    </div>
+  </main>
+  <footer class="footer">
+    <h3>FedUni</h3>
+    <p>470 Bourke Street · Melbourne 3000 · 1800 333 864 ·
+       <a href="mailto:info@feduni.com.au">info@feduni.com.au</a></p>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

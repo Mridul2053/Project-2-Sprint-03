@@ -1,0 +1,180 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>FitTracker</title>
+
+  <link rel="stylesheet" href="tracker.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="brand">FitTracker</div>
+</header>
+
+<main class="dashboard">
+
+  <!-- LEFT -->
+  <section class="panel">
+
+    <div class="card">
+      <h2>Daily Intake</h2>
+      <div class="totals">
+        <div><span id="kcal-total">0</span><small> kcal</small></div>
+        <div><span id="carb-total">0</span><small> g</small></div>
+        <div><span id="protein-total">0</span><small> g</small></div>
+        <div><span id="fat-total">0</span><small> g</small></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Goals</h2>
+
+      <form id="goals-form" class="form-grid">
+
+        <div class="field">
+          <label>Calories (kcal)</label>
+          <input id="goal-kcal">
+        </div>
+
+        <div class="field">
+          <label>Carbohydrates (g)</label>
+          <input id="goal-carbs">
+        </div>
+
+        <div class="field">
+          <label>Protein (g)</label>
+          <input id="goal-protein">
+        </div>
+
+        <div class="field">
+          <label>Fat (g)</label>
+          <input id="goal-fat">
+        </div>
+
+      </form>
+    </div>
+
+  </section>
+
+  <!-- CENTER -->
+  <section class="panel">
+
+    <div class="card">
+      <h2>Meals</h2>
+
+      <div class="form-grid">
+
+        <div class="field">
+          <label>Meal</label>
+          <select id="meal-type">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snacks">Snacks</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Food</label>
+          <input id="food-name">
+        </div>
+
+        <div class="field">
+          <label>Calories (kcal)</label>
+          <input id="food-kcal">
+        </div>
+
+        <div class="field">
+          <label>Carbohydrates (g)</label>
+          <input id="food-carbs">
+        </div>
+
+        <div class="field">
+          <label>Protein (g)</label>
+          <input id="food-protein">
+        </div>
+
+        <div class="field">
+          <label>Fat (g)</label>
+          <input id="food-fat">
+        </div>
+
+      </div>
+
+      <div class="button-row">
+        <button id="add-meal">Add</button>
+        <button id="reset-meal" class="secondary">Reset</button>
+        <button id="clear-all" class="danger">Clear</button>
+      </div>
+
+      <div id="meal-list" class="scroll-box"></div>
+    </div>
+
+  </section>
+
+  <!-- RIGHT -->
+  <section class="panel">
+
+    <div class="card">
+      <h2>Target</h2>
+
+      <form class="form-grid">
+
+        <div class="field">
+          <label>Height (cm)</label>
+          <input id="height">
+        </div>
+
+        <div class="field">
+          <label>Current Weight (kg)</label>
+          <input id="current-weight">
+        </div>
+
+        <div class="field">
+          <label>Target Weight (kg)</label>
+          <input id="target-weight">
+        </div>
+
+        <div class="field">
+          <label>Activity Level</label>
+          <select id="activity">
+            <option value="1.2">Low</option>
+            <option value="1.55">Moderate</option>
+            <option value="1.9">High</option>
+          </select>
+        </div>
+
+      </form>
+
+      <div class="button-row">
+        <button id="calculate-target">Calculate</button>
+        <button id="apply-targets" class="secondary">Apply</button>
+      </div>
+
+      <!-- ✅ FINAL RESULTS -->
+      <div class="results">
+        <p>Calories: <span id="out-kcal"></span> kcal</p>
+        <p>Protein: <span id="out-protein"></span> g</p>
+        <p>Carbohydrates: <span id="out-carbs"></span> g</p>
+        <p>Fat: <span id="out-fat"></span> g</p>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <h2>Macro Chart</h2>
+      <canvas id="macroChart"></canvas>
+    </div>
+
+  </section>
+
+</main>
+
+<script src="tracker.js"></script>
+
+</body>
+</html>

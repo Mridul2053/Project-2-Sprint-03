@@ -1,0 +1,142 @@
+﻿/* BASE */
+body{
+  margin:0;
+  font-family:'Nunito',sans-serif;
+  background:#f6f7fb;
+  height:100vh;
+  overflow:hidden;
+}
+
+/* HEADER */
+.topbar{
+  height:60px;
+  display:flex;
+  align-items:center;
+  padding:0 16px;
+  background:#fff;
+  border-bottom:1px solid #ddd;
+  font-weight:900;
+}
+
+/* MAIN LAYOUT */
+.dashboard{
+  display:grid;
+  grid-template-columns:1fr 1.5fr 1fr;
+  height:calc(100vh - 60px);
+  gap:12px;
+  padding:12px;
+}
+
+/* PANELS */
+.panel{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  height:100%;
+}
+
+/* CARDS */
+.card{
+  background:#fff;
+  border-radius:12px;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  flex:1; /* 🔥 THIS FIXES EMPTY SPACE */
+}
+
+/* TITLES */
+h2{
+  font-size:15px;
+  margin-bottom:8px;
+}
+
+/* TOTALS */
+.totals{
+  display:flex;
+  justify-content:space-between;
+}
+
+.totals div{
+  text-align:center;
+  flex:1;
+}
+
+.totals span{
+  font-weight:900;
+  font-size:18px;
+}
+
+/* FORMS */
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+}
+
+.field label{
+  font-size:12px;
+  font-weight:700;
+}
+
+input, select{
+  padding:6px;
+  border:1px solid #ddd;
+  border-radius:6px;
+}
+
+/* BUTTONS */
+.button-row{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+
+button{
+  flex:1;
+  padding:8px;
+  border:none;
+  border-radius:8px;
+  background:#690500;
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+}
+
+button.secondary{ background:#374151; }
+button.danger{ background:#b91c1c; }
+
+/* MEAL LIST SCROLL ONLY */
+.scroll-box{
+  flex:1;
+  overflow-y:auto;
+  margin-top:8px;
+}
+
+/* MEAL ITEMS */
+.meal-item{
+  border-bottom:1px solid #eee;
+  padding:6px 0;
+}
+
+.macro-line{
+  font-size:11px;
+  color:#555;
+}
+
+/* TARGET RESULTS */
+.results{
+  margin-top:8px;
+  font-size:13px;
+}
+
+/* CHART */
+canvas{
+  flex:1;
+  max-height:250px;
+}
