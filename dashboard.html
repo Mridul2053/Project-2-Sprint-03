@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fitness Tracker - Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">Fitness Tracker</div>
+  <nav class="nav">
+    <a href="home.html">Home</a>
+    <a href="tracker.html">Nutrition Tracker</a>
+    <a href="workout.html">Workout Builder</a>
+    <a href="dashboard.html" class="active">Dashboard</a>
+    <a href="#" id="logout" class="logout-btn">Log Out</a>
+  </nav>
+</header>
+
+<main class="dashboard-container">
+  <section class="welcome">
+    <h1>Welcome back, <span id="user-name">User</span> 👋</h1>
+
+<script>
+  function loadUserName() {
+    const userName = localStorage.getItem("ft_user") || "User";
+    document.getElementById("user-name").textContent = userName;
+  }
+
+  loadUserName();
+</script>
+    <p>Here is your fitness summary for today.</p>
+  </section>
+
+  <section class="stats-grid">
+    <div class="card">
+      <h3>Calories</h3>
+      <p id="dash-calories">0 kcal</p>
+    </div>
+    <div class="card">
+      <h3>Workout</h3>
+      <p id="dash-workout">0 mins</p>
+    </div>
+    <div class="card">
+      <h3>Steps</h3>
+      <p id="dash-steps">0</p>
+    </div>
+    <div class="card">
+      <h3>Water</h3>
+      <p id="dash-water">0 L</p>
+    </div>
+  </section>
+
+  <section class="progress-section">
+    <div class="progress-card">
+      <h2>Daily Goal Progress</h2>
+      <p>You achieved <strong id="goal-percent">0%</strong> of your daily calorie goal.</p>
+      <div class="progress-bar">
+        <div class="progress-fill" id="goal-bar" style="width: 0%;"></div>
+      </div>
+      <p id="goal-text">0 kcal of 2200 kcal target</p>
+    </div>
+
+    <div class="progress-card">
+      <h2>Weight Goal</h2>
+      <p>Current Weight: <strong id="current-weight">72 kg</strong></p>
+      <p>Target Weight: <strong id="target-weight">68 kg</strong></p>
+      <p id="weight-status">You are making progress toward your target.</p>
+    </div>
+  </section>
+
+  <section class="bottom-grid">
+    <div class="activity-card">
+      <h2>Recent Activity</h2>
+      <ul id="recent-activity">
+        <li>🥗 No meals logged yet</li>
+        <li>💪 No workout updated yet</li>
+        <li>💧 No water intake updated yet</li>
+        <li>🚶 No step count updated yet</li>
+      </ul>
+    </div>
+
+    <div class="action-card">
+      <h2>Quick Actions</h2>
+      <div class="action-buttons">
+        <a href="tracker.html">Add Meal</a>
+        <a href="workout.html">Start Workout</a>
+        <a href="#">Update Weight</a>
+        <a href="#">View Report</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  function todayISO() {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d.toISOString().slice(0, 10);
+  }
+
+  function getLogs() {
+    try {
+      return JSON.parse(localStorage.getItem('ft_logs')) || {};
+    } catch {
+      return {};
+    }
+  }
+
+  function getGoals() {
+    try {
+      return JSON.parse(localStorage.getItem('ft_goals')) || {
+        kcal: 2200,
+        carbs: 250,
+        protein: 150,
+        fat: 70
+      };
+    } catch {
+      return {
+        kcal: 2200,
+        carbs: 250,
+        protein: 150,
+        fat: 70
+      };
+    }
+  }
+
+  function getProfile() {
+    try {
+      return JSON.parse(localStorage.getItem('ft_profile')) || {
+        currentWeight: 72,
+        targetWeight: 68
+      };
+    } catch {
+      return {
+        currentWeight: 72,
+        targetWeight: 68
+      };
+    }
+  }
+
+  function getDashboardExtras() {
+    try {
+      return JSON.parse(localStorage.getItem('ft_dashboard')) || {
+        workout: 45,
+        steps: 8420,
+        water: 2.5
+      };
+    } catch {
+      return {
+        workout: 45,
+        steps: 8420,
+        water: 2.5
+      };
+    }
+  }
+
+  function calculateTodayCalories() {
+    const logs = getLogs();
+    const today = todayISO();
+    const todayMeals = logs[today] || [];
+
+    return todayMeals.reduce((total, item) => {
+      return total + (+item.kcal || 0);
+    }, 0);
+  }
+
+  function getTodayMeals() {
+    const logs = getLogs();
+    const today = todayISO();
+    return logs[today] || [];
+  }
+
+  function updateDashboard() {
+    const calories = calculateTodayCalories();
+    const goals = getGoals();
+    const profile = getProfile();
+    const extras = getDashboardExtras();
+    const meals = getTodayMeals();
+
+    document.getElementById('dash-calories').textContent = calories + ' kcal';
+    document.getElementById('dash-workout').textContent = extras.workout + ' mins';
+    document.getElementById('dash-steps').textContent = extras.steps.toLocaleString();
+    document.getElementById('dash-water').textContent = extras.water + ' L';
+
+    const percent = goals.kcal > 0 ? Math.min(100, Math.round((calories / goals.kcal) * 100)) : 0;
+    document.getElementById('goal-percent').textContent = percent + '%';
+    document.getElementById('goal-bar').style.width = percent + '%';
+    document.getElementById('goal-text').textContent = calories + ' kcal of ' + goals.kcal + ' kcal target';
+
+    document.getElementById('current-weight').textContent = profile.currentWeight + ' kg';
+    document.getElementById('target-weight').textContent = profile.targetWeight + ' kg';
+
+    let weightMessage = 'You are making progress toward your target.';
+    if (profile.currentWeight > profile.targetWeight) {
+      weightMessage = 'You need to lose ' + (profile.currentWeight - profile.targetWeight) + ' kg to reach your target.';
+    } else if (profile.currentWeight < profile.targetWeight) {
+      weightMessage = 'You need to gain ' + (profile.targetWeight - profile.currentWeight) + ' kg to reach your target.';
+    } else {
+      weightMessage = 'You have reached your target weight.';
+    }
+    document.getElementById('weight-status').textContent = weightMessage;
+
+    const activityList = document.getElementById('recent-activity');
+    activityList.innerHTML = '';
+
+    if (meals.length > 0) {
+      meals.slice(0, 2).forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = '🥗 ' + item.name + ' logged - ' + item.kcal + ' kcal';
+        activityList.appendChild(li);
+      });
+    } else {
+      const li = document.createElement('li');
+      li.textContent = '🥗 No meals logged yet';
+      activityList.appendChild(li);
+    }
+
+    const workoutLi = document.createElement('li');
+    workoutLi.textContent = '💪 Workout completed - ' + extras.workout + ' mins';
+    activityList.appendChild(workoutLi);
+
+    const waterLi = document.createElement('li');
+    waterLi.textContent = '💧 Water intake updated - ' + extras.water + ' L';
+    activityList.appendChild(waterLi);
+
+    const stepsLi = document.createElement('li');
+    stepsLi.textContent = '🚶 Daily steps tracked - ' + extras.steps.toLocaleString();
+    activityList.appendChild(stepsLi);
+  }
+
+  document.getElementById('logout').addEventListener('click', function(e) {
+    e.preventDefault();
+    localStorage.removeItem('ft_token');
+    window.location.href = 'index.html';
+  });
+
+  updateDashboard();
+</script>
+
+</body>
+</html>

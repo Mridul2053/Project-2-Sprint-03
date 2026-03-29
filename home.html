@@ -1,0 +1,50 @@
+﻿<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fitness Tracker — Home</title>
+<link rel="stylesheet" href="home.css">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+</head><body>
+<header class="topbar">
+  <a class="brand" href="home.html">
+    <img src="assets/logo.png" alt="Fitness Tracker Logo" class="logo">
+    <span class="brand-text">Fitness Tracker</span>
+  </a>
+  <nav class="nav">
+    <a href="profile.html">Profile</a>
+    <a href="tracker.html" class="nav-strong">Nutrition Tracker</a>
+    <a href="workout.html">Workout Builder</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="index.html" class="nav-cta">Log In</a>
+  </nav>
+  <button class="nav-toggle" aria-label="Menu">☰</button>
+</header>
+<section class="hero">
+  <div class="hero-text">
+    <h1>Track Your<br>Fitness Journey</h1>
+    <p>Set goals, log meals, and watch your progress. Simple, fast, and built for results.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="index.html">Sign Up / Log In</a>
+      <a class="btn ghost" href="tracker.html">Open Nutrition Tracker</a>
+    </div>
+  </div>
+  <div class="hero-art"><div class="frame"></div></div>
+</section>
+<section class="tri">
+  <article class="tri-card"><h3>Activity Tracking</h3><p>Log workouts and steps to stay consistent.</p></article>
+  <article class="tri-card"><h3>Goal Setting</h3><p>Use your BMI and target weight to set automatic goals.</p></article>
+  <article class="tri-card"><h3>Progress Monitoring</h3><p>Visualize progress with charts and trackers.</p></article>
+</section>
+<section class="features"><h2>Features</h2>
+  <div class="feature"><div class="thumb"></div><div class="copy"><h4>Smart Nutrition Targets</h4><p>We calculate your ideal calories and macros from your BMI and target weight.</p></div></div>
+  <div class="feature"><div class="thumb"></div><div class="copy"><h4>Fast Food Logging</h4><p>Add meals easily and monitor totals in real time.</p></div></div>
+  <div class="feature"><div class="thumb"></div><div class="copy"><h4>Clean Dashboard</h4><p>See daily calories and macros instantly.</p></div></div>
+</section>
+<footer class="footer">
+  <div class="links"><a href="#">About</a><a href="tracker.html">Nutrition Intake</a><a href="#">Contact</a><a href="#">Privacy Policy</a></div>
+  <p>© 2025 Fitness Tracker. Designed by your team.</p>
+</footer>
+<script>
+  const btn=document.querySelector('.nav-toggle'); const nav=document.querySelector('.nav');
+  btn.addEventListener('click',()=>nav.classList.toggle('open'));
+</script>
+</body></html>
