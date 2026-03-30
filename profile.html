@@ -1,167 +1,871 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FitTracker — Profile</title>
-  <link rel="stylesheet" href="profile.css">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile | FitTracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #690500;
+      --primary-dark: #4f0400;
+      --primary-light: rgba(105, 5, 0, 0.08);
+      --text: #111827;
+      --muted: #6b7280;
+      --bg: #f6f7fb;
+      --border: #e5e7eb;
+      --shadow: 0 10px 30px rgba(17, 24, 39, .08);
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand { font-size: 26px; font-weight: 900; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    .brand img { width: 32px; height: 32px; }
+
+    .nav { display: flex; gap: 20px; align-items: center; }
+    .nav a { text-decoration: none; color: var(--text); font-weight: 700; transition: color .2s; }
+    .nav a:hover { color: var(--primary); }
+    .nav a.active { color: var(--primary); }
+
+    .logout-btn {
+      background: var(--primary);
+      color: #fff !important;
+      padding: 10px 16px;
+      border-radius: 10px;
+      transition: background .2s;
+    }
+    .logout-btn:hover { background: var(--primary-dark) !important; }
+
+    /* ── PAGE LAYOUT ── */
+    .page { max-width: 1100px; margin: 36px auto; padding: 0 16px; display: grid; gap: 24px; }
+
+    /* ── PROFILE HERO CARD ── */
+    .hero-card {
+      background: linear-gradient(135deg, #690500, #a30d00);
+      border-radius: 22px;
+      padding: 36px 36px 32px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      box-shadow: 0 16px 40px rgba(105,5,0,.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 260px; height: 260px;
+      background: rgba(255,255,255,.07);
+      border-radius: 50%;
+    }
+    .hero-card::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: 200px;
+      width: 180px; height: 180px;
+      background: rgba(255,255,255,.05);
+      border-radius: 50%;
+    }
+
+    .avatar-wrap { position: relative; flex-shrink: 0; }
+
+    .avatar {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      border: 4px solid rgba(255,255,255,.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 46px; font-weight: 900; color: white;
+      text-transform: uppercase;
+      user-select: none;
+    }
+
+    .avatar-badge {
+      position: absolute; bottom: 4px; right: 4px;
+      width: 28px; height: 28px;
+      background: #22c55e;
+      border-radius: 50%;
+      border: 3px solid white;
+    }
+
+    .hero-info { flex: 1; position: relative; z-index: 1; }
+    .hero-info h1 { font-size: 32px; font-weight: 900; margin-bottom: 6px; }
+    .hero-info p  { font-size: 15px; color: rgba(255,255,255,.75); margin-bottom: 14px; }
+
+    .hero-tags { display: flex; gap: 10px; flex-wrap: wrap; }
+    .hero-tag {
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: 13px; font-weight: 700;
+      backdrop-filter: blur(4px);
+    }
+
+    .hero-edit-btn {
+      position: relative; z-index: 1;
+      background: rgba(255,255,255,.2);
+      border: 2px solid rgba(255,255,255,.4);
+      color: white;
+      padding: 10px 22px;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 14px;
+      cursor: pointer;
+      transition: background .2s;
+      white-space: nowrap;
+      align-self: flex-start;
+    }
+    .hero-edit-btn:hover { background: rgba(255,255,255,.3); }
+
+    /* ── TWO-COL GRID ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+
+    /* ── SECTION CARD ── */
+    .card {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 26px 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 18px; font-weight: 900;
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .card-title .icon {
+      width: 36px; height: 36px;
+      background: var(--primary-light);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px;
+    }
+
+    /* ── FORM FIELDS ── */
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-weight: 700; font-size: 13px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: #fafbff;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--primary);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(105,5,0,.08);
+    }
+
+    .field textarea { resize: vertical; min-height: 80px; }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .field-readonly input {
+      background: var(--bg);
+      color: var(--muted);
+      cursor: not-allowed;
+    }
+
+    /* ── STAT PILLS ── */
+    .stat-pill {
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 16px 18px;
+      text-align: center;
+      border: 1.5px solid var(--border);
+    }
+    .stat-pill .val { font-size: 26px; font-weight: 900; color: var(--primary); }
+    .stat-pill .lbl { font-size: 12px; color: var(--muted); font-weight: 700; margin-top: 2px; }
+
+    /* ── GOAL SELECTOR ── */
+    .goal-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 4px; }
+
+    .goal-opt {
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      user-select: none;
+    }
+    .goal-opt:hover { border-color: var(--primary); background: var(--primary-light); }
+    .goal-opt.selected { border-color: var(--primary); background: var(--primary-light); }
+    .goal-opt .g-icon { font-size: 24px; margin-bottom: 6px; }
+    .goal-opt .g-label { font-size: 13px; font-weight: 800; color: var(--text); }
+
+    /* ── FITNESS LEVEL SLIDER ── */
+    .level-bar { display: flex; gap: 8px; margin-top: 8px; }
+    .level-seg {
+      flex: 1; height: 8px; border-radius: 999px;
+      background: var(--border);
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .level-seg.active { background: var(--primary); }
+    .level-labels { display: flex; justify-content: space-between; margin-top: 6px; font-size: 12px; color: var(--muted); font-weight: 700; }
+
+    /* ── ACTIVITY LOG ── */
+    .activity-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .activity-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .activity-dot {
+      width: 38px; height: 38px; border-radius: 12px;
+      background: var(--primary-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .activity-info { flex: 1; }
+    .activity-info strong { font-size: 14px; font-weight: 800; display: block; }
+    .activity-info span  { font-size: 12px; color: var(--muted); }
+    .activity-val { font-weight: 900; font-size: 14px; color: var(--primary); }
+
+    /* ── BMI RESULT ── */
+    .bmi-display {
+      background: linear-gradient(135deg, #690500, #a30d00);
+      border-radius: 16px;
+      padding: 20px;
+      color: white;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .bmi-display .bmi-val { font-size: 52px; font-weight: 900; line-height: 1; }
+    .bmi-display .bmi-label { font-size: 16px; font-weight: 700; margin-top: 6px; opacity: .85; }
+
+    /* ── SAVE BUTTON ── */
+    .save-btn {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 13px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px; font-weight: 900;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background .2s, transform .15s;
+    }
+    .save-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .save-btn:active { transform: translateY(0); }
+
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: #111827;
+      color: white;
+      padding: 14px 22px;
+      border-radius: 14px;
+      font-weight: 800; font-size: 15px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      transform: translateY(80px); opacity: 0;
+      transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .35s;
+      pointer-events: none;
+      z-index: 999;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* ── DANGER ZONE ── */
+    .danger-zone { border: 2px solid #fee2e2; border-radius: 18px; padding: 22px 26px; background: #fff5f5; }
+    .danger-zone .card-title { color: #b91c1c; }
+    .danger-btn {
+      background: #b91c1c;
+      color: white; border: none;
+      padding: 11px 20px;
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 14px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .danger-btn:hover { background: #991b1b; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .two-col, .three-col { grid-template-columns: 1fr; }
+      .hero-card { flex-direction: column; text-align: center; }
+      .hero-tags { justify-content: center; }
+      .hero-edit-btn { align-self: center; }
+      .goal-options { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .topbar { flex-direction: column; gap: 12px; }
+      .nav { flex-wrap: wrap; justify-content: center; }
+      .hero-card { padding: 24px 20px; }
+      .field-row { grid-template-columns: 1fr; }
+      .goal-options { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <img src="assets/logo.png" alt="FitTracker Logo" class="brand-logo">
-      <span>FitTracker</span>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a class="brand" href="home.html">
+    <img src="assets/logo.png" alt="FitTracker Logo">
+    Fitness Tracker
+  </a>
+  <nav class="nav">
+    <a href="home.html">Home</a>
+    <a href="tracker.html">Nutrition Tracker</a>
+    <a href="workoutplan.html">Workout Builder</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="profile.html" class="active">Profile</a>
+    <a href="index.html" class="logout-btn" id="logout-btn">Log Out</a>
+  </nav>
+</header>
+
+<!-- MAIN -->
+<main class="page">
+
+  <!-- HERO -->
+  <div class="hero-card">
+    <div class="avatar-wrap">
+      <div class="avatar" id="avatar-initials">?</div>
+      <div class="avatar-badge"></div>
     </div>
+    <div class="hero-info">
+      <h1 id="hero-name">Your Name</h1>
+      <p id="hero-email">your@email.com</p>
+      <div class="hero-tags">
+        <span class="hero-tag" id="hero-goal-tag">🎯 Goal: –</span>
+        <span class="hero-tag" id="hero-level-tag">⚡ Level: –</span>
+        <span class="hero-tag" id="hero-bmi-tag">📊 BMI: –</span>
+      </div>
+    </div>
+    <button class="hero-edit-btn" onclick="scrollToEdit()">✏️ Edit Profile</button>
+  </div>
 
-    <nav class="nav">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="tracker.html">Nutrition</a>
-      <a href="Workout.html">Workout</a>
-      <a href="profile.html" class="active">Profile</a>
-      <a href="#" id="logoutBtn" class="logout-btn">Logout</a>
-    </nav>
-  </header>
+  <!-- STATS ROW -->
+  <div class="three-col">
+    <div class="stat-pill">
+      <div class="val" id="stat-weight">–</div>
+      <div class="lbl">Weight (kg)</div>
+    </div>
+    <div class="stat-pill">
+      <div class="val" id="stat-height">–</div>
+      <div class="lbl">Height (cm)</div>
+    </div>
+    <div class="stat-pill">
+      <div class="val" id="stat-age">–</div>
+      <div class="lbl">Age (yrs)</div>
+    </div>
+  </div>
 
-  <main class="profile-container">
-    <section class="profile-card">
-      <div class="profile-header">
-        <div class="avatar" id="avatar">U</div>
-        <div>
-          <h1 id="profile-name">User Profile</h1>
-          <p id="profile-email">user@fittracker.com</p>
+  <!-- EDIT SECTIONS -->
+  <div class="two-col" id="edit-section">
+
+    <!-- LEFT: Personal Info -->
+    <div class="card">
+      <div class="card-title"><span class="icon">👤</span> Personal Information</div>
+
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="fullName" placeholder="Enter your full name">
+      </div>
+
+      <div class="field field-readonly">
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="your@email.com" readonly>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Date of Birth</label>
+          <input type="date" id="dob">
+        </div>
+        <div class="field">
+          <label>Gender</label>
+          <select id="gender">
+            <option value="">Select</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Prefer not to say</option>
+          </select>
         </div>
       </div>
 
-      <form id="profile-form" class="profile-form">
-        <div class="form-grid">
-          <div>
-            <label for="fullName">Full Name</label>
-            <input type="text" id="fullName" placeholder="Enter your full name">
-          </div>
+      <div class="field">
+        <label>Phone Number</label>
+        <input type="tel" id="phone" placeholder="+61 4xx xxx xxx">
+      </div>
 
-          <div>
-            <label for="email">Email Address</label>
-            <input type="email" id="email" placeholder="Enter your email">
-          </div>
+      <div class="field">
+        <label>Location</label>
+        <input type="text" id="location" placeholder="City, Country">
+      </div>
 
-          <div>
-            <label for="age">Age</label>
-            <input type="number" id="age" placeholder="Enter your age">
-          </div>
+      <div class="field">
+        <label>Bio</label>
+        <textarea id="bio" placeholder="Tell us a bit about your fitness journey…"></textarea>
+      </div>
+    </div>
 
-          <div>
-            <label for="gender">Gender</label>
-            <select id="gender">
-              <option value="">Select gender</option>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
-            </select>
-          </div>
+    <!-- RIGHT: Fitness Info -->
+    <div style="display:flex; flex-direction:column; gap:24px;">
 
-          <div>
-            <label for="height">Height (cm)</label>
-            <input type="number" id="height" placeholder="Enter your height">
-          </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">🏋️</span> Body Metrics</div>
 
-          <div>
-            <label for="weight">Weight (kg)</label>
-            <input type="number" id="weight" placeholder="Enter your weight">
+        <div class="field-row">
+          <div class="field">
+            <label>Height (cm)</label>
+            <input type="number" id="height" placeholder="e.g. 175" min="100" max="250">
           </div>
-
-          <div>
-            <label for="goal">Fitness Goal</label>
-            <select id="goal">
-              <option value="">Select goal</option>
-              <option>Lose Weight</option>
-              <option>Maintain Fitness</option>
-              <option>Gain Muscle</option>
-              <option>Improve Endurance</option>
-            </select>
+          <div class="field">
+            <label>Weight (kg)</label>
+            <input type="number" id="weight" placeholder="e.g. 72" min="30" max="300" step="0.1">
           </div>
+        </div>
 
-          <div>
-            <label for="activity">Activity Level</label>
+        <div class="field-row">
+          <div class="field">
+            <label>Target Weight (kg)</label>
+            <input type="number" id="targetWeight" placeholder="e.g. 68" min="30" max="300" step="0.1">
+          </div>
+          <div class="field">
+            <label>Activity Level</label>
             <select id="activity">
-              <option value="">Select activity level</option>
-              <option>Beginner</option>
-              <option>Moderate</option>
-              <option>Active</option>
+              <option value="1.2">Sedentary</option>
+              <option value="1.375">Lightly Active</option>
+              <option value="1.55" selected>Moderately Active</option>
+              <option value="1.725">Very Active</option>
+              <option value="1.9">Athlete</option>
             </select>
           </div>
         </div>
 
-        <button type="submit">Save Profile</button>
-        <p id="success-message" class="success-message"></p>
-      </form>
-    </section>
-  </main>
+        <!-- BMI Display -->
+        <div class="bmi-display" id="bmi-display" style="display:none;">
+          <div class="bmi-val" id="bmi-val">–</div>
+          <div class="bmi-label" id="bmi-label">–</div>
+        </div>
+      </div>
 
-  <script>
-    function getProfile() {
-      return JSON.parse(localStorage.getItem("ft_profile")) || {
-        fullName: localStorage.getItem("ft_user") || "User",
-        email: "user@fittracker.com",
-        age: "",
-        gender: "",
-        height: "",
-        weight: "",
-        goal: "",
-        activity: ""
-      };
-    }
+      <div class="card">
+        <div class="card-title"><span class="icon">🎯</span> Fitness Goal</div>
+        <div class="goal-options" id="goalOptions">
+          <div class="goal-opt" data-goal="Weight Loss">
+            <div class="g-icon">🔥</div>
+            <div class="g-label">Weight Loss</div>
+          </div>
+          <div class="goal-opt" data-goal="Muscle Gain">
+            <div class="g-icon">💪</div>
+            <div class="g-label">Muscle Gain</div>
+          </div>
+          <div class="goal-opt" data-goal="Maintain">
+            <div class="g-icon">⚖️</div>
+            <div class="g-label">Maintain</div>
+          </div>
+          <div class="goal-opt" data-goal="Endurance">
+            <div class="g-icon">🏃</div>
+            <div class="g-label">Endurance</div>
+          </div>
+          <div class="goal-opt" data-goal="Flexibility">
+            <div class="g-icon">🧘</div>
+            <div class="g-label">Flexibility</div>
+          </div>
+          <div class="goal-opt" data-goal="General Health">
+            <div class="g-icon">❤️</div>
+            <div class="g-label">General Health</div>
+          </div>
+        </div>
+      </div>
 
-    function saveProfile(profile) {
-      localStorage.setItem("ft_profile", JSON.stringify(profile));
-      localStorage.setItem("ft_user", profile.fullName);
-    }
+    </div>
+  </div>
 
-    function loadProfile() {
-      const profile = getProfile();
+  <!-- FITNESS LEVEL + ACTIVITY -->
+  <div class="two-col">
 
-      document.getElementById("profile-name").textContent = profile.fullName || "User Profile";
-      document.getElementById("profile-email").textContent = profile.email || "user@fittracker.com";
-      document.getElementById("avatar").textContent = (profile.fullName || "U").charAt(0).toUpperCase();
+    <div class="card">
+      <div class="card-title"><span class="icon">⚡</span> Fitness Level</div>
+      <div class="level-bar" id="levelBar">
+        <div class="level-seg" data-level="1"></div>
+        <div class="level-seg" data-level="2"></div>
+        <div class="level-seg" data-level="3"></div>
+        <div class="level-seg" data-level="4"></div>
+        <div class="level-seg" data-level="5"></div>
+      </div>
+      <div class="level-labels">
+        <span>Beginner</span>
+        <span>Intermediate</span>
+        <span>Advanced</span>
+      </div>
+      <p style="margin-top:14px; font-size:14px; color:var(--muted);">
+        Current level: <strong id="levelLabel" style="color:var(--primary);">Not set</strong>
+      </p>
 
-      document.getElementById("fullName").value = profile.fullName || "";
-      document.getElementById("email").value = profile.email || "";
-      document.getElementById("age").value = profile.age || "";
-      document.getElementById("gender").value = profile.gender || "";
-      document.getElementById("height").value = profile.height || "";
-      document.getElementById("weight").value = profile.weight || "";
-      document.getElementById("goal").value = profile.goal || "";
-      document.getElementById("activity").value = profile.activity || "";
-    }
+      <div style="margin-top:20px;">
+        <div class="card-title" style="margin-bottom:12px;"><span class="icon">🏅</span> Preferred Workout Days</div>
+        <div id="dayPicker" style="display:flex; gap:8px; flex-wrap:wrap;">
+        </div>
+      </div>
+    </div>
 
-    document.getElementById("profile-form").addEventListener("submit", function(e) {
-      e.preventDefault();
+    <div class="card">
+      <div class="card-title"><span class="icon">📅</span> Recent Activity</div>
+      <div id="recentActivity">
+        <div class="activity-item">
+          <div class="activity-dot">🥗</div>
+          <div class="activity-info">
+            <strong>Last Meal Logged</strong>
+            <span id="act-meal">No meals yet</span>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot">💧</div>
+          <div class="activity-info">
+            <strong>Water Intake</strong>
+            <span>Today</span>
+          </div>
+          <div class="activity-val" id="act-water">0 L</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot">🚶</div>
+          <div class="activity-info">
+            <strong>Steps Today</strong>
+            <span>Daily count</span>
+          </div>
+          <div class="activity-val" id="act-steps">0</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot">💪</div>
+          <div class="activity-info">
+            <strong>Workout Time</strong>
+            <span>Today</span>
+          </div>
+          <div class="activity-val" id="act-workout">0 mins</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      const profile = {
-        fullName: document.getElementById("fullName").value.trim(),
-        email: document.getElementById("email").value.trim(),
-        age: document.getElementById("age").value.trim(),
-        gender: document.getElementById("gender").value,
-        height: document.getElementById("height").value.trim(),
-        weight: document.getElementById("weight").value.trim(),
-        goal: document.getElementById("goal").value,
-        activity: document.getElementById("activity").value
-      };
+  <!-- SAVE BUTTON -->
+  <div class="card" style="text-align:center; padding: 24px 28px;">
+    <button class="save-btn" onclick="saveProfile()">💾 Save Profile</button>
+  </div>
 
-      saveProfile(profile);
-      loadProfile();
+  <!-- DANGER ZONE -->
+  <div class="danger-zone">
+    <div class="card-title"><span style="font-size:20px;">⚠️</span> Danger Zone</div>
+    <p style="font-size:14px; color:#6b7280; margin-bottom:16px;">These actions are irreversible. Please proceed with caution.</p>
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <button class="danger-btn" onclick="confirmReset()">🗑️ Clear All Data</button>
+      <button class="danger-btn" style="background:#7f1d1d;" onclick="confirmLogout()">🚪 Log Out & Clear</button>
+    </div>
+  </div>
 
-      document.getElementById("success-message").textContent = "Profile saved successfully!";
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── DAYS PICKER ──
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const dayPicker = document.getElementById('dayPicker');
+  let selectedDays = [];
+
+  days.forEach(d => {
+    const btn = document.createElement('button');
+    btn.textContent = d;
+    btn.style.cssText = `
+      padding: 8px 14px; border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 13px;
+      cursor: pointer; transition: .2s;
+      color: var(--text);
+    `;
+    btn.onclick = () => {
+      if (selectedDays.includes(d)) {
+        selectedDays = selectedDays.filter(x => x !== d);
+        btn.style.background = 'var(--bg)';
+        btn.style.borderColor = 'var(--border)';
+        btn.style.color = 'var(--text)';
+      } else {
+        selectedDays.push(d);
+        btn.style.background = 'var(--primary)';
+        btn.style.borderColor = 'var(--primary)';
+        btn.style.color = 'white';
+      }
+    };
+    dayPicker.appendChild(btn);
+  });
+
+  // ── FITNESS LEVEL ──
+  const levelLabels = ['','Beginner','Novice','Intermediate','Advanced','Elite'];
+  let fitnessLevel = 0;
+  document.querySelectorAll('.level-seg').forEach(seg => {
+    seg.addEventListener('click', () => {
+      fitnessLevel = +seg.dataset.level;
+      document.querySelectorAll('.level-seg').forEach(s => {
+        s.classList.toggle('active', +s.dataset.level <= fitnessLevel);
+      });
+      document.getElementById('levelLabel').textContent = levelLabels[fitnessLevel];
     });
+  });
 
-    document.getElementById("logoutBtn").addEventListener("click", function(e) {
-      e.preventDefault();
-      localStorage.removeItem("ft_token");
-      localStorage.removeItem("ft_user");
-      window.location.href = "index.html";
+  // ── GOAL OPTIONS ──
+  let selectedGoal = '';
+  document.querySelectorAll('.goal-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.goal-opt').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedGoal = opt.dataset.goal;
     });
+  });
 
-    loadProfile();
-  </script>
+  // ── BMI CALCULATOR ──
+  function calcBMI() {
+    const h = parseFloat(document.getElementById('height').value);
+    const w = parseFloat(document.getElementById('weight').value);
+    if (!h || !w) return null;
+    return (w / ((h / 100) ** 2)).toFixed(1);
+  }
+
+  function getBMILabel(bmi) {
+    if (bmi < 18.5) return 'Underweight';
+    if (bmi < 25)   return 'Healthy Weight';
+    if (bmi < 30)   return 'Overweight';
+    return 'Obese';
+  }
+
+  ['height','weight'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      const bmi = calcBMI();
+      const box = document.getElementById('bmi-display');
+      if (bmi) {
+        box.style.display = 'block';
+        document.getElementById('bmi-val').textContent = bmi;
+        document.getElementById('bmi-label').textContent = getBMILabel(bmi);
+      } else {
+        box.style.display = 'none';
+      }
+    });
+  });
+
+  // ── LOAD SAVED PROFILE ──
+  function loadProfile() {
+    const user = JSON.parse(localStorage.getItem('fittrackerUser') || '{}');
+    const profile = JSON.parse(localStorage.getItem('ft_profile') || '{}');
+    const dash = JSON.parse(localStorage.getItem('ft_dashboard') || '{}');
+
+    const name = user.fullName || localStorage.getItem('ft_user') || '';
+    const email = user.email || '';
+
+    // Hero
+    document.getElementById('hero-name').textContent = name || 'Your Name';
+    document.getElementById('hero-email').textContent = email || 'your@email.com';
+    document.getElementById('avatar-initials').textContent = name ? name.charAt(0).toUpperCase() : '?';
+
+    // Form fields
+    if (name) document.getElementById('fullName').value = name;
+    if (email) document.getElementById('email').value = email;
+    if (profile.dob)      document.getElementById('dob').value = profile.dob;
+    if (profile.gender)   document.getElementById('gender').value = profile.gender;
+    if (profile.phone)    document.getElementById('phone').value = profile.phone;
+    if (profile.location) document.getElementById('location').value = profile.location;
+    if (profile.bio)      document.getElementById('bio').value = profile.bio;
+    if (profile.height)   document.getElementById('height').value = profile.height;
+    if (profile.weight)   document.getElementById('weight').value = profile.weight;
+    if (profile.targetWeight) document.getElementById('targetWeight').value = profile.targetWeight;
+    if (profile.activity) document.getElementById('activity').value = profile.activity;
+
+    // Stats
+    document.getElementById('stat-weight').textContent = profile.weight || '–';
+    document.getElementById('stat-height').textContent = profile.height || '–';
+    if (profile.dob) {
+      const age = new Date().getFullYear() - new Date(profile.dob).getFullYear();
+      document.getElementById('stat-age').textContent = age;
+    }
+
+    // BMI
+    if (profile.height && profile.weight) {
+      const bmi = (profile.weight / ((profile.height / 100) ** 2)).toFixed(1);
+      document.getElementById('bmi-val').textContent = bmi;
+      document.getElementById('bmi-label').textContent = getBMILabel(bmi);
+      document.getElementById('bmi-display').style.display = 'block';
+      document.getElementById('hero-bmi-tag').textContent = `📊 BMI: ${bmi}`;
+    }
+
+    // Goal
+    if (profile.goal) {
+      selectedGoal = profile.goal;
+      document.querySelectorAll('.goal-opt').forEach(o => {
+        if (o.dataset.goal === profile.goal) o.classList.add('selected');
+      });
+      document.getElementById('hero-goal-tag').textContent = `🎯 Goal: ${profile.goal}`;
+    }
+
+    // Level
+    if (profile.fitnessLevel) {
+      fitnessLevel = profile.fitnessLevel;
+      document.querySelectorAll('.level-seg').forEach(s => {
+        s.classList.toggle('active', +s.dataset.level <= fitnessLevel);
+      });
+      document.getElementById('levelLabel').textContent = levelLabels[fitnessLevel];
+      document.getElementById('hero-level-tag').textContent = `⚡ Level: ${levelLabels[fitnessLevel]}`;
+    }
+
+    // Days
+    if (profile.selectedDays) {
+      selectedDays = profile.selectedDays;
+      dayPicker.querySelectorAll('button').forEach(btn => {
+        if (selectedDays.includes(btn.textContent)) {
+          btn.style.background = 'var(--primary)';
+          btn.style.borderColor = 'var(--primary)';
+          btn.style.color = 'white';
+        }
+      });
+    }
+
+    // Activity from dashboard
+    document.getElementById('act-water').textContent   = (dash.water   || 0) + ' L';
+    document.getElementById('act-steps').textContent   = (dash.steps   || 0).toLocaleString();
+    document.getElementById('act-workout').textContent = (dash.workout || 0) + ' mins';
+
+    // Last meal
+    const today = new Date().toISOString().split('T')[0];
+    const meals = JSON.parse(localStorage.getItem('ft_log_' + today) || '{}');
+    const allMeals = Object.values(meals).flat();
+    if (allMeals.length > 0) {
+      const last = allMeals[allMeals.length - 1];
+      document.getElementById('act-meal').textContent = last.name + ' — today';
+    }
+  }
+
+  // ── SAVE PROFILE ──
+  function saveProfile() {
+    const name   = document.getElementById('fullName').value.trim();
+    const email  = document.getElementById('email').value.trim();
+    const height = document.getElementById('height').value;
+    const weight = document.getElementById('weight').value;
+
+    if (!name) { showToast('❌ Please enter your full name.'); return; }
+
+    // Update fittrackerUser so login still works
+    const user = JSON.parse(localStorage.getItem('fittrackerUser') || '{}');
+    user.fullName = name;
+    user.email = email || user.email;
+    localStorage.setItem('fittrackerUser', JSON.stringify(user));
+    localStorage.setItem('ft_user', name);
+
+    const profile = {
+      dob:          document.getElementById('dob').value,
+      gender:       document.getElementById('gender').value,
+      phone:        document.getElementById('phone').value,
+      location:     document.getElementById('location').value,
+      bio:          document.getElementById('bio').value,
+      height:       parseFloat(height) || '',
+      weight:       parseFloat(weight) || '',
+      targetWeight: parseFloat(document.getElementById('targetWeight').value) || '',
+      activity:     document.getElementById('activity').value,
+      goal:         selectedGoal,
+      fitnessLevel: fitnessLevel,
+      selectedDays: selectedDays,
+    };
+    localStorage.setItem('ft_profile', JSON.stringify(profile));
+
+    // Refresh hero
+    document.getElementById('hero-name').textContent = name;
+    document.getElementById('hero-email').textContent = email;
+    document.getElementById('avatar-initials').textContent = name.charAt(0).toUpperCase();
+    document.getElementById('stat-weight').textContent = profile.weight || '–';
+    document.getElementById('stat-height').textContent = profile.height || '–';
+    if (profile.dob) {
+      const age = new Date().getFullYear() - new Date(profile.dob).getFullYear();
+      document.getElementById('stat-age').textContent = age;
+    }
+    if (selectedGoal) document.getElementById('hero-goal-tag').textContent = `🎯 Goal: ${selectedGoal}`;
+    if (fitnessLevel) document.getElementById('hero-level-tag').textContent = `⚡ Level: ${levelLabels[fitnessLevel]}`;
+    if (profile.height && profile.weight) {
+      const bmi = (profile.weight / ((profile.height / 100) ** 2)).toFixed(1);
+      document.getElementById('hero-bmi-tag').textContent = `📊 BMI: ${bmi}`;
+    }
+
+    showToast('✅ Profile saved!');
+  }
+
+  // ── UTILS ──
+  function scrollToEdit() {
+    document.getElementById('edit-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function confirmReset() {
+    if (confirm('Clear all your FitTracker data? This cannot be undone.')) {
+      const user = JSON.parse(localStorage.getItem('fittrackerUser') || '{}');
+      localStorage.clear();
+      if (user.fullName) localStorage.setItem('fittrackerUser', JSON.stringify(user));
+      showToast('🗑️ All data cleared.');
+      setTimeout(() => location.reload(), 1200);
+    }
+  }
+
+  function confirmLogout() {
+    if (confirm('Log out and clear all data?')) {
+      localStorage.clear();
+      window.location.href = 'index.html';
+    }
+  }
+
+  document.getElementById('logout-btn').addEventListener('click', e => {
+    e.preventDefault();
+    localStorage.removeItem('ft_token');
+    localStorage.removeItem('ft_user');
+    window.location.href = 'index.html';
+  });
+
+  // ── INIT ──
+  loadProfile();
+</script>
 </body>
 </html>
