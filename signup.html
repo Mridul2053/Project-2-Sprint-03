@@ -4,82 +4,789 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up | FitTracker</title>
-  <link rel="stylesheet" href="signup.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', sans-serif; }
+
+    body {
+      background: #f4f6fb;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 20px;
+    }
+
+    /* ── TOP BRAND BAR ── */
+    .top-brand {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 28px;
+    }
+    .top-brand img { width: 36px; height: 36px; }
+    .top-brand span { font-size: 24px; font-weight: 900; color: #690500; }
+
+    .form-card {
+      width: 100%; max-width: 520px;
+      background: white;
+      padding: 40px 38px;
+      border-radius: 26px;
+      box-shadow: 0 15px 40px rgba(0,0,0,.09);
+    }
+
+    /* ── STEP PROGRESS ── */
+    .step-progress {
+      display: flex; align-items: center;
+      gap: 0; margin-bottom: 32px;
+    }
+
+    .step-dot {
+      width: 34px; height: 34px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900;
+      border: 2px solid #d8dce7;
+      background: white; color: #aaa;
+      flex-shrink: 0;
+      transition: all .3s;
+      position: relative; z-index: 1;
+    }
+    .step-dot.active  { border-color: #690500; background: #690500; color: white; }
+    .step-dot.done    { border-color: #690500; background: #690500; color: white; }
+    .step-dot.done::after { content: '✓'; }
+    .step-dot.done .step-num { display: none; }
+
+    .step-line {
+      flex: 1; height: 3px;
+      background: #e5e7eb;
+      transition: background .4s;
+    }
+    .step-line.done { background: #690500; }
+
+    .step-label {
+      position: absolute;
+      bottom: -20px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px; font-weight: 800;
+      color: #aaa; white-space: nowrap;
+    }
+    .step-dot.active .step-label,
+    .step-dot.done   .step-label { color: #690500; }
+    .step-dot-wrap { position: relative; padding-bottom: 24px; }
+
+    /* ── STEP PANELS ── */
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+
+    .step-heading { margin-bottom: 22px; }
+    .step-heading h2 { font-size: 26px; font-weight: 900; color: #1a1a1a; margin-bottom: 4px; }
+    .step-heading p  { font-size: 14px; color: #777; }
+
+    /* ── FIELDS ── */
+    .input-group { margin-bottom: 16px; }
+    .input-group label {
+      display: block; margin-bottom: 7px;
+      font-weight: 700; color: #333; font-size: 14px;
+    }
+    .input-group input,
+    .input-group select {
+      width: 100%; padding: 13px 15px;
+      border: 1.5px solid #d8dce7; border-radius: 12px;
+      font-size: 15px; font-family: 'Nunito', sans-serif;
+      outline: none; transition: .25s; background: #fafbff; color: #111;
+    }
+    .input-group input:focus,
+    .input-group select:focus {
+      border-color: #690500; background: white;
+      box-shadow: 0 0 0 3px rgba(105,5,0,.08);
+    }
+    .input-group input.invalid { border-color: #d62828; background: #fff5f5; }
+    .input-group select.invalid { border-color: #d62828; }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .password-box { position: relative; }
+    .password-box input { padding-right: 75px; }
+    .toggle-btn {
+      position: absolute; right: 10px; top: 50%;
+      transform: translateY(-50%);
+      border: none; background: transparent;
+      color: #690500; font-weight: 800;
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer; padding: 8px; font-size: 13px;
+    }
+
+    .error-msg {
+      color: #d62828; font-size: 12px;
+      margin-top: 5px; display: none;
+    }
+
+    /* ── PASSWORD STRENGTH ── */
+    .strength-bar { display: flex; gap: 4px; margin-top: 8px; }
+    .strength-seg {
+      flex: 1; height: 4px; border-radius: 999px;
+      background: #e5e7eb; transition: background .3s;
+    }
+    .strength-label { font-size: 12px; font-weight: 700; margin-top: 5px; color: #aaa; }
+
+    /* ── GOAL / ACTIVITY SELECTOR ── */
+    .option-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 6px; }
+    .option-btn {
+      border: 2px solid #e5e7eb; border-radius: 14px;
+      padding: 14px 8px; text-align: center;
+      cursor: pointer; transition: .2s; background: white;
+      user-select: none;
+    }
+    .option-btn:hover { border-color: #690500; background: rgba(105,5,0,.04); }
+    .option-btn.selected { border-color: #690500; background: rgba(105,5,0,.07); }
+    .option-btn .opt-icon { font-size: 22px; margin-bottom: 5px; }
+    .option-btn .opt-label { font-size: 12px; font-weight: 800; color: #1a1a1a; line-height: 1.3; }
+
+    .activity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+    .activity-opt {
+      border: 2px solid #e5e7eb; border-radius: 14px;
+      padding: 13px 12px; cursor: pointer; transition: .2s;
+      background: white; user-select: none;
+    }
+    .activity-opt:hover { border-color: #690500; background: rgba(105,5,0,.04); }
+    .activity-opt.selected { border-color: #690500; background: rgba(105,5,0,.07); }
+    .activity-opt .act-title { font-size: 13px; font-weight: 800; color: #1a1a1a; }
+    .activity-opt .act-desc  { font-size: 11px; color: #777; margin-top: 2px; }
+
+    /* ── BMI PREVIEW ── */
+    .bmi-preview {
+      background: linear-gradient(135deg, #690500, #a30d00);
+      border-radius: 14px; padding: 16px 20px;
+      color: white; display: flex;
+      align-items: center; justify-content: space-between;
+      margin-top: 14px; display: none;
+    }
+    .bmi-preview .bmi-num { font-size: 36px; font-weight: 900; }
+    .bmi-preview .bmi-right { text-align: right; }
+    .bmi-preview .bmi-cat  { font-size: 15px; font-weight: 800; }
+    .bmi-preview .bmi-sub  { font-size: 12px; opacity: .75; margin-top: 2px; }
+
+    /* ── SUMMARY ── */
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .summary-item {
+      background: #f6f7fb; border-radius: 13px;
+      padding: 13px 15px; border: 1.5px solid #e5e7eb;
+    }
+    .summary-item .s-label { font-size: 11px; font-weight: 800; color: #aaa; text-transform: uppercase; letter-spacing: .5px; }
+    .summary-item .s-val   { font-size: 15px; font-weight: 800; color: #1a1a1a; margin-top: 3px; }
+
+    /* ── TERMS ── */
+    .checkbox-group {
+      display: flex; align-items: flex-start;
+      gap: 10px; margin: 14px 0 6px;
+    }
+    .checkbox-group input { margin-top: 3px; accent-color: #690500; }
+    .checkbox-group label { font-size: 13px; color: #555; line-height: 1.5; }
+    .checkbox-group span  { color: #690500; font-weight: 700; }
+
+    /* ── NAVIGATION BUTTONS ── */
+    .btn-row { display: flex; gap: 12px; margin-top: 22px; }
+
+    .btn-next {
+      flex: 1; background: #690500; color: white;
+      border: none; padding: 14px;
+      border-radius: 13px; font-size: 16px;
+      font-weight: 900; font-family: 'Nunito', sans-serif;
+      cursor: pointer; transition: .2s;
+    }
+    .btn-next:hover { background: #8a0900; transform: translateY(-1px); }
+
+    .btn-back {
+      background: #f4f6fb; color: #333;
+      border: 1.5px solid #d8dce7;
+      padding: 14px 22px;
+      border-radius: 13px; font-size: 15px;
+      font-weight: 800; font-family: 'Nunito', sans-serif;
+      cursor: pointer; transition: .2s;
+    }
+    .btn-back:hover { background: #e9eaef; }
+
+    .bottom-text {
+      text-align: center; margin-top: 20px;
+      font-size: 14px; color: #666;
+    }
+    .bottom-text a { color: #690500; font-weight: 800; text-decoration: none; }
+    .bottom-text a:hover { text-decoration: underline; }
+
+    /* ── SUCCESS ── */
+    .success-screen {
+      text-align: center; padding: 20px 0;
+      display: none;
+    }
+    .success-icon {
+      width: 80px; height: 80px;
+      background: linear-gradient(135deg, #690500, #a30d00);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; margin: 0 auto 20px;
+    }
+    .success-screen h2 { font-size: 28px; font-weight: 900; margin-bottom: 8px; }
+    .success-screen p  { color: #777; font-size: 15px; margin-bottom: 26px; }
+    .go-btn {
+      background: #690500; color: white;
+      border: none; padding: 15px 40px;
+      border-radius: 13px; font-size: 16px;
+      font-weight: 900; font-family: 'Nunito', sans-serif;
+      cursor: pointer; transition: .2s;
+    }
+    .go-btn:hover { background: #8a0900; transform: translateY(-1px); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 580px) {
+      .form-card { padding: 28px 20px; }
+      .field-row { grid-template-columns: 1fr; }
+      .option-grid { grid-template-columns: 1fr 1fr; }
+      .summary-grid { grid-template-columns: 1fr; }
+      .activity-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-  <div class="signup-page">
-    <div class="signup-left">
-      <div class="brand-box">
-        <h1>FitTracker</h1>
-        <p>
-          Build healthy habits, track your workouts, monitor your nutrition,
-          and stay consistent with your fitness journey.
-        </p>
 
-        <div class="feature-list">
-          <div class="feature-item">Track calories and macros easily</div>
-          <div class="feature-item">Create personalised workout plans</div>
-          <div class="feature-item">Monitor your daily fitness progress</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="signup-right">
-      <div class="form-card">
-        <h2>Create Account</h2>
-        <p class="subtitle">Join FitTracker and start your journey today</p>
-
-        <form id="signupForm">
-          <div class="input-group">
-            <label for="fullName">Full Name</label>
-            <input type="text" id="fullName" placeholder="Enter your full name" />
-            <small class="error" id="nameError"></small>
-          </div>
-
-          <div class="input-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" placeholder="Enter your email address" />
-            <small class="error" id="emailError"></small>
-          </div>
-
-          <div class="input-group">
-            <label for="password">Password</label>
-            <div class="password-box">
-              <input type="password" id="password" placeholder="Create a password" />
-              <button type="button" class="toggle-btn" onclick="togglePassword('password', this)">Show</button>
-            </div>
-            <small class="error" id="passwordError"></small>
-          </div>
-
-          <div class="input-group">
-            <label for="confirmPassword">Confirm Password</label>
-            <div class="password-box">
-              <input type="password" id="confirmPassword" placeholder="Confirm your password" />
-              <button type="button" class="toggle-btn" onclick="togglePassword('confirmPassword', this)">Show</button>
-            </div>
-            <small class="error" id="confirmPasswordError"></small>
-          </div>
-
-          <div class="checkbox-group">
-            <input type="checkbox" id="terms" />
-            <label for="terms">
-              I agree to the <span>Terms & Conditions</span> and <span>Privacy Policy</span>
-            </label>
-          </div>
-          <small class="error" id="termsError"></small>
-
-          <button type="submit" class="signup-btn">Create Account</button>
-        </form>
-
-        <p class="bottom-text">
-          Already have an account?
-          <a href="index.html">Sign In</a>
-        </p>
-      </div>
-    </div>
+  <!-- TOP BRAND -->
+  <div class="top-brand">
+    <img src="assets/logo.png" alt="FitTracker">
+    <span>FitTracker</span>
   </div>
 
-  <script src="app.js"></script>
+  <div class="form-card">
+
+      <!-- Step progress -->
+      <div class="step-progress" id="stepProgress">
+        <div class="step-dot-wrap">
+          <div class="step-dot active" id="dot-1"><span class="step-num">1</span><span class="step-label">Account</span></div>
+        </div>
+        <div class="step-line" id="line-1"></div>
+        <div class="step-dot-wrap">
+          <div class="step-dot" id="dot-2"><span class="step-num">2</span><span class="step-label">Body</span></div>
+        </div>
+        <div class="step-line" id="line-2"></div>
+        <div class="step-dot-wrap">
+          <div class="step-dot" id="dot-3"><span class="step-num">3</span><span class="step-label">Goals</span></div>
+        </div>
+        <div class="step-line" id="line-3"></div>
+        <div class="step-dot-wrap">
+          <div class="step-dot" id="dot-4"><span class="step-num">4</span><span class="step-label">Review</span></div>
+        </div>
+      </div>
+
+      <!-- ── STEP 1: Account ── -->
+      <div class="step-panel active" id="step-1">
+        <div class="step-heading">
+          <h2>Create Your Account</h2>
+          <p>Start with your basic login details</p>
+        </div>
+
+        <div class="input-group">
+          <label>Full Name</label>
+          <input type="text" id="fullName" placeholder="e.g. Alex Johnson">
+          <span class="error-msg" id="err-fullName"></span>
+        </div>
+
+        <div class="input-group">
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com">
+          <span class="error-msg" id="err-email"></span>
+        </div>
+
+        <div class="field-row">
+          <div class="input-group">
+            <label>Date of Birth</label>
+            <input type="date" id="dob">
+            <span class="error-msg" id="err-dob"></span>
+          </div>
+          <div class="input-group">
+            <label>Gender</label>
+            <select id="gender">
+              <option value="">Select</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Prefer not to say</option>
+            </select>
+            <span class="error-msg" id="err-gender"></span>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Password</label>
+          <div class="password-box">
+            <input type="password" id="password" placeholder="Create a strong password" oninput="checkStrength()">
+            <button type="button" class="toggle-btn" onclick="togglePass('password', this)">Show</button>
+          </div>
+          <div class="strength-bar" id="strengthBar">
+            <div class="strength-seg" id="s1"></div>
+            <div class="strength-seg" id="s2"></div>
+            <div class="strength-seg" id="s3"></div>
+            <div class="strength-seg" id="s4"></div>
+          </div>
+          <div class="strength-label" id="strengthLabel"></div>
+          <span class="error-msg" id="err-password"></span>
+        </div>
+
+        <div class="input-group">
+          <label>Confirm Password</label>
+          <div class="password-box">
+            <input type="password" id="confirmPassword" placeholder="Re-enter your password">
+            <button type="button" class="toggle-btn" onclick="togglePass('confirmPassword', this)">Show</button>
+          </div>
+          <span class="error-msg" id="err-confirmPassword"></span>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-next" onclick="nextStep(1)">Continue →</button>
+        </div>
+
+        <p class="bottom-text">Already have an account? <a href="index.html">Log In</a></p>
+      </div>
+
+      <!-- ── STEP 2: Body Metrics ── -->
+      <div class="step-panel" id="step-2">
+        <div class="step-heading">
+          <h2>Your Body Metrics</h2>
+          <p>Used to calculate your BMI, calorie targets, and personalised goals</p>
+        </div>
+
+        <div class="field-row">
+          <div class="input-group">
+            <label>Height (cm)</label>
+            <input type="number" id="height" placeholder="e.g. 175" min="100" max="250" oninput="calcBMI()">
+            <span class="error-msg" id="err-height"></span>
+          </div>
+          <div class="input-group">
+            <label>Current Weight (kg)</label>
+            <input type="number" id="weight" placeholder="e.g. 72" min="30" max="300" step="0.1" oninput="calcBMI()">
+            <span class="error-msg" id="err-weight"></span>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="input-group">
+            <label>Target Weight (kg)</label>
+            <input type="number" id="targetWeight" placeholder="e.g. 68" min="30" max="300" step="0.1">
+            <span class="error-msg" id="err-targetWeight"></span>
+          </div>
+          <div class="input-group">
+            <label>Daily Step Goal</label>
+            <select id="stepGoal">
+              <option value="5000">5,000 steps (light)</option>
+              <option value="8000" selected>8,000 steps (moderate)</option>
+              <option value="10000">10,000 steps (active)</option>
+              <option value="12000">12,000+ steps (very active)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Daily Water Goal (L)</label>
+          <select id="waterGoal">
+            <option value="1.5">1.5 L (minimum)</option>
+            <option value="2" selected>2.0 L (recommended)</option>
+            <option value="2.5">2.5 L (active)</option>
+            <option value="3">3.0 L (athlete)</option>
+          </select>
+        </div>
+
+        <!-- Live BMI preview -->
+        <div class="bmi-preview" id="bmiPreview">
+          <div>
+            <div style="font-size:12px; opacity:.75; margin-bottom:4px;">YOUR BMI</div>
+            <div class="bmi-num" id="bmiNum">–</div>
+          </div>
+          <div class="bmi-right">
+            <div class="bmi-cat" id="bmiCat">–</div>
+            <div class="bmi-sub" id="bmiSub">–</div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-back" onclick="goBack(2)">← Back</button>
+          <button class="btn-next" onclick="nextStep(2)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 3: Goals & Activity ── -->
+      <div class="step-panel" id="step-3">
+        <div class="step-heading">
+          <h2>Your Goals & Activity</h2>
+          <p>We'll use this to set your calorie budget and workout plan</p>
+        </div>
+
+        <div class="input-group">
+          <label>Primary Fitness Goal</label>
+          <div class="option-grid" id="goalGrid">
+            <div class="option-btn" data-val="Weight Loss"><div class="opt-icon">🔥</div><div class="opt-label">Weight Loss</div></div>
+            <div class="option-btn" data-val="Muscle Gain"><div class="opt-icon">💪</div><div class="opt-label">Muscle Gain</div></div>
+            <div class="option-btn" data-val="Maintain Weight"><div class="opt-icon">⚖️</div><div class="opt-label">Maintain Weight</div></div>
+            <div class="option-btn" data-val="Build Endurance"><div class="opt-icon">🏃</div><div class="opt-label">Build Endurance</div></div>
+            <div class="option-btn" data-val="Flexibility"><div class="opt-icon">🧘</div><div class="opt-label">Flexibility</div></div>
+            <div class="option-btn" data-val="General Health"><div class="opt-icon">❤️</div><div class="opt-label">General Health</div></div>
+          </div>
+          <span class="error-msg" id="err-goal"></span>
+        </div>
+
+        <div class="input-group" style="margin-top:20px;">
+          <label>Activity Level</label>
+          <div class="activity-grid" id="activityGrid">
+            <div class="activity-opt" data-val="1.2"><div class="act-title">🛋️ Sedentary</div><div class="act-desc">Little or no exercise, desk job</div></div>
+            <div class="activity-opt" data-val="1.375"><div class="act-title">🚶 Lightly Active</div><div class="act-desc">Light exercise 1–3 days/week</div></div>
+            <div class="activity-opt" data-val="1.55"><div class="act-title">🏋️ Moderately Active</div><div class="act-desc">Moderate exercise 3–5 days/week</div></div>
+            <div class="activity-opt" data-val="1.725"><div class="act-title">🏃 Very Active</div><div class="act-desc">Hard exercise 6–7 days/week</div></div>
+          </div>
+          <span class="error-msg" id="err-activity"></span>
+        </div>
+
+        <div class="input-group" style="margin-top:16px;">
+          <label>Preferred Workout Time</label>
+          <select id="workoutTime">
+            <option value="">Select preference</option>
+            <option>Early Morning (5–7 AM)</option>
+            <option>Morning (7–9 AM)</option>
+            <option>Midday (11 AM–1 PM)</option>
+            <option>Afternoon (3–5 PM)</option>
+            <option>Evening (6–8 PM)</option>
+            <option>Night (8–10 PM)</option>
+          </select>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-back" onclick="goBack(3)">← Back</button>
+          <button class="btn-next" onclick="nextStep(3)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 4: Review ── -->
+      <div class="step-panel" id="step-4">
+        <div class="step-heading">
+          <h2>Review Your Profile</h2>
+          <p>Make sure everything looks right before you begin</p>
+        </div>
+
+        <div class="summary-grid" id="summaryGrid"></div>
+
+        <div class="input-group">
+          <label>Phone Number <span style="color:#aaa; font-weight:600;">(optional)</span></label>
+          <input type="tel" id="phone" placeholder="+61 4xx xxx xxx">
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="terms">
+          <label for="terms">I agree to the <span>Terms & Conditions</span> and <span>Privacy Policy</span></label>
+        </div>
+        <span class="error-msg" id="err-terms"></span>
+
+        <div class="btn-row">
+          <button class="btn-back" onclick="goBack(4)">← Back</button>
+          <button class="btn-next" onclick="submitSignup()">🚀 Create Account</button>
+        </div>
+      </div>
+
+      <!-- ── SUCCESS ── -->
+      <div class="success-screen" id="successScreen">
+        <div class="success-icon">🎉</div>
+        <h2 id="successName">Welcome!</h2>
+        <p>Your FitTracker account is ready.<br>Your goals and calorie targets have been set.</p>
+        <button class="go-btn" onclick="window.location.href='dashboard.html'">Go to Dashboard →</button>
+      </div>
+
+  </div><!-- end form-card -->
+
+<script>
+  // ── STATE ──
+  let selectedGoal     = '';
+  let selectedActivity = '';
+  let currentStep      = 1;
+
+  // ── GOAL SELECTOR ──
+  document.querySelectorAll('#goalGrid .option-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#goalGrid .option-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedGoal = btn.dataset.val;
+    });
+  });
+
+  // ── ACTIVITY SELECTOR ──
+  document.querySelectorAll('#activityGrid .activity-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('#activityGrid .activity-opt').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedActivity = opt.dataset.val;
+    });
+  });
+
+  // ── PASSWORD TOGGLE ──
+  function togglePass(id, btn) {
+    const input = document.getElementById(id);
+    if (input.type === 'password') { input.type = 'text'; btn.textContent = 'Hide'; }
+    else                           { input.type = 'password'; btn.textContent = 'Show'; }
+  }
+
+  // ── PASSWORD STRENGTH ──
+  function checkStrength() {
+    const val = document.getElementById('password').value;
+    const segs = [document.getElementById('s1'), document.getElementById('s2'),
+                  document.getElementById('s3'), document.getElementById('s4')];
+    const lbl  = document.getElementById('strengthLabel');
+    let score = 0;
+    if (val.length >= 8)            score++;
+    if (/[A-Z]/.test(val))          score++;
+    if (/[0-9]/.test(val))          score++;
+    if (/[^A-Za-z0-9]/.test(val))   score++;
+
+    const colors = ['#d62828','#f97316','#f59e0b','#22c55e'];
+    const labels = ['Weak','Fair','Good','Strong'];
+    segs.forEach((s, i) => s.style.background = i < score ? colors[score - 1] : '#e5e7eb');
+    lbl.textContent  = val ? labels[score - 1] || '' : '';
+    lbl.style.color  = val ? colors[score - 1] : '#aaa';
+  }
+
+  // ── BMI CALCULATOR ──
+  function calcBMI() {
+    const h = parseFloat(document.getElementById('height').value);
+    const w = parseFloat(document.getElementById('weight').value);
+    const preview = document.getElementById('bmiPreview');
+    if (!h || !w) { preview.style.display = 'none'; return; }
+    const bmi = (w / ((h / 100) ** 2)).toFixed(1);
+    let cat, sub;
+    if      (bmi < 18.5) { cat = 'Underweight'; sub = 'Below healthy range'; }
+    else if (bmi < 25)   { cat = 'Healthy Weight'; sub = 'Within healthy range ✓'; }
+    else if (bmi < 30)   { cat = 'Overweight'; sub = 'Above healthy range'; }
+    else                  { cat = 'Obese'; sub = 'Well above healthy range'; }
+    document.getElementById('bmiNum').textContent = bmi;
+    document.getElementById('bmiCat').textContent = cat;
+    document.getElementById('bmiSub').textContent = sub;
+    preview.style.display = 'flex';
+  }
+
+  // ── VALIDATION ──
+  function showErr(id, msg) {
+    const el = document.getElementById('err-' + id);
+    if (!el) return;
+    el.textContent = msg; el.style.display = 'block';
+    const input = document.getElementById(id);
+    if (input) input.classList.add('invalid');
+  }
+  function clearErr(id) {
+    const el = document.getElementById('err-' + id);
+    if (el) { el.style.display = 'none'; }
+    const input = document.getElementById(id);
+    if (input) input.classList.remove('invalid');
+  }
+
+  function validateStep1() {
+    let ok = true;
+    ['fullName','email','dob','gender','password','confirmPassword'].forEach(clearErr);
+
+    const name = document.getElementById('fullName').value.trim();
+    if (!name)                   { showErr('fullName', 'Full name is required.'); ok = false; }
+
+    const email = document.getElementById('email').value.trim();
+    if (!email)                  { showErr('email', 'Email is required.'); ok = false; }
+    else if (!/\S+@\S+\.\S+/.test(email)) { showErr('email', 'Enter a valid email address.'); ok = false; }
+
+    const dob = document.getElementById('dob').value;
+    if (!dob)                    { showErr('dob', 'Date of birth is required.'); ok = false; }
+    else {
+      const age = new Date().getFullYear() - new Date(dob).getFullYear();
+      if (age < 13 || age > 100) { showErr('dob', 'Please enter a valid date of birth.'); ok = false; }
+    }
+
+    const gender = document.getElementById('gender').value;
+    if (!gender)                 { showErr('gender', 'Please select a gender.'); ok = false; }
+
+    const pass = document.getElementById('password').value;
+    if (!pass)                   { showErr('password', 'Password is required.'); ok = false; }
+    else if (pass.length < 8)    { showErr('password', 'Password must be at least 8 characters.'); ok = false; }
+
+    const conf = document.getElementById('confirmPassword').value;
+    if (!conf)                   { showErr('confirmPassword', 'Please confirm your password.'); ok = false; }
+    else if (conf !== pass)      { showErr('confirmPassword', 'Passwords do not match.'); ok = false; }
+
+    return ok;
+  }
+
+  function validateStep2() {
+    let ok = true;
+    ['height','weight','targetWeight'].forEach(clearErr);
+
+    const h = document.getElementById('height').value;
+    if (!h || h < 100 || h > 250) { showErr('height', 'Enter a valid height (100–250 cm).'); ok = false; }
+
+    const w = document.getElementById('weight').value;
+    if (!w || w < 30 || w > 300)  { showErr('weight', 'Enter a valid weight (30–300 kg).'); ok = false; }
+
+    const t = document.getElementById('targetWeight').value;
+    if (!t || t < 30 || t > 300)  { showErr('targetWeight', 'Enter a valid target weight.'); ok = false; }
+
+    return ok;
+  }
+
+  function validateStep3() {
+    let ok = true;
+    clearErr('goal'); clearErr('activity');
+    if (!selectedGoal)    { showErr('goal', 'Please select a fitness goal.'); ok = false; }
+    if (!selectedActivity){ showErr('activity', 'Please select your activity level.'); ok = false; }
+    return ok;
+  }
+
+  // ── CALORIE CALCULATOR (Mifflin-St Jeor) ──
+  function calcTargets() {
+    const dob      = document.getElementById('dob').value;
+    const gender   = document.getElementById('gender').value;
+    const h        = parseFloat(document.getElementById('height').value) || 170;
+    const w        = parseFloat(document.getElementById('weight').value) || 70;
+    const tw       = parseFloat(document.getElementById('targetWeight').value) || 70;
+    const activity = parseFloat(selectedActivity) || 1.55;
+    const goal     = selectedGoal;
+    const age      = new Date().getFullYear() - new Date(dob).getFullYear();
+
+    let bmr;
+    if (gender === 'Female') bmr = 10 * w + 6.25 * h - 5 * age - 161;
+    else                     bmr = 10 * w + 6.25 * h - 5 * age + 5;
+
+    let tdee = Math.round(bmr * activity);
+    let kcal = tdee;
+    if      (goal === 'Weight Loss')     kcal = tdee - 500;
+    else if (goal === 'Muscle Gain')     kcal = tdee + 300;
+    else if (goal === 'Build Endurance') kcal = tdee + 100;
+
+    const protein = Math.round(tw * 1.8);
+    const fat     = Math.round(kcal * 0.25 / 9);
+    const carbs   = Math.round((kcal - protein * 4 - fat * 9) / 4);
+    const bmi     = (w / ((h / 100) ** 2)).toFixed(1);
+
+    return { kcal, protein, fat, carbs, bmi, tdee };
+  }
+
+  // ── STEP NAVIGATION ──
+  function nextStep(from) {
+    if (from === 1 && !validateStep1()) return;
+    if (from === 2 && !validateStep2()) return;
+    if (from === 3 && !validateStep3()) return;
+
+    if (from === 3) buildSummary();
+
+    goToStep(from + 1);
+  }
+
+  function goBack(from) { goToStep(from - 1); }
+
+  function goToStep(n) {
+    document.getElementById('step-' + currentStep).classList.remove('active');
+
+    // Update dots
+    for (let i = 1; i <= 4; i++) {
+      const dot  = document.getElementById('dot-' + i);
+      const line = document.getElementById('line-' + i);
+      dot.className = 'step-dot' + (i < n ? ' done' : i === n ? ' active' : '');
+      if (line) line.className = 'step-line' + (i < n ? ' done' : '');
+    }
+
+    currentStep = n;
+    document.getElementById('step-' + n).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── SUMMARY ──
+  function buildSummary() {
+    const t   = calcTargets();
+    const bmi = (parseFloat(document.getElementById('weight').value) /
+                 ((parseFloat(document.getElementById('height').value) / 100) ** 2)).toFixed(1);
+
+    const items = [
+      { label: 'Name',          val: document.getElementById('fullName').value },
+      { label: 'Goal',          val: selectedGoal },
+      { label: 'Height',        val: document.getElementById('height').value + ' cm' },
+      { label: 'Weight',        val: document.getElementById('weight').value + ' kg' },
+      { label: 'Target Weight', val: document.getElementById('targetWeight').value + ' kg' },
+      { label: 'BMI',           val: bmi },
+      { label: 'Daily Calories',val: t.kcal + ' kcal' },
+      { label: 'Daily Protein', val: t.protein + ' g' },
+      { label: 'Daily Carbs',   val: t.carbs + ' g' },
+      { label: 'Daily Fat',     val: t.fat + ' g' },
+      { label: 'Step Goal',     val: parseInt(document.getElementById('stepGoal').value).toLocaleString() },
+      { label: 'Water Goal',    val: document.getElementById('waterGoal').value + ' L' },
+    ];
+
+    const grid = document.getElementById('summaryGrid');
+    grid.innerHTML = items.map(i => `
+      <div class="summary-item">
+        <div class="s-label">${i.label}</div>
+        <div class="s-val">${i.val}</div>
+      </div>`).join('');
+  }
+
+  // ── SUBMIT ──
+  function submitSignup() {
+    clearErr('terms');
+    if (!document.getElementById('terms').checked) {
+      showErr('terms', 'You must agree to the Terms & Conditions.');
+      return;
+    }
+
+    const targets = calcTargets();
+    const bmi = (parseFloat(document.getElementById('weight').value) /
+                 ((parseFloat(document.getElementById('height').value) / 100) ** 2)).toFixed(1);
+
+    // Build user object (matches what login expects)
+    const user = {
+      fullName:    document.getElementById('fullName').value.trim(),
+      email:       document.getElementById('email').value.trim(),
+      password:    document.getElementById('password').value,
+      dob:         document.getElementById('dob').value,
+      gender:      document.getElementById('gender').value,
+      phone:       document.getElementById('phone').value,
+    };
+    localStorage.setItem('fittrackerUser', JSON.stringify(user));
+    localStorage.setItem('ft_user',  user.fullName);
+    localStorage.setItem('ft_token', 'logged_in');
+
+    // Save full profile
+    const profile = {
+      dob:          user.dob,
+      gender:       user.gender,
+      phone:        user.phone,
+      height:       parseFloat(document.getElementById('height').value),
+      weight:       parseFloat(document.getElementById('weight').value),
+      targetWeight: parseFloat(document.getElementById('targetWeight').value),
+      stepGoal:     parseInt(document.getElementById('stepGoal').value),
+      waterGoal:    parseFloat(document.getElementById('waterGoal').value),
+      goal:         selectedGoal,
+      activity:     selectedActivity,
+      workoutTime:  document.getElementById('workoutTime').value,
+      bmi:          parseFloat(bmi),
+      fitnessLevel: 1,
+    };
+    localStorage.setItem('ft_profile', JSON.stringify(profile));
+
+    // Save calculated nutrition goals so the tracker picks them up
+    const goals = {
+      kcal:    targets.kcal,
+      protein: targets.protein,
+      carbs:   targets.carbs,
+      fat:     targets.fat,
+    };
+    localStorage.setItem('ft_goals', JSON.stringify(goals));
+
+    // Save dashboard baseline
+    const dash = {
+      workout: 0, steps: 0,
+      water:   0,
+      stepGoal:  profile.stepGoal,
+      waterGoal: profile.waterGoal,
+    };
+    localStorage.setItem('ft_dashboard', JSON.stringify(dash));
+
+    // Show success
+    document.getElementById('step-4').classList.remove('active');
+    document.getElementById('stepProgress').style.display = 'none';
+    document.getElementById('successName').textContent = `Welcome, ${user.fullName.split(' ')[0]}! 👋`;
+    document.getElementById('successScreen').style.display = 'block';
+  }
+</script>
 </body>
 </html>
