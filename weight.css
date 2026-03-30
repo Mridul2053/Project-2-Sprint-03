@@ -1,0 +1,137 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  body {
+    background: #f4f6f8;
+  }
+  
+  .container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 30px auto;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .logo {
+    border: 1px solid #aaa;
+    padding: 8px 20px;
+  }
+  
+  nav ul {
+    display: flex;
+    gap: 25px;
+    list-style: none;
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  /* Breadcrumb */
+  .breadcrumb {
+    padding: 15px 25px;
+    background: #fafafa;
+  }
+  
+  .breadcrumb a {
+    text-decoration: none;
+    color: #2d89ef;
+  }
+  
+  /* Title */
+  .title {
+    text-align: center;
+    padding: 25px;
+    font-size: 32px;
+  }
+  
+  /* Cards */
+  .day-card {
+    margin: 15px 25px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  .day-card h3 {
+    background: #f1f1f1;
+    padding: 12px;
+  }
+  
+  .day-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+  }
+  
+  .day-content ul {
+    line-height: 2;
+  }
+  
+  /* Side */
+  .side {
+    text-align: center;
+  }
+  
+  .image-box {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #aaa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    color: #777;
+  }
+
+  .workout-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid #aaa;
+    margin-bottom: 10px;
+  }
+  
+  button {
+    padding: 8px 15px;
+    border: 1px solid #333;
+    background: white;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    background: #333;
+    color: white;
+  }
+  
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .day-content {
+      flex-direction: column;
+      gap: 15px;
+    }
+  }
