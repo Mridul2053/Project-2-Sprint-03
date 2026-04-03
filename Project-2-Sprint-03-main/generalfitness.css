@@ -1,0 +1,287 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f4f4f4;
+  color: #333;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+  border: 1px solid #bbb;
+  padding: 8px 18px;
+  border-radius: 4px;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 28px;
+}
+
+.navbar ul li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.navbar ul li a:hover {
+  color: #0b5ed7;
+}
+
+.signin {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.signin i {
+  font-size: 24px;
+}
+
+.breadcrumb {
+  padding: 14px 24px;
+  border-bottom: 1px solid #eee;
+}
+
+.breadcrumb p {
+  font-size: 14px;
+  color: #666;
+}
+
+.breadcrumb a {
+  text-decoration: none;
+  color: #0b5ed7;
+}
+
+.hero {
+  text-align: center;
+  padding: 30px 20px 20px;
+}
+
+.hero h1 {
+  font-size: 46px;
+  color: #333;
+}
+
+.workout-section {
+  margin: 18px 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #fafafa;
+  overflow: hidden;
+}
+
+.day-title {
+  background: #ececec;
+  padding: 14px 18px;
+  font-size: 22px;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+}
+
+.day-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px 18px;
+}
+
+.exercise-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.exercise-link {
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 20px;
+  color: #222;
+}
+
+.side-box {
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.exercise-img {
+  width: 130px;
+  height: 120px;
+  object-fit: cover;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  background: #eee;
+}
+
+.add-btn {
+  padding: 10px 18px;
+  border: 1px solid #999;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.add-btn:hover {
+  background: #f0f0f0;
+}
+
+.footer {
+  margin: 20px;
+  padding: 16px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #f2f2f2;
+}
+
+.footer h3 {
+  margin-bottom: 8px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 999;
+}
+
+.modal-content {
+  background: #fff;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+}
+
+.small-modal {
+  max-width: 420px;
+}
+
+.close-btn {
+  position: absolute;
+  right: 16px;
+  top: 10px;
+  font-size: 30px;
+  cursor: pointer;
+  color: #333;
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+}
+
+.input-box {
+  margin-bottom: 18px;
+}
+
+.input-box label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #444;
+}
+
+.input-box input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.save-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  background: #0b5ed7;
+  color: #fff;
+}
+
+.save-btn:hover {
+  background: #094db1;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .navbar ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .day-content {
+    flex-direction: column;
+  }
+
+  .side-box {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .exercise-link {
+    font-size: 18px;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+  }
+
+  .day-title {
+    font-size: 18px;
+  }
+
+  .modal-content {
+    padding: 18px;
+  }
+}

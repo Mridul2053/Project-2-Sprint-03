@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weight Loss - Workout Builder</title>
+  <link rel="stylesheet" href="weightloss.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">LOGO</div>
+
+      <nav class="navbar">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#plans">Plans</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="signin">
+        <i class="fa-solid fa-circle-user"></i>
+        <span>Sign In</span>
+      </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <section class="breadcrumb">
+      <p><a href="index.html">Plans</a> &gt; Weight Loss</p>
+    </section>
+
+    <!-- Page Title -->
+    <section class="hero">
+      <h1>Weight Loss</h1>
+    </section>
+
+    <!-- Day 1 -->
+    <section class="workout-section">
+      <div class="day-title">Day 1 – Cardio &amp; Core</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day1-list">
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Jump Rope')">• Jump Rope</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Mountain Climbers')">• Mountain Climbers</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Plank')">• Plank</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/cardio.webp" alt="Cardio Workout" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day1-list', 'Day 1 – Cardio & Core')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 2 -->
+    <section class="workout-section">
+      <div class="day-title">Day 2 – Lower Body Fat Burn</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day2-list">
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Squats')">• Squats</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Lunges')">• Lunges</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Step-Ups')">• Step-Ups</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/squat.webp" alt="Lower Body Workout" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day2-list', 'Day 2 – Lower Body Fat Burn')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 3 -->
+    <section class="workout-section">
+      <div class="day-title">Day 3 – HIIT Training</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day3-list">
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Burpees')">• Burpees</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('High Knees')">• High Knees</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Jump Squats')">• Jump Squats</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/cardio.webp" alt="HIIT Workout" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day3-list', 'Day 3 – HIIT Training')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 4 -->
+    <section class="workout-section">
+      <div class="day-title">Day 4 – Upper Body &amp; Core</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day4-list">
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Push-Ups')">• Push-Ups</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Bicycle Crunches')">• Bicycle Crunches</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Russian Twists')">• Russian Twists</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/pushup.webp" alt="Upper Body Workout" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day4-list', 'Day 4 – Upper Body & Core')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 5 -->
+    <section class="workout-section">
+      <div class="day-title">Day 5 – Full Body Workout</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day5-list">
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Jumping Jacks')">• Jumping Jacks</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Bodyweight Squats')">• Bodyweight Squats</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Plank Shoulder Taps')">• Plank Shoulder Taps</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/Plank shoulder.webp" alt="Full Body Workout" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day5-list', 'Day 5 – Full Body Workout')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <h3>Footer</h3>
+      <p>© 2025 Workout Builder • Stay Fit • Stay Strong</p>
+    </footer>
+  </div>
+
+  <!-- Add Exercise Modal -->
+  <div id="addExerciseModal" class="modal">
+    <div class="modal-content small-modal">
+      <span class="close-btn" onclick="closeAddExerciseModal()">&times;</span>
+      <h2 id="addModalTitle">Add Exercise</h2>
+
+      <div class="input-box">
+        <label for="newExerciseInput">Exercise Name</label>
+        <input type="text" id="newExerciseInput" placeholder="Enter exercise name" />
+      </div>
+
+      <div class="modal-buttons">
+        <button class="save-btn" type="button" onclick="addNewExercise()">Add Exercise</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exercise Details Modal -->
+  <div id="exerciseModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeExerciseModal()">&times;</span>
+      <h2 id="exerciseModalTitle">Exercise Details</h2>
+
+      <div class="input-group">
+        <div class="input-box">
+          <label for="weightInput">Weight (kg)</label>
+          <input type="number" id="weightInput" placeholder="e.g. 5" />
+        </div>
+
+        <div class="input-box">
+          <label for="repsInput">Reps</label>
+          <input type="number" id="repsInput" placeholder="e.g. 10" />
+        </div>
+
+        <div class="input-box">
+          <label for="setsInput">Sets</label>
+          <input type="number" id="setsInput" placeholder="e.g. 3" />
+        </div>
+      </div>
+
+      <div class="modal-buttons">
+        <button class="save-btn" type="button" onclick="addExerciseDetail()">Add</button>
+        <button class="clear-btn" type="button" onclick="clearExerciseDetails()">Clear All</button>
+      </div>
+
+      <div id="exerciseDetailsList" class="details-list"></div>
+    </div>
+  </div>
+
+  <script src="weightloss.js"></script>
+</body>
+</html>

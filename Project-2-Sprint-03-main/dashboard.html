@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fitness Tracker - Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">Fitness Tracker</div>
+  <nav class="nav">
+    <a href="home.html">Home</a>
+    <a href="tracker.html">Nutrition Tracker</a>
+    <a href="workout.html">Workout Builder</a>
+    <a href="dashboard.html" class="active">Dashboard</a>
+    <a href="#" id="logout" class="logout-btn">Log Out</a>
+  </nav>
+</header>
+
+<main class="dashboard-container">
+
+  <!-- Welcome -->
+  <section class="welcome">
+    <h1>Welcome back, <span id="user-name">User</span> 👋</h1>
+    <p>Here is your fitness summary for today.</p>
+  </section>
+
+  <!-- Stats Cards -->
+  <section class="stats-grid">
+
+    <div class="card calories-card">
+      <h3>Calories</h3>
+      <p id="dash-calories">0 kcal</p>
+    </div>
+
+    <div class="card workout-card">
+      <h3>Workout</h3>
+      <p id="dash-workout">0 mins</p>
+    </div>
+
+    <div class="card steps-card">
+      <h3>Steps</h3>
+      <p id="dash-steps">0</p>
+    </div>
+
+    <div class="card water-card">
+      <h3>Water</h3>
+      <p id="dash-water">0 L</p>
+    </div>
+
+  </section>
+
+  <!-- Progress Section -->
+  <section class="progress-section">
+
+    <div class="progress-card goal-card">
+      <h2>Daily Goal Progress</h2>
+      <p>You achieved <strong id="goal-percent">0%</strong> of your daily calorie goal.</p>
+
+      <div class="progress-bar">
+        <div class="progress-fill" id="goal-bar" style="width: 0%;"></div>
+      </div>
+
+      <p id="goal-text">0 kcal of 2200 kcal target</p>
+    </div>
+
+    <div class="progress-card weight-card">
+      <h2>Weight Goal</h2>
+      <p>Current Weight: <strong id="current-weight">72 kg</strong></p>
+      <p>Target Weight: <strong id="target-weight">68 kg</strong></p>
+      <p id="weight-status">You are making progress toward your target.</p>
+    </div>
+
+  </section>
+
+  <!-- Bottom Section -->
+  <section class="bottom-grid">
+
+    <div class="activity-card">
+      <h2>Recent Activity</h2>
+      <ul id="recent-activity">
+        <li>🥗 No meals logged yet</li>
+        <li>💪 No workout updated yet</li>
+        <li>💧 No water intake updated yet</li>
+        <li>🚶 No step count updated yet</li>
+      </ul>
+    </div>
+
+    <div class="action-card">
+      <h2>Quick Actions</h2>
+
+      <div class="action-buttons">
+        <a href="tracker.html">🥗 Add Meal</a>
+        <a href="workout.html">💪 Start Workout</a>
+        <a href="#">⚖️ Update Weight</a>
+        <a href="#">📊 View Report</a>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Update Form -->
+  <section class="progress-card">
+    <h2>Update Daily Health Data</h2>
+
+    <form id="daily-data-form">
+
+      <div class="form-row">
+        <label>Workout Time (mins)</label>
+        <input type="number" id="workout-input" placeholder="Enter workout minutes">
+      </div>
+
+      <div class="form-row">
+        <label>Steps</label>
+        <input type="number" id="steps-input" placeholder="Enter steps">
+      </div>
+
+      <div class="form-row">
+        <label>Water Intake (L)</label>
+        <input type="number" step="0.1" id="water-input" placeholder="Enter water intake">
+      </div>
+
+      <button type="submit" class="save-btn">Save Data</button>
+
+    </form>
+  </section>
+
+</main>
+
+<script>
+/* USER NAME */
+function loadUserName() {
+  const user = localStorage.getItem("ft_user") || "User";
+  document.getElementById("user-name").textContent = user;
+}
+
+/* DASHBOARD DATA */
+function getDashboardData() {
+  return JSON.parse(localStorage.getItem("ft_dashboard")) || {
+    workout: 0,
+    steps: 0,
+    water: 0
+  };
+}
+
+function saveDashboardData(data) {
+  localStorage.setItem("ft_dashboard", JSON.stringify(data));
+}
+
+function updateDashboard() {
+  const data = getDashboardData();
+
+  document.getElementById("dash-workout").textContent = data.workout + " mins";
+  document.getElementById("dash-steps").textContent = data.steps.toLocaleString();
+  document.getElementById("dash-water").textContent = data.water + " L";
+
+  document.getElementById("workout-input").value = data.workout;
+  document.getElementById("steps-input").value = data.steps;
+  document.getElementById("water-input").value = data.water;
+}
+
+/* FORM SAVE */
+document.getElementById("daily-data-form").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const workout = +document.getElementById("workout-input").value || 0;
+  const steps = +document.getElementById("steps-input").value || 0;
+  const water = +document.getElementById("water-input").value || 0;
+
+  saveDashboardData({ workout, steps, water });
+  updateDashboard();
+});
+
+/* LOGOUT */
+document.getElementById("logout").addEventListener("click", function(e){
+  e.preventDefault();
+  localStorage.clear();
+  window.location.href = "index.html";
+});
+
+/* INIT */
+loadUserName();
+updateDashboard();
+</script>
+
+</body>
+</html>

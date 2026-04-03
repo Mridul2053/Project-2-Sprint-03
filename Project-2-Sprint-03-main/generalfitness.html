@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>General Fitness - Workout Builder</title>
+  <link rel="stylesheet" href="generalfitness.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+<body>
+  <div class="container">
+
+    <header class="header">
+      <div class="logo">LOGO</div>
+
+      <nav class="navbar">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#plans">Plans</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="signin">
+        <i class="fa-solid fa-circle-user"></i>
+        <span>Sign In</span>
+      </div>
+    </header>
+
+    <section class="breadcrumb">
+      <p><a href="index.html">Plans</a> &gt; General Fitness</p>
+    </section>
+
+    <section class="hero">
+      <h1>General Fitness</h1>
+    </section>
+
+    <!-- Day 1 -->
+    <section class="workout-section">
+      <div class="day-title">Day 1 – Light Cardio</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day1-list">
+          <button class="exercise-link" type="button">• Brisk Walking</button>
+          <button class="exercise-link" type="button">• Jumping Jacks</button>
+          <button class="exercise-link" type="button">• Light Jogging</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/Jumping jacks.webp" alt="Light Cardio" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day1-list', 'Day 1 – Light Cardio')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 2 -->
+    <section class="workout-section">
+      <div class="day-title">Day 2 – Full Body Basics</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day2-list">
+          <button class="exercise-link" type="button">• Bodyweight Squats</button>
+          <button class="exercise-link" type="button">• Wall Push-Ups</button>
+          <button class="exercise-link" type="button">• Lunges</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/wall pushup.webp" alt="Full Body Basics" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day2-list', 'Day 2 – Full Body Basics')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 3 -->
+    <section class="workout-section">
+      <div class="day-title">Day 3 – Flexibility & Stretching</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day3-list">
+          <button class="exercise-link" type="button">• Hamstring Stretch</button>
+          <button class="exercise-link" type="button">• Shoulder Stretch</button>
+          <button class="exercise-link" type="button">• Child Pose</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/Child pose.webp" alt="Stretching Workout" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day3-list', 'Day 3 – Flexibility & Stretching')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 4 -->
+    <section class="workout-section">
+      <div class="day-title">Day 4 – Core & Stability</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day4-list">
+          <button class="exercise-link" type="button">• Bird Dog</button>
+          <button class="exercise-link" type="button">• Glute Bridge</button>
+          <button class="exercise-link" type="button">• Side Plank</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/side plank 1.webp" alt="Core and Stability" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day4-list', 'Day 4 – Core & Stability')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 5 -->
+    <section class="workout-section">
+      <div class="day-title">Day 5 – Active Recovery</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day5-list">
+          <button class="exercise-link" type="button">• Walking</button>
+          <button class="exercise-link" type="button">• Light Cycling</button>
+          <button class="exercise-link" type="button">• Deep Breathing</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/cycling.webp" alt="Active Recovery" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day5-list', 'Day 5 – Active Recovery')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <h3>Footer</h3>
+      <p>© 2025 Workout Builder • Stay Fit • Stay Strong</p>
+    </footer>
+  </div>
+
+  <!-- Add Exercise Modal -->
+  <div id="addExerciseModal" class="modal">
+    <div class="modal-content small-modal">
+      <span class="close-btn" onclick="closeAddExerciseModal()">&times;</span>
+      <h2 id="addModalTitle">Add Exercise</h2>
+
+      <div class="input-box">
+        <label for="newExerciseInput">Exercise Name</label>
+        <input type="text" id="newExerciseInput" placeholder="Enter exercise name" />
+      </div>
+
+      <div class="modal-buttons">
+        <button class="save-btn" type="button" onclick="addNewExercise()">Add Exercise</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="generalfitness.js"></script>
+</body>
+</html>

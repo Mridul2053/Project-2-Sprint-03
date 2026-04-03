@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muscle Gain - Workout Builder</title>
+  <link rel="stylesheet" href="musclegain.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+<body>
+  <div class="container">
+
+    <header class="header">
+      <div class="logo">LOGO</div>
+
+      <nav class="navbar">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#plans">Plans</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="signin">
+        <i class="fa-solid fa-circle-user"></i>
+        <span>Sign In</span>
+      </div>
+    </header>
+
+    <section class="breadcrumb">
+      <p><a href="index.html">Plans</a> &gt; Muscle Gain</p>
+    </section>
+
+    <section class="hero">
+      <h1>Muscle Gain</h1>
+    </section>
+
+    <!-- Day 1 -->
+    <section class="workout-section">
+      <div class="day-title">Day 1 – Chest &amp; Triceps</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day1-list">
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Bench Press')">• Bench Press</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Incline Dumbbell Press')">• Incline Dumbbell Press</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Triceps Dips')">• Triceps Dips</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/triceps.webp" alt="triceps Workout" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day1-list', 'Day 1 – Chest & Triceps')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 2 -->
+    <section class="workout-section">
+      <div class="day-title">Day 2 – Back &amp; Biceps</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day2-list">
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Pull-Ups')">• Pull-Ups</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Bent Over Rows')">• Bent Over Rows</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Biceps Curl')">• Biceps Curl</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/Back.webp" alt="Back and Biceps Workout" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day2-list', 'Day 2 – Back & Biceps')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 3 -->
+    <section class="workout-section">
+      <div class="day-title">Day 3 – Legs</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day3-list">
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Squats')">• Squats</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Leg Press')">• Leg Press</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Calf Raises')">• Calf Raises</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/leg.webp" alt="Legs Workout" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day3-list', 'Day 3 – Legs')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 4 -->
+    <section class="workout-section">
+      <div class="day-title">Day 4 – Shoulders</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day4-list">
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Overhead Press')">• Overhead Press</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Lateral Raises')">• Lateral Raises</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Rear Delt Flys')">• Rear Delt Flys</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/shoulder.webp" alt="Shoulder Workout" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day4-list', 'Day 4 – Shoulders')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 5 -->
+    <section class="workout-section">
+      <div class="day-title">Day 5 – Full Body</div>
+      <div class="day-content">
+        <div class="exercise-list" id="day5-list">
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Deadlift')">• Deadlift</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Pull-Ups')">• Pull-Ups</button>
+          <button class="exercise-link" type="button" onclick="openExerciseModal('Dumbbell Lunges')">• Dumbbell Lunges</button>
+        </div>
+
+        <div class="side-box">
+          <img src="assets/pullups.webp" alt="Full Body Workout" class="exercise-img" />
+          <button class="add-btn" type="button" onclick="openAddExerciseModal('day5-list', 'Day 5 – Full Body')">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <h3>Footer</h3>
+      <p>© 2025 Workout Builder • Stay Fit • Stay Strong</p>
+    </footer>
+  </div>
+
+  <!-- Add Exercise Modal -->
+  <div id="addExerciseModal" class="modal">
+    <div class="modal-content small-modal">
+      <span class="close-btn" onclick="closeAddExerciseModal()">&times;</span>
+      <h2 id="addModalTitle">Add Exercise</h2>
+
+      <div class="input-box">
+        <label for="newExerciseInput">Exercise Name</label>
+        <input type="text" id="newExerciseInput" placeholder="Enter exercise name" />
+      </div>
+
+      <div class="modal-buttons">
+        <button class="save-btn" type="button" onclick="addNewExercise()">Add Exercise</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exercise Details Modal -->
+  <div id="exerciseModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeExerciseModal()">&times;</span>
+      <h2 id="exerciseModalTitle">Exercise Details</h2>
+
+      <div class="input-group">
+        <div class="input-box">
+          <label for="weightInput">Weight (kg)</label>
+          <input type="number" id="weightInput" placeholder="e.g. 20" />
+        </div>
+
+        <div class="input-box">
+          <label for="repsInput">Reps</label>
+          <input type="number" id="repsInput" placeholder="e.g. 8" />
+        </div>
+
+        <div class="input-box">
+          <label for="setsInput">Sets</label>
+          <input type="number" id="setsInput" placeholder="e.g. 4" />
+        </div>
+      </div>
+
+      <div class="modal-buttons">
+        <button class="save-btn" type="button" onclick="addExerciseDetail()">Add</button>
+        <button class="clear-btn" type="button" onclick="clearExerciseDetails()">Clear All</button>
+      </div>
+
+      <div id="exerciseDetailsList" class="details-list"></div>
+    </div>
+  </div>
+
+  <script src="musclegain.js"></script>
+</body>
+</html>
