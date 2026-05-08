@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Activity Tracking - FitTracker</title>
+    <link rel="stylesheet" href="activity.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="logo">FitTracker</div>
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="profile.html">Profile</a>
+        <a href="tracker.html">Nutrition</a>
+        <a href="Workout.html">Workout</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="activity.html" class="active">Activity</a>
+        <a href="settingspage.html">Settings</a>
+    </nav>
+    <div class="user">Admin ⌄</div>
+</header>
+
+<!-- PAGE TITLE -->
+<section class="title-section">
+    <h1>ACTIVITY TRACKING</h1>
+</section>
+
+<!-- SUMMARY CARDS -->
+<section class="cards">
+    <div class="card">
+        <h3>Total Activities</h3>
+        <p class="big">12</p>
+        <span>This Month</span>
+    </div>
+
+    <div class="card">
+        <h3>Total Duration</h3>
+        <p class="big">6h 30m</p>
+        <span>This Month</span>
+    </div>
+
+    <div class="card">
+        <h3>Calories Burned</h3>
+        <p class="big">3200</p>
+        <span>This Month</span>
+    </div>
+
+    <div class="card">
+        <h3>Longest Activity</h3>
+        <p class="big">1h 15m</p>
+        <span>10 May</span>
+    </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<section class="main">
+
+    <!-- LEFT SIDE -->
+    <div class="activity-list">
+
+        <div class="section-header">
+            <h2>Activity List</h2>
+            <button class="btn">+ Add Activity</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Activity</th>
+                    <th>Duration</th>
+                    <th>Calories</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+             <tbody>
+                <tr>
+                    <td>12 May</td>
+                    <td>Running</td>
+                    <td>30 min</td>
+                    <td>250 kcal</td>
+                    <td>Morning run</td>
+                    <td>✏️ 🗑️</td>
+                </tr>
+
+                <tr>
+                    <td>11 May</td>
+                    <td>Gym</td>
+                    <td>45 min</td>
+                    <td>400 kcal</td>
+                    <td>Chest day</td>
+                    <td>✏️ 🗑️</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="sidebar">
+
+        <div class="box">
+            <h3>Weekly Activity</h3>
+            <div class="bars">
+                <div style="height:40%"></div>
+                <div style="height:70%"></div>
+                <div style="height:30%"></div>
+                <div style="height:90%"></div>
+                <div style="height:60%"></div>
+                <div style="height:65%"></div>
+                <div style="height:25%"></div>
+            </div>
+        </div>
+
+        <div class="box">
+            <h3>Activity Goals</h3>
+
+            <p>Weekly Goal (5/7)</p>
+            <div class="progress">
+                <div style="width:70%"></div>
+            </div>
+
+            <p>Monthly Goal (12/20)</p>
+            <div class="progress">
+                <div style="width:60%"></div>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- QUICK ADD -->
+<section class="quick-add">
+
+    <h2>Quick Add Activity</h2>
+
+    <div class="form">
+        <input type="text" placeholder="Activity Type">
+        <input type="number" placeholder="Duration (min)">
+        <input type="number" placeholder="Calories">
+        <input type="date">
+        <input type="text" placeholder="Notes">
+        <button class="btn">Add</button>
+    </div>
+
+</section>
+
+</body>
+</html>

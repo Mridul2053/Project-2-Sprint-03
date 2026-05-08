@@ -1,0 +1,158 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f5f5f5;
+    color: #222;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 40px;
+    border-bottom: 1px solid #ccc;
+    background: #fff;
+}
+
+.navbar nav a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #444;
+}
+
+.navbar nav .active {
+    font-weight: bold;
+    border-bottom: 2px solid black;
+}
+
+/* TITLE */
+.title-section {
+    text-align: center;
+    padding: 30px;
+}
+
+/* CARDS */
+.cards {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.card .big {
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+/* MAIN LAYOUT */
+.main {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* ACTIVITY LIST */
+.activity-list {
+    flex: 2;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+/* SIDEBAR */
+.sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* BARS */
+.bars {
+    display: flex;
+    align-items: flex-end;
+    height: 120px;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.bars div {
+    flex: 1;
+    background: #333;
+}
+
+/* PROGRESS */
+.progress {
+    background: #ddd;
+    height: 8px;
+    border-radius: 5px;
+    margin: 5px 0 15px;
+}
+
+.progress div {
+    height: 100%;
+    background: black;
+    border-radius: 5px;
+}
+
+/* QUICK ADD */
+.quick-add {
+    padding: 20px;
+}
+
+.form {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* BUTTON */
+.btn {
+    padding: 10px 15px;
+    border: none;
+    background: black;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}

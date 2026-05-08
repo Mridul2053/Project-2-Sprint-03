@@ -1,12 +1,13 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
+const path = require('path');
 
 const app = express();
 app.use(bodyParser.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-const db = new sqlite3.Database('./database.db');
+const db = new sqlite3.Database('./fittracker.db');
 
 // CREATE TABLE
 db.run(`
@@ -16,6 +17,9 @@ CREATE TABLE IF NOT EXISTS users(
   password TEXT
 )
 `);
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // REGISTER
 app.post('/register',(req,res)=>{

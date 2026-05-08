@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitTracker</title>
+  <link rel="stylesheet" href="admin.dashboard.css" />
+</head>
+
+<body>
+
+<header class="navbar">
+  <div class="brand">
+    <div class="logo">
+      <img src="assets/fittracker-logo.png" alt="Logo">
+    </div>
+    <span>FitTracker</span>
+  </div>
+
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Profile</a>
+    <a href="#">Nutrition</a>
+    <a href="#">Workout</a>
+    <a href="#">Dashboard</a>
+   <a href="admin.login.html" onclick="logoutAdmin()" class="logout-btn">Log Out</a>
+  </nav>
+
+  <div class="admin-profile" id="adminName">👤 Admin</div>
+</header>
+
+<main class="dashboard">
+
+  <div class="top-row">
+    <input 
+      type="text" 
+      id="searchInput" 
+      class="search-box" 
+      placeholder="Search users 🔍"
+      onkeyup="searchUsers()"
+    />
+    <h1>Dashboard Overview</h1>
+  </div>
+
+  <section class="cards">
+    <div class="card">
+      <p>Total Users</p>
+      <h2 id="totalUsers">0</h2>
+    </div>
+
+    <div class="card">
+      <p>Active Users</p>
+      <h2 id="activeUsers">0</h2>
+    </div>
+
+    <div class="card">
+      <p>Total Workouts</p>
+      <h2 id="totalWorkouts">0</h2>
+    </div>
+
+    <div class="card">
+      <p>Total Plans</p>
+      <h2 id="totalPlans">0</h2>
+    </div>
+  </section>
+
+  <h2 class="title">Recent Users</h2>
+
+  <section class="table-box">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Joined On</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="userTable"></tbody>
+    </table>
+  </section>
+
+  <h2 class="title">Quick Actions</h2>
+
+  <section class="actions">
+    <div class="action-row">
+      <button type="button" onclick="openAddUserModal()">Add New Users</button>
+      <span>+</span>
+    </div>
+
+    <div class="action-row">
+      <button type="button" onclick="openNutritionModal()">Add Nutrition Item</button>
+      <span>+</span>
+    </div>
+
+    <div class="action-row">
+      <button type="button" onclick="openWorkoutModal()">Add New Workouts</button>
+      <span>+</span>
+    </div>
+
+    <div class="action-row">
+      <button type="button" onclick="openReportsModal()">View Reports</button>
+      <span>+</span>
+    </div>
+
+    <div class="action-row">
+      <button type="button" onclick="openDeleteWorkoutModal()">Delete Workout</button>
+      <span>-</span>
+    </div>
+
+    <div class="action-row">
+      <button type="button" onclick="openDeleteNutritionModal()">Delete Nutrition</button>
+      <span>-</span>
+    </div>
+  </section>
+
+  <div class="bottom">
+    <p>2026 FitTracker Admin Panel</p>
+  </div>
+
+</main>
+
+<!-- WHITE MODAL POPUP -->
+<div id="customModal" class="modal-overlay">
+  <div class="modal-box">
+
+    <div class="modal-header">
+      <h2 id="modalTitle">Add</h2>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+
+    <div class="modal-body" id="modalBody"></div>
+
+    <div class="modal-footer">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-submit" onclick="submitModal()">Add</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let allUsers = [];
+let modalType = "";
+
+async function loadUsers() {
+  const res = await fetch("http://localhost:5000/api/users");
+  allUsers = await res.json();
+  displayUsers(allUsers);
+}
+
+function displayUsers(users) {
+  const table = document.getElementById("userTable");
+  table.innerHTML = "";
+
+  users.forEach(user => {
+    const date = new Date(user.joined_date).toLocaleDateString("en-GB");
+
+    table.innerHTML += `
+      <tr>
+        <td>${user.id}</td>
+        <td>${user.name}</td>
+        <td>${user.email}</td>
+        <td>${date}</td>
+        <td>${user.status}</td>
+        <td>
+          <button class="delete-btn" onclick="deleteUser(${user.id})">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+function searchUsers() {
+  const keyword = document.getElementById("searchInput").value.toLowerCase();
+
+  const filtered = allUsers.filter(user =>
+    user.name.toLowerCase().includes(keyword) ||
+    user.email.toLowerCase().includes(keyword) ||
+    user.status.toLowerCase().includes(keyword)
+  );
+
+  displayUsers(filtered);
+}
+
+async function loadStats() {
+  const res = await fetch("http://localhost:5000/api/admin/stats");
+  const data = await res.json();
+
+  document.getElementById("totalUsers").innerText = data.totalUsers;
+  document.getElementById("activeUsers").innerText = data.activeUsers;
+  document.getElementById("totalWorkouts").innerText = data.totalWorkouts;
+  document.getElementById("totalPlans").innerText = data.totalPlans;
+}
+
+function openModal(title, bodyHtml, buttonText, type) {
+  modalType = type;
+  document.getElementById("modalTitle").innerText = title;
+  document.getElementById("modalBody").innerHTML = bodyHtml;
+  document.querySelector(".modal-submit").innerText = buttonText;
+  document.getElementById("customModal").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("customModal").style.display = "none";
+}
+
+function openAddUserModal() {
+  openModal(
+    "Add User",
+    `
+      <label>User Name</label>
+      <input id="modalName" type="text" placeholder="e.g. John Smith">
+
+      <label>Email</label>
+      <input id="modalEmail" type="email" placeholder="e.g. john@email.com">
+
+      <label>Status</label>
+      <input id="modalStatus" type="text" placeholder="Active or De-Active">
+    `,
+    "Add",
+    "addUser"
+  );
+}
+
+function openWorkoutModal() {
+  openModal(
+    "Add Workout",
+    `
+      <label>Workout Name</label>
+      <input id="modalTitleInput" type="text" placeholder="e.g. Cable Row">
+
+      <label>Category</label>
+      <input id="modalCategory" type="text" placeholder="e.g. Back">
+    `,
+    "Add",
+    "addWorkout"
+  );
+}
+
+function openNutritionModal() {
+  openModal(
+    "Add Nutrition Item",
+    `
+      <label>Nutrition Name</label>
+      <input id="modalName" type="text" placeholder="e.g. Chicken Salad">
+
+      <label>Calories</label>
+      <input id="modalCalories" type="number" placeholder="e.g. 350">
+    `,
+    "Add",
+    "addNutrition"
+  );
+}
+
+function openDeleteWorkoutModal() {
+  openModal(
+    "Delete Workout",
+    `
+      <label>Workout ID</label>
+      <input id="modalId" type="number" placeholder="Enter workout ID">
+    `,
+    "Delete",
+    "deleteWorkout"
+  );
+}
+
+function openDeleteNutritionModal() {
+  openModal(
+    "Delete Nutrition",
+    `
+      <label>Nutrition ID</label>
+      <input id="modalId" type="number" placeholder="Enter nutrition ID">
+    `,
+    "Delete",
+    "deleteNutrition"
+  );
+}
+
+function openReportsModal() {
+  openModal(
+    "Reports",
+    `
+      <p class="report-message">Reports feature coming soon.</p>
+    `,
+    "Done",
+    "reports"
+  );
+}
+
+async function submitModal() {
+  if (modalType === "addUser") {
+    const name = document.getElementById("modalName").value;
+    const email = document.getElementById("modalEmail").value;
+    const status = document.getElementById("modalStatus").value;
+
+    if (!name || !email || !status) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    await fetch("http://localhost:5000/api/users", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ name, email, status })
+    });
+
+    alert("User added successfully");
+    loadUsers();
+    loadStats();
+  }
+
+  if (modalType === "addWorkout") {
+    const title = document.getElementById("modalTitleInput").value;
+    const category = document.getElementById("modalCategory").value;
+
+    if (!title || !category) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    await fetch("http://localhost:5000/api/workouts", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ title, category })
+    });
+
+    alert("Workout added successfully");
+    loadStats();
+  }
+
+  if (modalType === "addNutrition") {
+    const name = document.getElementById("modalName").value;
+    const calories = document.getElementById("modalCalories").value;
+
+    if (!name || !calories) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    await fetch("http://localhost:5000/api/nutrition", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ name, calories })
+    });
+
+    alert("Nutrition item added successfully");
+  }
+
+  if (modalType === "deleteWorkout") {
+    const id = document.getElementById("modalId").value;
+
+    if (!id) {
+      alert("Please enter workout ID");
+      return;
+    }
+
+    await fetch(`http://localhost:5000/api/workouts/${id}`, {
+      method: "DELETE"
+    });
+
+    alert("Workout deleted");
+    loadStats();
+  }
+
+  if (modalType === "deleteNutrition") {
+    const id = document.getElementById("modalId").value;
+
+    if (!id) {
+      alert("Please enter nutrition ID");
+      return;
+    }
+
+    await fetch(`http://localhost:5000/api/nutrition/${id}`, {
+      method: "DELETE"
+    });
+
+    alert("Nutrition deleted");
+  }
+
+  if (modalType === "reports") {
+    closeModal();
+    return;
+  }
+
+  closeModal();
+}
+
+async function deleteUser(id) {
+  openModal(
+    "Delete User",
+    `
+      <p class="report-message">Are you sure you want to delete this user?</p>
+      <input id="deleteUserId" type="hidden" value="${id}">
+    `,
+    "Delete",
+    "deleteUser"
+  );
+}
+
+document.addEventListener("click", async function(e) {
+  if (e.target.classList.contains("modal-submit") && modalType === "deleteUser") {
+    const id = document.getElementById("deleteUserId").value;
+
+    await fetch(`http://localhost:5000/api/users/${id}`, {
+      method: "DELETE"
+    });
+
+    alert("User deleted");
+    closeModal();
+    loadUsers();
+    loadStats();
+  }
+});
+
+function showAdminName() {
+  const name = localStorage.getItem("adminName");
+  if (name) {
+    document.getElementById("adminName").innerText = "👤 " + name;
+  }
+}
+
+showAdminName();
+loadUsers();
+loadStats();
+</script>
+
+</body>
+</html>

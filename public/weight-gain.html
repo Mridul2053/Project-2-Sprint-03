@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weight Gain Plan</title>
+  <link rel="stylesheet" href="weight.css" />
+</head>
+<body>
+
+<div class="container">
+
+  <header class="header">
+    <div class="logo">LOGO</div>
+
+    <nav>
+      <ul>
+        <li><a href="workout-plan.html">Home</a></li>
+        <li><a href="workout-plan.html">Plans</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="signin">Sign In</div>
+  </header>
+
+  <div class="breadcrumb">
+    <a href="workout-plan.html">Plans</a> &gt; Weight Gain
+  </div>
+
+  <h1 class="title">Weight Gain</h1>
+
+  <!-- DAY 1 -->
+  <div class="day-card">
+    <h3>Day 1 – Chest & Triceps</h3>
+    <div class="day-content">
+      <ul>
+        <li>Bench Press</li>
+        <li>Triceps Dips</li>
+        <li>Chest Fly</li>
+      </ul>
+
+      <div class="side">
+        <div class="image-container">
+          <img src="Images/chest.jpg" alt="Chest Workout" class="workout-img">
+        </div>
+        <button class="add-btn" onclick="openModal('Bench Press')">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 2 -->
+  <div class="day-card">
+    <h3>Day 2 – Back & Biceps</h3>
+    <div class="day-content">
+      <ul>
+        <li>Seated Row</li>
+        <li>Lat Pulldown</li>
+        <li>Biceps Curl</li>
+      </ul>
+
+      <div class="side">
+        <div class="image-container">
+          <img src="C:\Users\ishan\Desktop\Project 2\Images\back and biceps.jpeg" alt="Back and Biceps Workout" class="workout-img">
+        </div>
+        <button class="add-btn" onclick="openModal('Lat Pulldown')">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 3 -->
+  <div class="day-card">
+    <h3>Day 3 – Legs</h3>
+    <div class="day-content">
+      <ul>
+        <li>Squats</li>
+        <li>Leg Press</li>
+        <li>Leg Curl</li>
+      </ul>
+
+      <div class="side">
+        <div class="image-container">
+          <img src="Images/legs.webp" alt="Legs Workout" class="workout-img">
+        </div>
+        <button class="add-btn" onclick="openModal('Squats')">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 4 -->
+  <div class="day-card">
+    <h3>Day 4 – Shoulders</h3>
+    <div class="day-content">
+      <ul>
+        <li>Shoulder Press</li>
+        <li>Lateral Raises</li>
+        <li>Front Raises</li>
+      </ul>
+
+      <div class="side">
+        <div class="image-container">
+          <img src="Images/shoulders.jpg" alt="Shoulders Workout" class="workout-img">
+        </div>
+        <button class="add-btn" onclick="openModal('Shoulder Press')">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 5 -->
+  <div class="day-card">
+    <h3>Day 5 – Full Body</h3>
+    <div class="day-content">
+      <ul>
+        <li>Deadlift</li>
+        <li>Push-ups</li>
+        <li>Pull-ups</li>
+        <li>Plank</li>
+      </ul>
+
+      <div class="side">
+        <div class="image-container">
+          <img src="C:\Users\ishan\Desktop\Project 2\Images\full body.jpg" alt="Full Body Workout" class="workout-img">
+        </div>
+        <button class="add-btn" onclick="openModal('Deadlift')">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>© 2025 Workout Builder • Stay Fit • Stay Strong</p>
+  </footer>
+</div>
+
+<!-- MODAL -->
+<div id="workoutModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <h2 id="exerciseTitle">Exercise Name</h2>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="weight">Weight (kg)</label>
+        <input type="number" id="weight" placeholder="Enter weight">
+      </div>
+
+      <div class="form-group">
+        <label for="reps">Reps</label>
+        <input type="number" id="reps" placeholder="Enter reps">
+      </div>
+
+      <div class="form-group">
+        <label for="sets">Sets</label>
+        <input type="number" id="sets" placeholder="Enter sets">
+      </div>
+    </div>
+
+    <div class="modal-buttons">
+      <button class="primary-btn" onclick="addWorkout()">Add</button>
+      <button class="secondary-btn" onclick="clearAll()">Clear All</button>
+    </div>
+
+    <div id="workoutList" class="workout-list"></div>
+  </div>
+</div>
+
+<script src="weight.js"></script>
+</body>
+</html>

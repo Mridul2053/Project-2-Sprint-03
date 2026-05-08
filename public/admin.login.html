@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitTracker</title>
+  <link rel="stylesheet" href="admin.login.css">
+</head>
+<body>
+
+<header class="navbar">
+
+  <div class="brand">
+    <div class="logo">
+  <img src="assests/fittracker-logo.png" alt="Logo">
+</div>
+    <span>FitTracker Admin</span>
+  </div>
+
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Profile</a>
+    <a href="#">Nutrition</a>
+    <a href="#">Workout</a>
+    <a href="#">Dashboard</a>
+    <a href="#">Admin</a>
+  </nav>
+
+  <div class="admin-profile">
+    👤 <span id="adminName">Admin</span>
+  </div>
+
+</header>
+
+<main class="login-layout">
+
+  <!-- LEFT SIDE -->
+  <section class="left-section">
+    <img src="image/admin 1.png" alt="Admin" class="admin-img">
+
+    <h2 class="tagline">Manage, Monitor, Motivate</h2>
+
+    <h3>Access Keys</h3>
+    <p>User Management</p>
+    <p>Workout Plans</p>
+    <p>Track Progress</p>
+  </section>
+
+  <!-- RIGHT SIDE -->
+  <section class="login-card">
+    <h1>Admin Login</h1>
+    <p class="subtitle">Sign in to your admin Account</p>
+
+    <label>Email Address</label>
+    <input type="email" id="email" placeholder="Enter your email">
+
+    <label>Password</label>
+    <div class="password-box">
+      <input type="password" id="password" placeholder="Enter your password">
+      <span onclick="togglePassword()">👁️</span>
+    </div>
+
+    <div class="options">
+      <label class="remember">
+        <input type="checkbox">
+        <span>Remember me</span>
+      </label>
+      <a href="#">Forgot Password?</a>
+    </div>
+
+    <button onclick="loginAdmin()">Login</button>
+
+    <p class="or">Or</p>
+
+    <button class="admin-key">Login With Admin Key</button>
+  </section>
+
+</main>
+
+<footer>2026 FitTracker Admin Panel</footer>
+
+<script>
+function loginAdmin() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    alert("Please enter email and password");
+    return;
+  }
+
+  localStorage.setItem("adminName", email.split("@")[0]);
+  window.location.href = "admin.dashboard.html";
+}
+
+function togglePassword() {
+  const pass = document.getElementById("password");
+  pass.type = pass.type === "password" ? "text" : "password";
+}
+</script>
+
+</body>
+</html>

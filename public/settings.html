@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitTracker Settings</title>
+  <link rel="stylesheet" href="settings.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="topbar">
+
+  <div class="brand">
+    <div class="logo">Logo</div>
+    <strong>FitTracker</strong>
+  </div>
+
+  <nav class="nav">
+    <a href="home.html">Home</a>
+    <a href="profile.html">Profile</a>
+    <a href="nutrition.html">Nutrition</a>
+    <a href="Workout.html">Workout</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="settingspage.html" class="active">Settings</a>
+  </nav>
+
+  <div class="profile-icon">👤</div>
+
+</header>
+
+<!-- PAGE -->
+<main class="page">
+
+  <h1>Settings</h1>
+
+  <p class="subtitle">
+    Manage your FitTracker preferences and account details.
+  </p>
+
+  <!-- GRID -->
+  <section class="settings-grid">
+
+    <!-- PROFILE SETTINGS -->
+    <div class="card">
+
+      <h2>Profile Settings</h2>
+
+      <label>Name</label>
+      <input type="text" id="name">
+
+      <label>Email</label>
+      <input type="email" id="email">
+
+      <label>Weight</label>
+      <input type="number" id="weight">
+
+      <label>Fitness Goal</label>
+
+      <select id="goal">
+        <option>Weight Loss</option>
+        <option>Weight Gain</option>
+        <option>Muscle Gain</option>
+        <option>General Fitness</option>
+      </select>
+
+    </div>
+
+    <!-- FITNESS GOALS -->
+    <div class="card">
+
+      <h2>Fitness Goals</h2>
+
+      <label>Daily Calories</label>
+      <input type="number" id="calories">
+
+      <label>Water Intake (L)</label>
+      <input type="number" id="water">
+
+      <label>Step Goal</label>
+      <input type="number" id="steps">
+
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="card">
+
+      <h2>Notifications</h2>
+
+      <div class="setting-row">
+        <span>Workout Reminder</span>
+        <button class="toggle on">ON</button>
+      </div>
+
+      <div class="setting-row">
+        <span>Water Reminder</span>
+        <button class="toggle off">OFF</button>
+      </div>
+
+      <div class="setting-row">
+        <span>Meal Reminder</span>
+        <button class="toggle on">ON</button>
+      </div>
+
+    </div>
+
+    <!-- APPEARANCE -->
+    <div class="card">
+
+      <h2>Appearance</h2>
+
+      <div class="setting-row">
+        <span>Dark Mode</span>
+        <button class="toggle off" id="darkModeBtn">OFF</button>
+      </div>
+
+      <div class="setting-row">
+        <span>Compact View</span>
+        <button class="toggle off">OFF</button>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ACCOUNT -->
+  <section class="card account-card">
+
+    <h2>Account</h2>
+
+    <div class="account-actions">
+
+      <button class="outline-btn" id="changePasswordBtn">
+        Change Password
+      </button>
+
+      <button class="danger-btn" id="logoutBtn">
+        Logout
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- SAVE BUTTON -->
+  <div class="save-area">
+
+    <button class="save-btn" id="saveBtn">
+      Save Changes
+    </button>
+
+  </div>
+
+</main>
+
+<script src="settings.js"></script>
+
+</body>
+</html>
