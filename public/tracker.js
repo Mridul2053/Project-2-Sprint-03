@@ -159,3 +159,148 @@ function refresh(){
   renderMeals();
   draw();
 }
+// ======================
+// MODAL + FOOD FORM
+// ======================
+
+const modal = document.getElementById('modal');
+const modalClose = document.getElementById('modal-close');
+const cancelFood = document.getElementById('cancel-food');
+const foodForm = document.getElementById('food-form');
+
+function openModal(item = {}) {
+
+  modal.style.display = 'flex';
+
+  document.getElementById('edit-id').value = item.id || '';
+
+  document.getElementById('food-name').value = item.name || '';
+
+  document.getElementById('food-meal').value =
+    item.meal || 'breakfast';
+
+  document.getElementById('food-kcal').value =
+    item.kcal || '';
+
+  document.getElementById('food-carbs').value =
+    item.carbs || '';
+
+  document.getElementById('food-protein').value =
+    item.protein || '';
+
+  document.getElementById('food-fat').value =
+    item.fat || '';
+
+}
+
+function closeModal() {
+
+  modal.style.display = 'none';
+
+  foodForm.reset();
+
+}
+
+modalClose.onclick = closeModal;
+
+cancelFood.onclick = closeModal;
+
+// ======================
+// SAVE FOOD
+// ======================
+
+foodForm.addEventListener('submit', (e) => {
+
+  e.preventDefault();
+
+  const id = document.getElementById('edit-id').value;
+
+  const item = {
+
+    id: id || uid(),
+
+    name: document.getElementById('food-name').value,
+
+    meal: document.getElementById('food-meal').value,
+
+    kcal: Number(document.getElementById('food-kcal').value),
+
+    carbs: Number(document.getElementById('food-carbs').value),
+
+    protein: Number(document.getElementById('food-protein').value),
+
+    fat: Number(document.getElementById('food-fat').value)
+
+  };
+
+  let list = day();
+
+  // EDIT EXISTING
+  if(id){
+
+    list = list.map(x => x.id === id ? item : x);
+
+  } else {
+
+    // ADD NEW
+    list.push(item);
+
+  }
+
+  setDay(list);
+
+  closeModal();
+
+  refresh();
+
+});
+
+// ======================
+// GOALS FORM
+// ======================
+
+document.getElementById('goals-form')
+.addEventListener('submit', (e) => {
+
+  e.preventDefault();
+
+  const g = {
+
+    kcal: Number(document.getElementById('goal-kcal').value),
+
+    carbs: Number(document.getElementById('goal-carbs').value),
+
+    protein: Number(document.getElementById('goal-protein').value),
+
+    fat: Number(document.getElementById('goal-fat').value)
+
+  };
+
+  saveGoals(g);
+
+  refresh();
+
+  alert('Goals saved successfully!');
+
+});
+
+// ======================
+// LOGOUT
+// ======================
+
+document.getElementById('logout')
+.addEventListener('click', (e) => {
+
+  e.preventDefault();
+
+  localStorage.removeItem('ft_token');
+
+  window.location.href = 'index.html';
+
+});
+
+// ======================
+// INITIAL LOAD
+// ======================
+
+refresh();

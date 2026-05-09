@@ -299,7 +299,65 @@ body {
   border-left: 3px solid var(--primary);
   border-radius: 8px;
 }
+.premium-card{
 
+  margin-top:30px;
+  background:linear-gradient(135deg,#690500,#a30d00);
+  color:white;
+
+  border-radius:20px;
+
+  padding:30px;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+
+  flex-wrap:wrap;
+
+  box-shadow:0 10px 30px rgba(0,0,0,0.15);
+
+}
+
+.premium-left h2{
+
+  margin-bottom:10px;
+  font-size:30px;
+
+}
+
+.premium-left p{
+
+  opacity:0.9;
+  max-width:500px;
+  line-height:1.6;
+
+}
+
+.premium-btn{
+
+  background:white;
+  color:#690500;
+
+  padding:14px 24px;
+
+  border-radius:12px;
+
+  text-decoration:none;
+
+  font-weight:900;
+
+  transition:.2s;
+
+}
+
+.premium-btn:hover{
+
+  transform:translateY(-2px);
+  background:#f3f4f6;
+
+}
 /* ── BOTTOM GRID ── */
 .bottom-grid {
   display: grid;

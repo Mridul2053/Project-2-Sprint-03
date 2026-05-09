@@ -3,22 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Profile | FitTracker</title>
+  <title>Profile & Settings | FitTracker</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #690500;
-      --primary-dark: #4f0400;
-      --primary-light: rgba(105, 5, 0, 0.08);
-      --text: #111827;
-      --muted: #6b7280;
-      --bg: #f6f7fb;
-      --border: #e5e7eb;
-      --shadow: 0 10px 30px rgba(17, 24, 39, .08);
-      --white: #ffffff;
+      --primary:       #690500;
+      --primary-dark:  #4f0400;
+      --primary-light: rgba(105,5,0,.08);
+      --text:          #111827;
+      --muted:         #6b7280;
+      --bg:            #f6f7fb;
+      --border:        #e5e7eb;
+      --white:         #ffffff;
+      --shadow:        0 8px 28px rgba(17,24,39,.08);
+      --radius:        16px;
+      --radius-sm:     10px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Nunito', sans-serif;
@@ -27,425 +29,447 @@
       min-height: 100vh;
     }
 
-    /* ── TOPBAR ── */
+    /* ── TOPBAR ───────────────────────────────── */
     .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 24px;
+      display: flex; align-items: center;
+      padding: 14px 28px; gap: 20px;
       background: var(--white);
       border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
     }
 
-    .brand { font-size: 26px; font-weight: 900; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px; }
-    .brand img { width: 32px; height: 32px; }
-
-    .nav { display: flex; gap: 20px; align-items: center; }
-    .nav a { text-decoration: none; color: var(--text); font-weight: 700; transition: color .2s; }
-    .nav a:hover { color: var(--primary); }
-    .nav a.active { color: var(--primary); }
-
-    .logout-btn {
-      background: var(--primary);
-      color: #fff !important;
-      padding: 10px 16px;
-      border-radius: 10px;
-      transition: background .2s;
+    .brand {
+      font-size: 22px; font-weight: 900;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 10px;
+      font-family: Georgia, serif; letter-spacing: .05em; text-transform: uppercase;
     }
-    .logout-btn:hover { background: var(--primary-dark) !important; }
+    .brand img { width: 32px; height: 32px; border-radius: 6px; }
 
-    /* ── PAGE LAYOUT ── */
-    .page { max-width: 1100px; margin: 36px auto; padding: 0 16px; display: grid; gap: 24px; }
+    .topnav { display: flex; align-items: center; gap: 4px; margin-left: 18px; }
+    .topnav a {
+      text-decoration: none; color: var(--muted);
+      font-weight: 700; font-size: .88rem;
+      padding: .38rem .8rem; border-radius: var(--radius-sm);
+      transition: color .15s, background .15s;
+    }
+    .topnav a:hover { color: var(--text); background: var(--bg); }
+    .topnav a.active {
+      color: var(--primary); background: var(--primary-light);
+      border: 1.5px solid rgba(105,5,0,.18);
+    }
 
-    /* ── PROFILE HERO CARD ── */
+    .topbar-right { margin-left: auto; }
+    .logout-link {
+      background: var(--primary); color: #fff;
+      text-decoration: none; font-weight: 900; font-size: .85rem;
+      padding: .48rem 1.1rem; border-radius: var(--radius-sm);
+      letter-spacing: .04em; text-transform: uppercase;
+      transition: background .15s;
+    }
+    .logout-link:hover { background: var(--primary-dark); }
+
+    /* ── PAGE ─────────────────────────────────── */
+    .page { max-width: 1080px; margin: 0 auto; padding: 32px 20px 60px; }
+
+    /* ── HERO CARD ────────────────────────────── */
     .hero-card {
-      background: linear-gradient(135deg, #690500, #a30d00);
-      border-radius: 22px;
-      padding: 36px 36px 32px;
-      color: white;
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      box-shadow: 0 16px 40px rgba(105,5,0,.35);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-card::before {
-      content: '';
-      position: absolute;
-      top: -60px; right: -60px;
-      width: 260px; height: 260px;
-      background: rgba(255,255,255,.07);
-      border-radius: 50%;
-    }
-    .hero-card::after {
-      content: '';
-      position: absolute;
-      bottom: -40px; left: 200px;
-      width: 180px; height: 180px;
-      background: rgba(255,255,255,.05);
-      border-radius: 50%;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 22px; padding: 28px 32px;
+      display: flex; align-items: center; gap: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
     }
 
     .avatar-wrap { position: relative; flex-shrink: 0; }
-
     .avatar {
-      width: 110px; height: 110px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.2);
-      border: 4px solid rgba(255,255,255,.5);
+      width: 90px; height: 90px; border-radius: 50%;
+      background: var(--primary-light);
+      border: 3px solid rgba(105,5,0,.2);
       display: flex; align-items: center; justify-content: center;
-      font-size: 46px; font-weight: 900; color: white;
-      text-transform: uppercase;
-      user-select: none;
+      font-size: 36px; font-weight: 900; color: var(--primary);
+      text-transform: uppercase; user-select: none;
     }
-
-    .avatar-badge {
+    .avatar-online {
       position: absolute; bottom: 4px; right: 4px;
-      width: 28px; height: 28px;
-      background: #22c55e;
-      border-radius: 50%;
-      border: 3px solid white;
+      width: 20px; height: 20px; background: #22c55e;
+      border-radius: 50%; border: 3px solid #fff;
     }
 
-    .hero-info { flex: 1; position: relative; z-index: 1; }
-    .hero-info h1 { font-size: 32px; font-weight: 900; margin-bottom: 6px; }
-    .hero-info p  { font-size: 15px; color: rgba(255,255,255,.75); margin-bottom: 14px; }
-
-    .hero-tags { display: flex; gap: 10px; flex-wrap: wrap; }
+    .hero-info { flex: 1; }
+    .hero-info h1 { font-size: 26px; font-weight: 900; margin-bottom: 3px; color: var(--text); }
+    .hero-info p  { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+    .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
     .hero-tag {
-      background: rgba(255,255,255,.15);
-      border: 1px solid rgba(255,255,255,.25);
-      padding: 5px 14px;
-      border-radius: 999px;
-      font-size: 13px; font-weight: 700;
-      backdrop-filter: blur(4px);
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      padding: 4px 12px; border-radius: 999px;
+      font-size: 12px; font-weight: 700; color: var(--text);
     }
 
     .hero-edit-btn {
-      position: relative; z-index: 1;
-      background: rgba(255,255,255,.2);
-      border: 2px solid rgba(255,255,255,.4);
-      color: white;
-      padding: 10px 22px;
-      border-radius: 12px;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 800; font-size: 14px;
-      cursor: pointer;
-      transition: background .2s;
-      white-space: nowrap;
       align-self: flex-start;
+      background: var(--primary); color: #fff;
+      border: none; padding: 9px 20px; border-radius: 12px;
+      font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 13px;
+      cursor: pointer; white-space: nowrap;
+      transition: background .15s;
     }
-    .hero-edit-btn:hover { background: rgba(255,255,255,.3); }
+    .hero-edit-btn:hover { background: var(--primary-dark); }
 
-    /* ── TWO-COL GRID ── */
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+    /* ── STATS ROW ────────────────────────────── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-pill {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: var(--radius); padding: 18px;
+      text-align: center; box-shadow: var(--shadow);
+    }
+    .stat-pill .val { font-size: 28px; font-weight: 900; color: var(--primary); }
+    .stat-pill .lbl { font-size: 11px; color: var(--muted); font-weight: 700; margin-top: 3px; text-transform: uppercase; letter-spacing: .06em; }
 
-    /* ── SECTION CARD ── */
+    /* ── TAB NAV ──────────────────────────────── */
+    .tab-nav {
+      display: flex; gap: 6px; margin-bottom: 22px;
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: var(--radius); padding: 6px;
+      box-shadow: var(--shadow);
+    }
+    .tab-btn {
+      flex: 1; padding: 10px; border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Nunito', sans-serif; font-weight: 900;
+      font-size: .85rem; cursor: pointer;
+      background: transparent; color: var(--muted);
+      transition: background .15s, color .15s;
+      letter-spacing: .03em;
+    }
+    .tab-btn.active { background: var(--primary); color: #fff; }
+    .tab-btn:not(.active):hover { background: var(--bg); color: var(--text); }
+
+    /* ── TAB PANELS ───────────────────────────── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── CARDS ────────────────────────────────── */
     .card {
       background: var(--white);
-      border-radius: 18px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
       padding: 26px 28px;
       box-shadow: var(--shadow);
     }
 
     .card-title {
-      font-size: 18px; font-weight: 900;
+      font-size: 15px; font-weight: 900;
       margin-bottom: 20px;
       display: flex; align-items: center; gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--border);
     }
     .card-title .icon {
-      width: 36px; height: 36px;
-      background: var(--primary-light);
-      border-radius: 10px;
+      width: 34px; height: 34px;
+      background: var(--primary-light); border-radius: 9px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 17px;
+      font-size: 16px; flex-shrink: 0;
     }
 
-    /* ── FORM FIELDS ── */
-    .field { margin-bottom: 16px; }
-    .field label { display: block; font-weight: 700; font-size: 13px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px; }
 
+    /* ── FORM ─────────────────────────────────── */
+    .field { margin-bottom: 16px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label {
+      display: block; font-weight: 800; font-size: 12px;
+      color: var(--muted); margin-bottom: 6px;
+      text-transform: uppercase; letter-spacing: .06em;
+    }
     .field input,
     .field select,
     .field textarea {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: 12px;
-      font-family: 'Nunito', sans-serif;
-      font-size: 15px;
-      color: var(--text);
-      background: #fafbff;
-      transition: border-color .2s, box-shadow .2s;
-      outline: none;
+      width: 100%; padding: 11px 13px;
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--text);
+      background: #fafbff; outline: none;
+      transition: border-color .15s, box-shadow .15s;
     }
     .field input:focus,
     .field select:focus,
     .field textarea:focus {
-      border-color: var(--primary);
-      background: white;
-      box-shadow: 0 0 0 3px rgba(105,5,0,.08);
+      border-color: var(--primary); background: #fff;
+      box-shadow: 0 0 0 3px rgba(105,5,0,.07);
     }
-
-    .field textarea { resize: vertical; min-height: 80px; }
-
+    .field textarea { resize: vertical; min-height: 72px; }
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field-readonly input { background: var(--bg); color: var(--muted); cursor: not-allowed; }
 
-    .field-readonly input {
-      background: var(--bg);
-      color: var(--muted);
-      cursor: not-allowed;
-    }
-
-    /* ── STAT PILLS ── */
-    .stat-pill {
-      background: var(--bg);
-      border-radius: 14px;
-      padding: 16px 18px;
-      text-align: center;
-      border: 1.5px solid var(--border);
-    }
-    .stat-pill .val { font-size: 26px; font-weight: 900; color: var(--primary); }
-    .stat-pill .lbl { font-size: 12px; color: var(--muted); font-weight: 700; margin-top: 2px; }
-
-    /* ── GOAL SELECTOR ── */
-    .goal-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 4px; }
-
+    /* ── GOAL SELECTOR ────────────────────────── */
+    .goal-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
     .goal-opt {
-      border: 2px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 10px;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color .2s, background .2s;
-      user-select: none;
+      border: 2px solid var(--border); border-radius: 13px;
+      padding: 14px 10px; text-align: center; cursor: pointer;
+      transition: border-color .15s, background .15s;
     }
-    .goal-opt:hover { border-color: var(--primary); background: var(--primary-light); }
-    .goal-opt.selected { border-color: var(--primary); background: var(--primary-light); }
-    .goal-opt .g-icon { font-size: 24px; margin-bottom: 6px; }
-    .goal-opt .g-label { font-size: 13px; font-weight: 800; color: var(--text); }
+    .goal-opt:hover, .goal-opt.selected {
+      border-color: var(--primary); background: var(--primary-light);
+    }
+    .goal-opt .g-icon { font-size: 22px; margin-bottom: 5px; }
+    .goal-opt .g-lbl { font-size: 12px; font-weight: 900; color: var(--text); }
 
-    /* ── FITNESS LEVEL SLIDER ── */
+    /* ── FITNESS LEVEL ────────────────────────── */
     .level-bar { display: flex; gap: 8px; margin-top: 8px; }
     .level-seg {
       flex: 1; height: 8px; border-radius: 999px;
-      background: var(--border);
-      cursor: pointer;
-      transition: background .2s;
+      background: var(--border); cursor: pointer; transition: background .15s;
     }
     .level-seg.active { background: var(--primary); }
-    .level-labels { display: flex; justify-content: space-between; margin-top: 6px; font-size: 12px; color: var(--muted); font-weight: 700; }
-
-    /* ── ACTIVITY LOG ── */
-    .activity-item {
-      display: flex; align-items: center; gap: 14px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
+    .level-labels {
+      display: flex; justify-content: space-between;
+      margin-top: 5px; font-size: 11px; color: var(--muted); font-weight: 700;
     }
-    .activity-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .activity-dot {
-      width: 38px; height: 38px; border-radius: 12px;
+
+    /* ── DAY PICKER ───────────────────────────── */
+    .day-picker { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 4px; }
+    .day-btn {
+      padding: 7px 13px; border-radius: 9px;
+      border: 2px solid var(--border); background: var(--bg);
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 12px;
+      cursor: pointer; transition: .15s; color: var(--text);
+    }
+    .day-btn.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+    /* ── BMI DISPLAY ──────────────────────────── */
+    .bmi-box {
+      
+      border-radius: 13px; padding: 16px; background: var(--bg); border: 1.5px solid var(--border);
+      
+    }
+    .bmi-box { text-align: center; margin-top: 14px; } .bmi-box .bmi-val { font-size: 44px; font-weight: 900; line-height: 1; color: var(--primary); }
+    .bmi-box .bmi-lbl { font-size: 14px; font-weight: 700; margin-top: 4px; color: var(--muted); }
+
+    /* ── ACTIVITY ITEMS ───────────────────────── */
+    .act-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 0; border-bottom: 1px solid var(--border);
+    }
+    .act-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .act-dot {
+      width: 36px; height: 36px; border-radius: 10px;
       background: var(--primary-light);
       display: flex; align-items: center; justify-content: center;
-      font-size: 18px; flex-shrink: 0;
+      font-size: 17px; flex-shrink: 0;
     }
-    .activity-info { flex: 1; }
-    .activity-info strong { font-size: 14px; font-weight: 800; display: block; }
-    .activity-info span  { font-size: 12px; color: var(--muted); }
-    .activity-val { font-weight: 900; font-size: 14px; color: var(--primary); }
+    .act-info { flex: 1; }
+    .act-info strong { font-size: 13px; font-weight: 900; display: block; }
+    .act-info span   { font-size: 11px; color: var(--muted); }
+    .act-val { font-weight: 900; font-size: 13px; color: var(--primary); }
 
-    /* ── BMI RESULT ── */
-    .bmi-display {
-      background: linear-gradient(135deg, #690500, #a30d00);
-      border-radius: 16px;
-      padding: 20px;
-      color: white;
-      text-align: center;
-      margin-bottom: 16px;
+    /* ── SETTINGS SPECIFIC ────────────────────── */
+    .setting-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 0; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 700;
     }
-    .bmi-display .bmi-val { font-size: 52px; font-weight: 900; line-height: 1; }
-    .bmi-display .bmi-label { font-size: 16px; font-weight: 700; margin-top: 6px; opacity: .85; }
+    .setting-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .setting-row span { color: var(--text); }
+    .setting-row small { display: block; font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 1px; }
 
-    /* ── SAVE BUTTON ── */
-    .save-btn {
-      width: 100%;
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 13px;
-      font-family: 'Nunito', sans-serif;
-      font-size: 16px; font-weight: 900;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: background .2s, transform .15s;
+    .toggle-pill {
+      width: 52px; height: 28px; border-radius: 999px;
+      border: none; cursor: pointer; position: relative;
+      transition: background .2s; flex-shrink: 0;
     }
-    .save-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
-    .save-btn:active { transform: translateY(0); }
+    .toggle-pill::after {
+      content: ''; position: absolute;
+      top: 3px; left: 3px;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: #fff; transition: transform .2s;
+    }
+    .toggle-pill.on { background: var(--primary); }
+    .toggle-pill.on::after { transform: translateX(24px); }
+    .toggle-pill.off { background: #d1d5db; }
 
+    /* ── BUTTONS ──────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 14px;
+      padding: 11px 20px; border-radius: var(--radius-sm); border: none;
+      cursor: pointer; transition: background .15s, transform .12s;
+      letter-spacing: .03em;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary   { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-outline   { background: #fff; color: var(--primary); border: 2px solid var(--primary); }
+    .btn-outline:hover { background: var(--primary-light); }
+    .btn-danger    { background: #b91c1c; color: #fff; }
+    .btn-danger:hover { background: #991b1b; }
+    .btn-full      { width: 100%; justify-content: center; font-size: 15px; padding: 13px; }
+
+    .danger-zone {
+      border: 2px solid #fee2e2; border-radius: var(--radius);
+      padding: 22px 26px; background: #fff5f5;
+    }
+    .danger-zone .card-title { color: #b91c1c; border-color: #fecaca; }
+    .danger-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* ── PASSWORD MODAL ───────────────────────── */
+    .modal-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.45); backdrop-filter: blur(3px);
+      z-index: 200; align-items: center; justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: var(--radius);
+      padding: 28px; width: 100%; max-width: 400px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.2);
+      animation: popIn .18s ease;
+    }
+    @keyframes popIn {
+      from { transform: scale(.94); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .modal h3 { font-size: 17px; font-weight: 900; margin-bottom: 18px; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+    .modal-actions .btn { flex: 1; }
+
+    /* ── TOAST ────────────────────────────────── */
     .toast {
       position: fixed; bottom: 24px; right: 24px;
-      background: #111827;
-      color: white;
-      padding: 14px 22px;
-      border-radius: 14px;
-      font-weight: 800; font-size: 15px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      background: #111827; color: #fff;
+      padding: 13px 20px; border-radius: 13px;
+      font-weight: 800; font-size: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.22);
       transform: translateY(80px); opacity: 0;
-      transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .35s;
-      pointer-events: none;
-      z-index: 999;
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+      pointer-events: none; z-index: 999;
     }
     .toast.show { transform: translateY(0); opacity: 1; }
 
-    /* ── DANGER ZONE ── */
-    .danger-zone { border: 2px solid #fee2e2; border-radius: 18px; padding: 22px 26px; background: #fff5f5; }
-    .danger-zone .card-title { color: #b91c1c; }
-    .danger-btn {
-      background: #b91c1c;
-      color: white; border: none;
-      padding: 11px 20px;
-      border-radius: 10px;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 800; font-size: 14px;
-      cursor: pointer;
-      transition: background .2s;
-    }
-    .danger-btn:hover { background: #991b1b; }
-
-    /* ── RESPONSIVE ── */
+    /* ── RESPONSIVE ───────────────────────────── */
     @media (max-width: 900px) {
-      .two-col, .three-col { grid-template-columns: 1fr; }
+      .two-col, .three-col, .stats-row { grid-template-columns: 1fr; }
       .hero-card { flex-direction: column; text-align: center; }
       .hero-tags { justify-content: center; }
       .hero-edit-btn { align-self: center; }
-      .goal-options { grid-template-columns: 1fr 1fr; }
+      .goal-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) {
-      .topbar { flex-direction: column; gap: 12px; }
-      .nav { flex-wrap: wrap; justify-content: center; }
-      .hero-card { padding: 24px 20px; }
+      .topnav { display: none; }
+      .page { padding: 20px 14px 50px; }
       .field-row { grid-template-columns: 1fr; }
-      .goal-options { grid-template-columns: 1fr; }
+      .goal-grid { grid-template-columns: 1fr; }
+      .hero-card { padding: 22px 18px; }
+      .tab-btn { font-size: .76rem; padding: 9px 6px; }
     }
   </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
+<!-- ── TOPBAR ── -->
 <header class="topbar">
   <a class="brand" href="home.html">
-    <img src="assets/logo.png" alt="FitTracker Logo">
-    Fitness Tracker
+    <img src="assets/logo.png" alt="FitTracker">
+    FitTracker
   </a>
-  <nav class="nav">
+  <nav class="topnav">
     <a href="home.html">Home</a>
     <a href="tracker.html">Nutrition Tracker</a>
     <a href="workoutplan.html">Workout Builder</a>
     <a href="dashboard.html">Dashboard</a>
     <a href="profile.html" class="active">Profile</a>
-    <a href="index.html" class="logout-btn" id="logout-btn">Log Out</a>
   </nav>
+  <div class="topbar-right">
+    <a href="index.html" class="logout-link" id="logout-btn">Log Out</a>
+  </div>
 </header>
 
-<!-- MAIN -->
+<!-- ── PAGE ── -->
 <main class="page">
 
   <!-- HERO -->
   <div class="hero-card">
     <div class="avatar-wrap">
-      <div class="avatar" id="avatar-initials">?</div>
-      <div class="avatar-badge"></div>
+      <div class="avatar" id="heroInitials">?</div>
+      <div class="avatar-online"></div>
     </div>
     <div class="hero-info">
-      <h1 id="hero-name">Your Name</h1>
-      <p id="hero-email">your@email.com</p>
+      <h1 id="heroName">Your Name</h1>
+      <p id="heroEmail">your@email.com</p>
       <div class="hero-tags">
-        <span class="hero-tag" id="hero-goal-tag">🎯 Goal: –</span>
-        <span class="hero-tag" id="hero-level-tag">⚡ Level: –</span>
-        <span class="hero-tag" id="hero-bmi-tag">📊 BMI: –</span>
+        <span class="hero-tag" id="heroGoalTag">🎯 Goal: –</span>
+        <span class="hero-tag" id="heroLevelTag">⚡ Level: –</span>
+        <span class="hero-tag" id="heroBmiTag">📊 BMI: –</span>
       </div>
     </div>
-    <button class="hero-edit-btn" onclick="scrollToEdit()">✏️ Edit Profile</button>
+    <button class="hero-edit-btn" onclick="switchTab('profile')">✏️ Edit Profile</button>
   </div>
 
-  <!-- STATS ROW -->
-  <div class="three-col">
-    <div class="stat-pill">
-      <div class="val" id="stat-weight">–</div>
-      <div class="lbl">Weight (kg)</div>
-    </div>
-    <div class="stat-pill">
-      <div class="val" id="stat-height">–</div>
-      <div class="lbl">Height (cm)</div>
-    </div>
-    <div class="stat-pill">
-      <div class="val" id="stat-age">–</div>
-      <div class="lbl">Age (yrs)</div>
-    </div>
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-pill"><div class="val" id="statWeight">–</div><div class="lbl">Weight (kg)</div></div>
+    <div class="stat-pill"><div class="val" id="statHeight">–</div><div class="lbl">Height (cm)</div></div>
+    <div class="stat-pill"><div class="val" id="statAge">–</div><div class="lbl">Age (yrs)</div></div>
   </div>
 
-  <!-- EDIT SECTIONS -->
-  <div class="two-col" id="edit-section">
+  <!-- TABS -->
+  <div class="tab-nav" role="tablist">
+    <button class="tab-btn active" onclick="switchTab('profile')"  id="tab-profile">👤 Profile</button>
+    <button class="tab-btn"        onclick="switchTab('fitness')"  id="tab-fitness">🏋️ Fitness</button>
+    <button class="tab-btn"        onclick="switchTab('activity')" id="tab-activity">📅 Activity</button>
+    <button class="tab-btn"        onclick="switchTab('settings')" id="tab-settings">⚙️ Settings</button>
+  </div>
 
-    <!-- LEFT: Personal Info -->
-    <div class="card">
-      <div class="card-title"><span class="icon">👤</span> Personal Information</div>
+  <!-- ── TAB: PROFILE ── -->
+  <div class="tab-panel active" id="panel-profile">
+    <div class="two-col">
 
-      <div class="field">
-        <label>Full Name</label>
-        <input type="text" id="fullName" placeholder="Enter your full name">
-      </div>
-
-      <div class="field field-readonly">
-        <label>Email Address</label>
-        <input type="email" id="email" placeholder="your@email.com" readonly>
-      </div>
-
-      <div class="field-row">
+      <!-- Personal Info -->
+      <div class="card">
+        <div class="card-title"><span class="icon">👤</span> Personal Information</div>
         <div class="field">
-          <label>Date of Birth</label>
-          <input type="date" id="dob">
+          <label>Full Name</label>
+          <input type="text" id="fullName" placeholder="Enter your full name">
+        </div>
+        <div class="field field-readonly">
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="your@email.com" readonly>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Date of Birth</label>
+            <input type="date" id="dob">
+          </div>
+          <div class="field">
+            <label>Gender</label>
+            <select id="gender">
+              <option value="">Select</option>
+              <option>Male</option><option>Female</option><option>Prefer not to say</option>
+            </select>
+          </div>
         </div>
         <div class="field">
-          <label>Gender</label>
-          <select id="gender">
-            <option value="">Select</option>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Prefer not to say</option>
-          </select>
+          <label>Phone Number</label>
+          <input type="tel" id="phone" placeholder="+61 4xx xxx xxx">
+        </div>
+        <div class="field">
+          <label>Location</label>
+          <input type="text" id="location" placeholder="City, Country">
+        </div>
+        <div class="field">
+          <label>Bio</label>
+          <textarea id="bio" placeholder="Tell us about your fitness journey…"></textarea>
         </div>
       </div>
 
-      <div class="field">
-        <label>Phone Number</label>
-        <input type="tel" id="phone" placeholder="+61 4xx xxx xxx">
-      </div>
-
-      <div class="field">
-        <label>Location</label>
-        <input type="text" id="location" placeholder="City, Country">
-      </div>
-
-      <div class="field">
-        <label>Bio</label>
-        <textarea id="bio" placeholder="Tell us a bit about your fitness journey…"></textarea>
-      </div>
-    </div>
-
-    <!-- RIGHT: Fitness Info -->
-    <div style="display:flex; flex-direction:column; gap:24px;">
-
+      <!-- Body Metrics -->
       <div class="card">
         <div class="card-title"><span class="icon">🏋️</span> Body Metrics</div>
-
         <div class="field-row">
           <div class="field">
             <label>Height (cm)</label>
@@ -456,7 +480,6 @@
             <input type="number" id="weight" placeholder="e.g. 72" min="30" max="300" step="0.1">
           </div>
         </div>
-
         <div class="field-row">
           <div class="field">
             <label>Target Weight (kg)</label>
@@ -473,182 +496,237 @@
             </select>
           </div>
         </div>
-
-        <!-- BMI Display -->
-        <div class="bmi-display" id="bmi-display" style="display:none;">
-          <div class="bmi-val" id="bmi-val">–</div>
-          <div class="bmi-label" id="bmi-label">–</div>
+        <div class="bmi-box" id="bmiBox" style="display:none;">
+          <div class="bmi-val" id="bmiVal">–</div>
+          <div class="bmi-lbl" id="bmiLbl">–</div>
         </div>
+        <div style="margin-top:20px;">
+          <button class="btn btn-primary btn-full" onclick="saveProfile()">💾 Save Profile</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── TAB: FITNESS ── -->
+  <div class="tab-panel" id="panel-fitness">
+    <div class="two-col">
+
+      <!-- Fitness Goal -->
+      <div class="card">
+        <div class="card-title"><span class="icon">🎯</span> Fitness Goal</div>
+        <div class="goal-grid" id="goalGrid">
+          <div class="goal-opt" data-goal="Weight Loss"><div class="g-icon">🔥</div><div class="g-lbl">Weight Loss</div></div>
+          <div class="goal-opt" data-goal="Muscle Gain"><div class="g-icon">💪</div><div class="g-lbl">Muscle Gain</div></div>
+          <div class="goal-opt" data-goal="Maintain"><div class="g-icon">⚖️</div><div class="g-lbl">Maintain</div></div>
+          <div class="goal-opt" data-goal="Endurance"><div class="g-icon">🏃</div><div class="g-lbl">Endurance</div></div>
+          <div class="goal-opt" data-goal="Flexibility"><div class="g-icon">🧘</div><div class="g-lbl">Flexibility</div></div>
+          <div class="goal-opt" data-goal="General Health"><div class="g-icon">❤️</div><div class="g-lbl">General Health</div></div>
+        </div>
+      </div>
+
+      <!-- Fitness Level + Days -->
+      <div class="card">
+        <div class="card-title"><span class="icon">⚡</span> Fitness Level</div>
+        <div class="level-bar" id="levelBar">
+          <div class="level-seg" data-lv="1"></div>
+          <div class="level-seg" data-lv="2"></div>
+          <div class="level-seg" data-lv="3"></div>
+          <div class="level-seg" data-lv="4"></div>
+          <div class="level-seg" data-lv="5"></div>
+        </div>
+        <div class="level-labels"><span>Beginner</span><span>Intermediate</span><span>Advanced</span></div>
+        <p style="margin-top:12px;font-size:13px;color:var(--muted);">
+          Current level: <strong id="levelLabel" style="color:var(--primary);">Not set</strong>
+        </p>
+
+        <div style="margin-top:22px;">
+          <div class="card-title" style="margin-bottom:10px;border:none;padding:0;">
+            <span class="icon">📅</span> Preferred Workout Days
+          </div>
+          <div class="day-picker" id="dayPicker"></div>
+        </div>
+
+        <div style="margin-top:20px;">
+          <button class="btn btn-primary btn-full" onclick="saveFitness()">💾 Save Fitness Info</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── TAB: ACTIVITY ── -->
+  <div class="tab-panel" id="panel-activity">
+    <div class="two-col">
+
+      <div class="card">
+        <div class="card-title"><span class="icon">📅</span> Recent Activity</div>
+        <div class="act-item"><div class="act-dot">🥗</div><div class="act-info"><strong>Last Meal Logged</strong><span id="actMeal">No meals yet</span></div></div>
+        <div class="act-item"><div class="act-dot">💧</div><div class="act-info"><strong>Water Intake</strong><span>Today</span></div><div class="act-val" id="actWater">0 L</div></div>
+        <div class="act-item"><div class="act-dot">🚶</div><div class="act-info"><strong>Steps Today</strong><span>Daily count</span></div><div class="act-val" id="actSteps">0</div></div>
+        <div class="act-item"><div class="act-dot">💪</div><div class="act-info"><strong>Workout Time</strong><span>Today</span></div><div class="act-val" id="actWorkout">0 mins</div></div>
       </div>
 
       <div class="card">
-        <div class="card-title"><span class="icon">🎯</span> Fitness Goal</div>
-        <div class="goal-options" id="goalOptions">
-          <div class="goal-opt" data-goal="Weight Loss">
-            <div class="g-icon">🔥</div>
-            <div class="g-label">Weight Loss</div>
-          </div>
-          <div class="goal-opt" data-goal="Muscle Gain">
-            <div class="g-icon">💪</div>
-            <div class="g-label">Muscle Gain</div>
-          </div>
-          <div class="goal-opt" data-goal="Maintain">
-            <div class="g-icon">⚖️</div>
-            <div class="g-label">Maintain</div>
-          </div>
-          <div class="goal-opt" data-goal="Endurance">
-            <div class="g-icon">🏃</div>
-            <div class="g-label">Endurance</div>
-          </div>
-          <div class="goal-opt" data-goal="Flexibility">
-            <div class="g-icon">🧘</div>
-            <div class="g-label">Flexibility</div>
-          </div>
-          <div class="goal-opt" data-goal="General Health">
-            <div class="g-icon">❤️</div>
-            <div class="g-label">General Health</div>
-          </div>
+        <div class="card-title"><span class="icon">🎯</span> Nutrition Goals</div>
+        <div class="field"><label>Daily Calories (kcal)</label><input type="number" id="goalCalories" placeholder="e.g. 2200"></div>
+        <div class="field-row">
+          <div class="field"><label>Protein (g)</label><input type="number" id="goalProtein" placeholder="150"></div>
+          <div class="field"><label>Carbs (g)</label><input type="number" id="goalCarbs" placeholder="250"></div>
         </div>
+        <div class="field-row">
+          <div class="field"><label>Fat (g)</label><input type="number" id="goalFat" placeholder="70"></div>
+          <div class="field"><label>Water Target (L)</label><input type="number" id="goalWater" placeholder="2.5" step="0.1"></div>
+        </div>
+        <div class="field"><label>Daily Step Goal</label><input type="number" id="goalSteps" placeholder="10000"></div>
+        <button class="btn btn-primary btn-full" style="margin-top:8px;" onclick="saveGoals()">💾 Save Goals</button>
       </div>
 
     </div>
   </div>
 
-  <!-- FITNESS LEVEL + ACTIVITY -->
-  <div class="two-col">
+  <!-- ── TAB: SETTINGS ── -->
+  <div class="tab-panel" id="panel-settings">
+    <div class="two-col" style="margin-bottom:20px;">
 
-    <div class="card">
-      <div class="card-title"><span class="icon">⚡</span> Fitness Level</div>
-      <div class="level-bar" id="levelBar">
-        <div class="level-seg" data-level="1"></div>
-        <div class="level-seg" data-level="2"></div>
-        <div class="level-seg" data-level="3"></div>
-        <div class="level-seg" data-level="4"></div>
-        <div class="level-seg" data-level="5"></div>
-      </div>
-      <div class="level-labels">
-        <span>Beginner</span>
-        <span>Intermediate</span>
-        <span>Advanced</span>
-      </div>
-      <p style="margin-top:14px; font-size:14px; color:var(--muted);">
-        Current level: <strong id="levelLabel" style="color:var(--primary);">Not set</strong>
-      </p>
-
-      <div style="margin-top:20px;">
-        <div class="card-title" style="margin-bottom:12px;"><span class="icon">🏅</span> Preferred Workout Days</div>
-        <div id="dayPicker" style="display:flex; gap:8px; flex-wrap:wrap;">
+      <!-- Notifications -->
+      <div class="card">
+        <div class="card-title"><span class="icon">🔔</span> Notifications</div>
+        <div class="setting-row">
+          <div><span>Workout Reminder</span><small>Daily push notification</small></div>
+          <button class="toggle-pill on" data-key="notif_workout"></button>
         </div>
+        <div class="setting-row">
+          <div><span>Water Reminder</span><small>Every 2 hours</small></div>
+          <button class="toggle-pill off" data-key="notif_water"></button>
+        </div>
+        <div class="setting-row">
+          <div><span>Meal Reminder</span><small>Before breakfast, lunch, dinner</small></div>
+          <button class="toggle-pill on" data-key="notif_meal"></button>
+        </div>
+        <div class="setting-row">
+          <div><span>Weekly Summary</span><small>Every Sunday</small></div>
+          <button class="toggle-pill off" data-key="notif_weekly"></button>
+        </div>
+      </div>
+
+      <!-- Appearance -->
+      <div class="card">
+        <div class="card-title"><span class="icon">🎨</span> Appearance</div>
+        <div class="setting-row">
+          <div><span>Dark Mode</span><small>Switch to dark theme</small></div>
+          <button class="toggle-pill off" data-key="dark_mode" id="darkModeToggle"></button>
+        </div>
+        <div class="setting-row">
+          <div><span>Compact View</span><small>Reduce card padding</small></div>
+          <button class="toggle-pill off" data-key="compact_view"></button>
+        </div>
+        <div class="setting-row">
+          <div><span>Show Calorie Alerts</span><small>Warn when over goal</small></div>
+          <button class="toggle-pill on" data-key="calorie_alerts"></button>
+        </div>
+        <div style="margin-top:18px;">
+          <div class="field"><label>Units</label>
+            <select id="unitPref">
+              <option value="metric">Metric (kg, cm)</option>
+              <option value="imperial">Imperial (lbs, ft)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Account -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title"><span class="icon">🔐</span> Account</div>
+      <div class="two-col" style="margin:0;">
+        <div class="field">
+          <label>Username / Display Name</label>
+          <input type="text" id="settingsName" placeholder="Your display name">
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="settingsEmail" placeholder="your@email.com">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;">
+        <button class="btn btn-outline" onclick="openPasswordModal()">🔑 Change Password</button>
+        <button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span class="icon">📅</span> Recent Activity</div>
-      <div id="recentActivity">
-        <div class="activity-item">
-          <div class="activity-dot">🥗</div>
-          <div class="activity-info">
-            <strong>Last Meal Logged</strong>
-            <span id="act-meal">No meals yet</span>
-          </div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-dot">💧</div>
-          <div class="activity-info">
-            <strong>Water Intake</strong>
-            <span>Today</span>
-          </div>
-          <div class="activity-val" id="act-water">0 L</div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-dot">🚶</div>
-          <div class="activity-info">
-            <strong>Steps Today</strong>
-            <span>Daily count</span>
-          </div>
-          <div class="activity-val" id="act-steps">0</div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-dot">💪</div>
-          <div class="activity-info">
-            <strong>Workout Time</strong>
-            <span>Today</span>
-          </div>
-          <div class="activity-val" id="act-workout">0 mins</div>
-        </div>
+    <!-- Danger Zone -->
+    <div class="danger-zone">
+      <div class="card-title"><span style="font-size:18px;">⚠️</span> Danger Zone</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">These actions are irreversible. Please proceed with caution.</p>
+      <div class="danger-actions">
+        <button class="btn btn-danger" onclick="confirmReset()">🗑️ Clear All Data</button>
+        <button class="btn btn-danger" onclick="confirmLogout()">🚪 Log Out & Clear</button>
       </div>
-    </div>
-  </div>
-
-  <!-- SAVE BUTTON -->
-  <div class="card" style="text-align:center; padding: 24px 28px;">
-    <button class="save-btn" onclick="saveProfile()">💾 Save Profile</button>
-  </div>
-
-  <!-- DANGER ZONE -->
-  <div class="danger-zone">
-    <div class="card-title"><span style="font-size:20px;">⚠️</span> Danger Zone</div>
-    <p style="font-size:14px; color:#6b7280; margin-bottom:16px;">These actions are irreversible. Please proceed with caution.</p>
-    <div style="display:flex; gap:12px; flex-wrap:wrap;">
-      <button class="danger-btn" onclick="confirmReset()">🗑️ Clear All Data</button>
-      <button class="danger-btn" style="background:#7f1d1d;" onclick="confirmLogout()">🚪 Log Out & Clear</button>
     </div>
   </div>
 
 </main>
 
-<!-- TOAST -->
+<!-- ── PASSWORD MODAL ── -->
+<div class="modal-backdrop" id="pwModal">
+  <div class="modal">
+    <h3>🔑 Change Password</h3>
+    <div class="field"><label>New Password</label><input type="password" id="newPw" placeholder="Enter new password"></div>
+    <div class="field"><label>Confirm Password</label><input type="password" id="confirmPw" placeholder="Repeat new password"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closePwModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="changePassword()">Save Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
 <div class="toast" id="toast"></div>
 
 <script>
-  // ── DAYS PICKER ──
-  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  const dayPicker = document.getElementById('dayPicker');
+  /* ── STATE ── */
+  const levelLabels = ['','Beginner','Novice','Intermediate','Advanced','Elite'];
+  let selectedGoal = '';
+  let fitnessLevel = 0;
   let selectedDays = [];
 
-  days.forEach(d => {
-    const btn = document.createElement('button');
-    btn.textContent = d;
-    btn.style.cssText = `
-      padding: 8px 14px; border-radius: 10px;
-      border: 2px solid var(--border);
-      background: var(--bg);
-      font-family: 'Nunito', sans-serif;
-      font-weight: 800; font-size: 13px;
-      cursor: pointer; transition: .2s;
-      color: var(--text);
-    `;
-    btn.onclick = () => {
+  /* ── TABS ── */
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.getElementById('panel-' + name).classList.add('active');
+  }
+
+  /* ── DAY PICKER ── */
+  const DAY_PICKER = document.getElementById('dayPicker');
+  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(d => {
+    const b = document.createElement('button');
+    b.className = 'day-btn'; b.textContent = d;
+    b.onclick = () => {
       if (selectedDays.includes(d)) {
         selectedDays = selectedDays.filter(x => x !== d);
-        btn.style.background = 'var(--bg)';
-        btn.style.borderColor = 'var(--border)';
-        btn.style.color = 'var(--text)';
+        b.classList.remove('on');
       } else {
         selectedDays.push(d);
-        btn.style.background = 'var(--primary)';
-        btn.style.borderColor = 'var(--primary)';
-        btn.style.color = 'white';
+        b.classList.add('on');
       }
     };
-    dayPicker.appendChild(btn);
+    DAY_PICKER.appendChild(b);
   });
 
-  // ── FITNESS LEVEL ──
-  const levelLabels = ['','Beginner','Novice','Intermediate','Advanced','Elite'];
-  let fitnessLevel = 0;
+  /* ── FITNESS LEVEL ── */
   document.querySelectorAll('.level-seg').forEach(seg => {
     seg.addEventListener('click', () => {
-      fitnessLevel = +seg.dataset.level;
-      document.querySelectorAll('.level-seg').forEach(s => {
-        s.classList.toggle('active', +s.dataset.level <= fitnessLevel);
-      });
+      fitnessLevel = +seg.dataset.lv;
+      document.querySelectorAll('.level-seg').forEach(s => s.classList.toggle('active', +s.dataset.lv <= fitnessLevel));
       document.getElementById('levelLabel').textContent = levelLabels[fitnessLevel];
     });
   });
 
-  // ── GOAL OPTIONS ──
-  let selectedGoal = '';
+  /* ── GOAL OPTIONS ── */
   document.querySelectorAll('.goal-opt').forEach(opt => {
     opt.addEventListener('click', () => {
       document.querySelectorAll('.goal-opt').forEach(o => o.classList.remove('selected'));
@@ -657,206 +735,252 @@
     });
   });
 
-  // ── BMI CALCULATOR ──
+  /* ── BMI ── */
   function calcBMI() {
     const h = parseFloat(document.getElementById('height').value);
     const w = parseFloat(document.getElementById('weight').value);
-    if (!h || !w) return null;
-    return (w / ((h / 100) ** 2)).toFixed(1);
+    return (h && w) ? (w / ((h / 100) ** 2)).toFixed(1) : null;
   }
-
-  function getBMILabel(bmi) {
-    if (bmi < 18.5) return 'Underweight';
-    if (bmi < 25)   return 'Healthy Weight';
-    if (bmi < 30)   return 'Overweight';
+  function bmiLabel(v) {
+    if (v < 18.5) return 'Underweight';
+    if (v < 25)   return 'Healthy Weight';
+    if (v < 30)   return 'Overweight';
     return 'Obese';
   }
-
   ['height','weight'].forEach(id => {
     document.getElementById(id).addEventListener('input', () => {
       const bmi = calcBMI();
-      const box = document.getElementById('bmi-display');
+      const box = document.getElementById('bmiBox');
       if (bmi) {
         box.style.display = 'block';
-        document.getElementById('bmi-val').textContent = bmi;
-        document.getElementById('bmi-label').textContent = getBMILabel(bmi);
-      } else {
-        box.style.display = 'none';
-      }
+        document.getElementById('bmiVal').textContent = bmi;
+        document.getElementById('bmiLbl').textContent = bmiLabel(+bmi);
+      } else { box.style.display = 'none'; }
     });
   });
 
-  // ── LOAD SAVED PROFILE ──
-  function loadProfile() {
-    const user = JSON.parse(localStorage.getItem('fittrackerUser') || '{}');
-    const profile = JSON.parse(localStorage.getItem('ft_profile') || '{}');
-    const dash = JSON.parse(localStorage.getItem('ft_dashboard') || '{}');
+  /* ── TOGGLES ── */
+  document.querySelectorAll('.toggle-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('on');
+      btn.classList.toggle('off');
+      const key = btn.dataset.key;
+      if (key === 'dark_mode') document.body.classList.toggle('dark', btn.classList.contains('on'));
+      const settings = getSettings();
+      settings[key] = btn.classList.contains('on');
+      localStorage.setItem('ft_settings', JSON.stringify(settings));
+    });
+  });
 
-    const name = user.fullName || localStorage.getItem('ft_user') || '';
+  function getSettings() {
+    try { return JSON.parse(localStorage.getItem('ft_settings')) || {}; } catch { return {}; }
+  }
+
+  /* ── LOAD ── */
+  function loadAll() {
+    const user    = JSON.parse(localStorage.getItem('fittrackerUser') || '{}');
+    const profile = JSON.parse(localStorage.getItem('ft_profile')     || '{}');
+    const dash    = JSON.parse(localStorage.getItem('ft_dashboard')   || '{}');
+    const settings= getSettings();
+
+    const name  = user.fullName || localStorage.getItem('ft_user') || '';
     const email = user.email || '';
 
     // Hero
-    document.getElementById('hero-name').textContent = name || 'Your Name';
-    document.getElementById('hero-email').textContent = email || 'your@email.com';
-    document.getElementById('avatar-initials').textContent = name ? name.charAt(0).toUpperCase() : '?';
+    document.getElementById('heroName').textContent     = name  || 'Your Name';
+    document.getElementById('heroEmail').textContent    = email || 'your@email.com';
+    document.getElementById('heroInitials').textContent = name ? name.charAt(0).toUpperCase() : '?';
 
-    // Form fields
-    if (name) document.getElementById('fullName').value = name;
-    if (email) document.getElementById('email').value = email;
-    if (profile.dob)      document.getElementById('dob').value = profile.dob;
-    if (profile.gender)   document.getElementById('gender').value = profile.gender;
-    if (profile.phone)    document.getElementById('phone').value = profile.phone;
-    if (profile.location) document.getElementById('location').value = profile.location;
-    if (profile.bio)      document.getElementById('bio').value = profile.bio;
-    if (profile.height)   document.getElementById('height').value = profile.height;
-    if (profile.weight)   document.getElementById('weight').value = profile.weight;
+    // Profile tab
+    if (name)             document.getElementById('fullName').value      = name;
+    if (email)            document.getElementById('email').value         = email;
+    if (profile.dob)      document.getElementById('dob').value           = profile.dob;
+    if (profile.gender)   document.getElementById('gender').value        = profile.gender;
+    if (profile.phone)    document.getElementById('phone').value         = profile.phone;
+    if (profile.location) document.getElementById('location').value      = profile.location;
+    if (profile.bio)      document.getElementById('bio').value           = profile.bio;
+    if (profile.height)   document.getElementById('height').value        = profile.height;
+    if (profile.weight)   document.getElementById('weight').value        = profile.weight;
     if (profile.targetWeight) document.getElementById('targetWeight').value = profile.targetWeight;
-    if (profile.activity) document.getElementById('activity').value = profile.activity;
+    if (profile.activity) document.getElementById('activity').value      = profile.activity;
 
     // Stats
-    document.getElementById('stat-weight').textContent = profile.weight || '–';
-    document.getElementById('stat-height').textContent = profile.height || '–';
+    document.getElementById('statWeight').textContent = profile.weight || '–';
+    document.getElementById('statHeight').textContent = profile.height || '–';
     if (profile.dob) {
-      const age = new Date().getFullYear() - new Date(profile.dob).getFullYear();
-      document.getElementById('stat-age').textContent = age;
+      document.getElementById('statAge').textContent = new Date().getFullYear() - new Date(profile.dob).getFullYear();
     }
 
     // BMI
     if (profile.height && profile.weight) {
-      const bmi = (profile.weight / ((profile.height / 100) ** 2)).toFixed(1);
-      document.getElementById('bmi-val').textContent = bmi;
-      document.getElementById('bmi-label').textContent = getBMILabel(bmi);
-      document.getElementById('bmi-display').style.display = 'block';
-      document.getElementById('hero-bmi-tag').textContent = `📊 BMI: ${bmi}`;
+      const bmi = (+profile.weight / ((+profile.height / 100) ** 2)).toFixed(1);
+      document.getElementById('bmiBox').style.display = 'block';
+      document.getElementById('bmiVal').textContent = bmi;
+      document.getElementById('bmiLbl').textContent = bmiLabel(+bmi);
+      document.getElementById('heroBmiTag').textContent = `📊 BMI: ${bmi}`;
     }
 
-    // Goal
+    // Fitness tab
     if (profile.goal) {
       selectedGoal = profile.goal;
-      document.querySelectorAll('.goal-opt').forEach(o => {
-        if (o.dataset.goal === profile.goal) o.classList.add('selected');
-      });
-      document.getElementById('hero-goal-tag').textContent = `🎯 Goal: ${profile.goal}`;
+      document.querySelectorAll('.goal-opt').forEach(o => o.classList.toggle('selected', o.dataset.goal === profile.goal));
+      document.getElementById('heroGoalTag').textContent = `🎯 Goal: ${profile.goal}`;
     }
-
-    // Level
     if (profile.fitnessLevel) {
       fitnessLevel = profile.fitnessLevel;
-      document.querySelectorAll('.level-seg').forEach(s => {
-        s.classList.toggle('active', +s.dataset.level <= fitnessLevel);
-      });
+      document.querySelectorAll('.level-seg').forEach(s => s.classList.toggle('active', +s.dataset.lv <= fitnessLevel));
       document.getElementById('levelLabel').textContent = levelLabels[fitnessLevel];
-      document.getElementById('hero-level-tag').textContent = `⚡ Level: ${levelLabels[fitnessLevel]}`;
+      document.getElementById('heroLevelTag').textContent = `⚡ Level: ${levelLabels[fitnessLevel]}`;
     }
-
-    // Days
     if (profile.selectedDays) {
       selectedDays = profile.selectedDays;
-      dayPicker.querySelectorAll('button').forEach(btn => {
-        if (selectedDays.includes(btn.textContent)) {
-          btn.style.background = 'var(--primary)';
-          btn.style.borderColor = 'var(--primary)';
-          btn.style.color = 'white';
-        }
-      });
+      DAY_PICKER.querySelectorAll('.day-btn').forEach(b => { if (selectedDays.includes(b.textContent)) b.classList.add('on'); });
     }
 
-    // Activity from dashboard
-    document.getElementById('act-water').textContent   = (dash.water   || 0) + ' L';
-    document.getElementById('act-steps').textContent   = (dash.steps   || 0).toLocaleString();
-    document.getElementById('act-workout').textContent = (dash.workout || 0) + ' mins';
+    // Activity tab
+    document.getElementById('actWater').textContent   = (dash.water   || 0) + ' L';
+    document.getElementById('actSteps').textContent   = (dash.steps   || 0).toLocaleString();
+    document.getElementById('actWorkout').textContent = (dash.workout || 0) + ' mins';
 
-    // Last meal
     const today = new Date().toISOString().split('T')[0];
-    const meals = JSON.parse(localStorage.getItem('ft_log_' + today) || '{}');
-    const allMeals = Object.values(meals).flat();
-    if (allMeals.length > 0) {
-      const last = allMeals[allMeals.length - 1];
-      document.getElementById('act-meal').textContent = last.name + ' — today';
-    }
+    const ftLogs = JSON.parse(localStorage.getItem('ft_logs') || '{}');
+    const dayLogs = ftLogs[today] || [];
+    if (dayLogs.length) document.getElementById('actMeal').textContent = dayLogs[dayLogs.length-1].name + ' — today';
+
+    // Goal inputs
+    const ftGoals = JSON.parse(localStorage.getItem('ft_goals') || '{}');
+    if (ftGoals.kcal)    document.getElementById('goalCalories').value = ftGoals.kcal;
+    if (ftGoals.protein) document.getElementById('goalProtein').value  = ftGoals.protein;
+    if (ftGoals.carbs)   document.getElementById('goalCarbs').value    = ftGoals.carbs;
+    if (ftGoals.fat)     document.getElementById('goalFat').value      = ftGoals.fat;
+    if (ftGoals.water)   document.getElementById('goalWater').value    = ftGoals.water;
+    if (ftGoals.steps)   document.getElementById('goalSteps').value    = ftGoals.steps;
+
+    // Settings tab
+    if (name)  document.getElementById('settingsName').value  = name;
+    if (email) document.getElementById('settingsEmail').value = email;
+    if (settings.unitPref) document.getElementById('unitPref').value = settings.unitPref;
+    document.querySelectorAll('.toggle-pill').forEach(btn => {
+      const val = settings[btn.dataset.key];
+      if (val !== undefined) {
+        btn.classList.toggle('on',  val);
+        btn.classList.toggle('off', !val);
+      }
+    });
   }
 
-  // ── SAVE PROFILE ──
+  /* ── SAVE PROFILE ── */
   function saveProfile() {
-    const name   = document.getElementById('fullName').value.trim();
-    const email  = document.getElementById('email').value.trim();
-    const height = document.getElementById('height').value;
-    const weight = document.getElementById('weight').value;
-
+    const name = document.getElementById('fullName').value.trim();
     if (!name) { showToast('❌ Please enter your full name.'); return; }
-
-    // Update fittrackerUser so login still works
     const user = JSON.parse(localStorage.getItem('fittrackerUser') || '{}');
     user.fullName = name;
-    user.email = email || user.email;
     localStorage.setItem('fittrackerUser', JSON.stringify(user));
     localStorage.setItem('ft_user', name);
 
-    const profile = {
-      dob:          document.getElementById('dob').value,
-      gender:       document.getElementById('gender').value,
-      phone:        document.getElementById('phone').value,
-      location:     document.getElementById('location').value,
-      bio:          document.getElementById('bio').value,
-      height:       parseFloat(height) || '',
-      weight:       parseFloat(weight) || '',
-      targetWeight: parseFloat(document.getElementById('targetWeight').value) || '',
-      activity:     document.getElementById('activity').value,
-      goal:         selectedGoal,
-      fitnessLevel: fitnessLevel,
-      selectedDays: selectedDays,
-    };
+    const profile = getProfile();
+    profile.dob      = document.getElementById('dob').value;
+    profile.gender   = document.getElementById('gender').value;
+    profile.phone    = document.getElementById('phone').value;
+    profile.location = document.getElementById('location').value;
+    profile.bio      = document.getElementById('bio').value;
+    profile.height   = parseFloat(document.getElementById('height').value) || '';
+    profile.weight   = parseFloat(document.getElementById('weight').value) || '';
+    profile.targetWeight = parseFloat(document.getElementById('targetWeight').value) || '';
+    profile.activity = document.getElementById('activity').value;
     localStorage.setItem('ft_profile', JSON.stringify(profile));
 
-    // Refresh hero
-    document.getElementById('hero-name').textContent = name;
-    document.getElementById('hero-email').textContent = email;
-    document.getElementById('avatar-initials').textContent = name.charAt(0).toUpperCase();
-    document.getElementById('stat-weight').textContent = profile.weight || '–';
-    document.getElementById('stat-height').textContent = profile.height || '–';
-    if (profile.dob) {
-      const age = new Date().getFullYear() - new Date(profile.dob).getFullYear();
-      document.getElementById('stat-age').textContent = age;
-    }
-    if (selectedGoal) document.getElementById('hero-goal-tag').textContent = `🎯 Goal: ${selectedGoal}`;
-    if (fitnessLevel) document.getElementById('hero-level-tag').textContent = `⚡ Level: ${levelLabels[fitnessLevel]}`;
-    if (profile.height && profile.weight) {
-      const bmi = (profile.weight / ((profile.height / 100) ** 2)).toFixed(1);
-      document.getElementById('hero-bmi-tag').textContent = `📊 BMI: ${bmi}`;
-    }
-
+    updateHero(name, profile);
     showToast('✅ Profile saved!');
   }
 
-  // ── UTILS ──
-  function scrollToEdit() {
-    document.getElementById('edit-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  /* ── SAVE FITNESS ── */
+  function saveFitness() {
+    const profile = getProfile();
+    profile.goal         = selectedGoal;
+    profile.fitnessLevel = fitnessLevel;
+    profile.selectedDays = selectedDays;
+    localStorage.setItem('ft_profile', JSON.stringify(profile));
+    if (selectedGoal)  document.getElementById('heroGoalTag').textContent  = `🎯 Goal: ${selectedGoal}`;
+    if (fitnessLevel)  document.getElementById('heroLevelTag').textContent = `⚡ Level: ${levelLabels[fitnessLevel]}`;
+    showToast('✅ Fitness info saved!');
   }
 
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
+  /* ── SAVE GOALS ── */
+  function saveGoals() {
+    const g = {
+      kcal:    parseInt(document.getElementById('goalCalories').value) || 2200,
+      protein: parseInt(document.getElementById('goalProtein').value)  || 150,
+      carbs:   parseInt(document.getElementById('goalCarbs').value)    || 250,
+      fat:     parseInt(document.getElementById('goalFat').value)      || 70,
+      water:   parseFloat(document.getElementById('goalWater').value)  || 2.5,
+      steps:   parseInt(document.getElementById('goalSteps').value)    || 10000,
+    };
+    localStorage.setItem('ft_goals', JSON.stringify(g));
+    showToast('✅ Goals saved!');
   }
 
+  /* ── SAVE SETTINGS ── */
+  function saveSettings() {
+    const name  = document.getElementById('settingsName').value.trim();
+    const email = document.getElementById('settingsEmail').value.trim();
+    if (name) {
+      const user = JSON.parse(localStorage.getItem('fittrackerUser') || '{}');
+      user.fullName = name; user.email = email;
+      localStorage.setItem('fittrackerUser', JSON.stringify(user));
+      localStorage.setItem('ft_user', name);
+    }
+    const s = getSettings();
+    s.unitPref = document.getElementById('unitPref').value;
+    localStorage.setItem('ft_settings', JSON.stringify(s));
+    showToast('✅ Settings saved!');
+  }
+
+  /* ── HELPERS ── */
+  function getProfile() { try { return JSON.parse(localStorage.getItem('ft_profile')) || {}; } catch { return {}; } }
+
+  function updateHero(name, profile) {
+    document.getElementById('heroName').textContent     = name;
+    document.getElementById('heroInitials').textContent = name.charAt(0).toUpperCase();
+    if (profile.weight) document.getElementById('statWeight').textContent = profile.weight;
+    if (profile.height) document.getElementById('statHeight').textContent = profile.height;
+    if (profile.dob)    document.getElementById('statAge').textContent    = new Date().getFullYear() - new Date(profile.dob).getFullYear();
+    if (profile.height && profile.weight) {
+      const bmi = (+profile.weight / ((+profile.height / 100) ** 2)).toFixed(1);
+      document.getElementById('heroBmiTag').textContent = `📊 BMI: ${bmi}`;
+    }
+  }
+
+  /* ── PASSWORD MODAL ── */
+  function openPasswordModal() { document.getElementById('pwModal').classList.add('open'); }
+  function closePwModal()      { document.getElementById('pwModal').classList.remove('open'); }
+  function changePassword() {
+    const pw1 = document.getElementById('newPw').value;
+    const pw2 = document.getElementById('confirmPw').value;
+    if (!pw1) { showToast('❌ Enter a new password.'); return; }
+    if (pw1 !== pw2) { showToast('❌ Passwords do not match.'); return; }
+    const user = JSON.parse(localStorage.getItem('fittrackerUser') || '{}');
+    user.password = pw1;
+    localStorage.setItem('fittrackerUser', JSON.stringify(user));
+    closePwModal();
+    showToast('✅ Password changed!');
+  }
+  document.getElementById('pwModal').addEventListener('click', e => { if (e.target === e.currentTarget) closePwModal(); });
+
+  /* ── DANGER ── */
   function confirmReset() {
     if (confirm('Clear all your FitTracker data? This cannot be undone.')) {
       const user = JSON.parse(localStorage.getItem('fittrackerUser') || '{}');
       localStorage.clear();
-      if (user.fullName) localStorage.setItem('fittrackerUser', JSON.stringify(user));
-      showToast('🗑️ All data cleared.');
-      setTimeout(() => location.reload(), 1200);
+      localStorage.setItem('fittrackerUser', JSON.stringify(user));
+      showToast('🗑️ All data cleared.'); setTimeout(() => location.reload(), 1200);
     }
   }
-
   function confirmLogout() {
-    if (confirm('Log out and clear all data?')) {
-      localStorage.clear();
-      window.location.href = 'index.html';
-    }
+    if (confirm('Log out and clear all data?')) { localStorage.clear(); window.location.href = 'index.html'; }
   }
 
+  /* ── LOGOUT ── */
   document.getElementById('logout-btn').addEventListener('click', e => {
     e.preventDefault();
     localStorage.removeItem('ft_token');
@@ -864,8 +988,15 @@
     window.location.href = 'index.html';
   });
 
-  // ── INIT ──
-  loadProfile();
+  /* ── TOAST ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  /* ── INIT ── */
+  loadAll();
 </script>
 </body>
 </html>

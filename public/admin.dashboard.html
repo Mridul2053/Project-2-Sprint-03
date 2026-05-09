@@ -147,14 +147,26 @@ let allUsers = [];
 let modalType = "";
 
 async function loadUsers() {
-  const res = await fetch("http://localhost:5000/api/users");
-  allUsers = await res.json();
-  displayUsers(allUsers);
-}
 
-function displayUsers(users) {
-  const table = document.getElementById("userTable");
-  table.innerHTML = "";
+  try {
+
+    const res = await fetch("/api/admin/users");
+
+    const users = await res.json();
+
+    allUsers = users;
+
+    displayUsers(users);
+
+    document.getElementById("totalUsers").innerText =
+      users.length;
+
+    document.getElementById("activeUsers").innerText =
+      users.length;
+
+  } catch (error) {
+
+    console.error(error);
 
   users.forEach(user => {
     const date = new Date(user.joined_date).toLocaleDateString("en-GB");

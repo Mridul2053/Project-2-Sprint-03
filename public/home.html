@@ -334,6 +334,7 @@
     <a href="Workout.html">Workouts</a>
     <a href="dashboard.html">Dashboard</a>
     <a href="profile.html">Profile</a>
+    <a href="admin.login.html">Admin Login</a>
     <a href="index.html" id="logoutBtn" class="nav-cta">Log Out</a>
   </nav>
   <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
@@ -395,6 +396,9 @@
     <div class="cta-row">
       <a class="btn primary" href="dashboard.html">Go to Dashboard →</a>
       <a class="btn ghost" href="tracker.html">Log Today's Meals</a>
+      <a class="btn primary" href="upgrade.html">
+  ✨ Upgrade Premium
+</a>
     </div>
   </div>
 
@@ -542,27 +546,62 @@
   function get(key)    { try { return JSON.parse(localStorage.getItem(key)) || {}; } catch { return {}; } }
   function pct(v, g)   { return g ? Math.min(Math.round((v / g) * 100), 100) : 0; }
 
-  function getTodayCalories() {
-    try {
-      const logs  = JSON.parse(localStorage.getItem('ft_meal_log')) || [];
-      const today = new Date().toDateString();
-      return logs.filter(m => new Date(m.date).toDateString() === today)
-                 .reduce((s, m) => s + (m.calories || 0), 0);
-    } catch { return 0; }
+ function getTodayCalories() {
+
+  try {
+
+    const logs = JSON.parse(localStorage.getItem('ft_logs')) || {};
+
+    const today = new Date().toISOString().slice(0,10);
+
+    const meals = logs[today] || [];
+
+    return meals.reduce((sum, meal) => {
+
+      return sum + (Number(meal.kcal) || 0);
+
+    }, 0);
+
+  } catch {
+
+    return 0;
+
   }
 
-  function getTodayMacros() {
-    try {
-      const logs  = JSON.parse(localStorage.getItem('ft_meal_log')) || [];
-      const today = new Date().toDateString();
-      const t     = logs.filter(m => new Date(m.date).toDateString() === today);
-      return {
-        protein: t.reduce((s, m) => s + (m.protein || 0), 0),
-        carbs:   t.reduce((s, m) => s + (m.carbs   || 0), 0),
-      };
-    } catch { return { protein: 0, carbs: 0 }; }
-  }
+}
+function getTodayMacros() {
 
+  try {
+
+    const logs = JSON.parse(localStorage.getItem('ft_logs')) || {};
+
+    const today = new Date().toISOString().slice(0,10);
+
+    const meals = logs[today] || [];
+
+    return {
+
+      protein: meals.reduce((sum, meal) => {
+
+        return sum + (Number(meal.protein) || 0);
+
+      }, 0),
+
+      carbs: meals.reduce((sum, meal) => {
+
+        return sum + (Number(meal.carbs) || 0);
+
+      }, 0)
+    };
+  } catch {
+    return {
+
+      protein: 0,
+      carbs: 0
+
+    };
+  }
+}
   // ── RENDER ──
   function render() {
     const goals   = get('ft_goals');

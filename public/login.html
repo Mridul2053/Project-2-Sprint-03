@@ -69,14 +69,14 @@
 
         localStorage.setItem("ft_user", savedUser.fullName);
         localStorage.setItem("ft_token", "logged_in");
-        window.location.href = "dashboard.html";
+        window.location.href = "home.html";
         return;
       }
 
       if (email === "demo@fittracker.app" && password === "Passw0rd!") {
         localStorage.setItem("ft_user", "Demo User");
         localStorage.setItem("ft_token", "logged_in");
-        window.location.href = "dashboard.html";
+        window.location.href = "home.html";
       } else {
         error.textContent = "Invalid email or password.";
         error.hidden = false;

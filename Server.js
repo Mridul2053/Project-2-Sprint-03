@@ -151,7 +151,9 @@ app.get('/', (req, res) =>
 app.get('/login',    (req, res) => res.redirect('/login.html'));
 app.get('/register', (req, res) => res.redirect('/register.html'));
 app.get('/dashboard',(req, res) => res.redirect('/dashboard.html'));
-app.get('/admin',    (req, res) => res.redirect('/admin.html'));
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin.dashboard.html'));
+});
 
 // ═══════════════════════════════════════════════════════════════
 //  AUTH  —  /register  /login  /logout  /api/session

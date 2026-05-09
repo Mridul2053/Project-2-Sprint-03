@@ -9,14 +9,24 @@
 <header class="topbar">
   <a class="brand" href="home.html">
     <img src="assets/logo.png" alt="Fitness Tracker Logo" class="logo">
-    <span class="brand-text">Fitness Tracker</span>
+    <span class="brand-text">FitTracker</span>
   </a>
-  <div class="date-controls"><button id="prev-day">◀</button><input type="date" id="log-date"><button id="next-day">▶</button></div>
-  <a id="logout" href="#">Logout</a>
+  <nav class="topnav">
+    <a href="home.html">Home</a>
+    <a href="tracker.html" class="active">Nutrition Tracker</a>
+    <a href="workout.html">Workout Builder</a>
+    <a href="dashboard.html">Dashboard</a>
+  </nav>
+  <div class="date-controls">
+    <button id="prev-day">◀</button>
+    <input type="date" id="log-date">
+    <button id="next-day">▶</button>
+  </div>
+  <a id="logout" href="#">Log Out</a>
 </header>
 <main class="wrap">
 <section class="summary">
-  <div class="card"><h2>Today’s Intake</h2>
+  <div class="card"><h2>Today's Intake</h2>
     <div class="totals">
       <div><span id="kcal-total">0</span><small>kcal</small></div>
       <div><span id="carb-total">0</span><small>carbs (g)</small></div>

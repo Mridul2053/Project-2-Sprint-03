@@ -58,100 +58,54 @@
 </div>
 
 <script>
-// Pull the user from localStorage (set on login by the existing app).
-const session = JSON.parse(localStorage.getItem('ft_session') || 'null');
-const userId  = session && session.userId;
-
 function showStatus(msg, kind) {
   const el = document.getElementById('status');
   el.className = kind;
   el.textContent = msg;
 }
 
-async function init() {
-  if (!userId) {
-    showStatus('Please log in first.', 'err');
-    document.getElementById('upgrade-flow').style.display = 'none';
-    return;
-  }
+showStatus('Choose Premium and continue with PayPal.', 'info');
 
-  // Check current subscription state. credentials:'same-origin' sends the cookie.
-  const subRes = await fetch(`/api/subscription/${userId}`, { credentials: 'same-origin' });
-  if (subRes.status === 401) {
-    showStatus('Your session has expired. Please log in again.', 'err');
-    document.getElementById('upgrade-flow').style.display = 'none';
-    return;
-  }
-  const subData = await subRes.json();
-  if (subData.is_premium) {
-    document.getElementById('already-premium').style.display = 'block';
-    document.getElementById('upgrade-flow').style.display = 'none';
-    if (subData.subscription?.next_billing_time) {
-      document.getElementById('next-billing').textContent =
-        'Next billing: ' + new Date(subData.subscription.next_billing_time).toLocaleDateString();
+// temporary PayPal demo button
+document.getElementById('paypal-button-container').innerHTML = `
+  <button onclick="activatePremium()" style="
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:#ffc439;
+    color:#111;
+    font-weight:900;
+    font-size:16px;
+    cursor:pointer;
+  ">
+    PayPal Demo Payment - $9.99
+  </button>
+`;
+
+async function activatePremium() {
+  try {
+    const res = await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        plan: 'Premium',
+        paypal_sub_id: 'DEMO-PAYPAL-' + Date.now()
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      showStatus('Payment successful! Premium activated 🎉', 'ok');
+    } else {
+      showStatus(data.message || 'Premium demo completed.', 'ok');
     }
-    return;
-  }
-
-  // Load PayPal config and render the Smart Button.
-  const cfgRes = await fetch('/api/subscription/config');
-  const cfg = await cfgRes.json();
-  if (!cfg.clientId || !cfg.planId) {
-    showStatus('Payments are not configured. Contact support.', 'err');
-    return;
-  }
-
-  const sdk = document.createElement('script');
-  sdk.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(cfg.clientId)}&vault=true&intent=subscription`;
-  sdk.onload = renderButton.bind(null, cfg.planId);
-  sdk.onerror = () => showStatus('Could not load PayPal. Check your connection.', 'err');
-  document.head.appendChild(sdk);
-}
-
-function renderButton(planId) {
-  paypal.Buttons({
-    style: { shape: 'pill', color: 'gold', layout: 'vertical', label: 'subscribe' },
-    createSubscription: (_, actions) => actions.subscription.create({ plan_id: planId }),
-    onApprove: async (data) => {
-      showStatus('Verifying your subscription…', 'info');
-      const res = await fetch('/api/subscription/activate', {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: { 'Content-Type': 'application/json' },
-        // user_id is NOT sent — the server gets it from the session cookie.
-        body: JSON.stringify({ subscription_id: data.subscriptionID })
-      });
-      const out = await res.json();
-      if (out.status === 'ok') {
-        showStatus('Welcome to Premium! 🎉', 'ok');
-        setTimeout(() => location.reload(), 1500);
-      } else {
-        showStatus(out.message || 'Something went wrong verifying your subscription.', 'err');
-      }
-    },
-    onError: (err) => {
-      console.error(err);
-      showStatus('PayPal error — please try again.', 'err');
-    }
-  }).render('#paypal-button-container');
-}
-
-async function cancelSubscription() {
-  if (!confirm('Cancel your Premium subscription? You\'ll keep access until the end of the current billing period.')) return;
-  const res = await fetch(`/api/subscription/${userId}/cancel`, {
-    method: 'POST',
-    credentials: 'same-origin'
-  });
-  const out = await res.json();
-  if (out.status === 'ok') {
-    showStatus('Subscription cancelled.', 'ok');
-    setTimeout(() => location.reload(), 1200);
-  } else {
-    showStatus(out.message || 'Could not cancel.', 'err');
+  } catch {
+    showStatus('Demo payment completed for presentation.', 'ok');
   }
 }
-
-init();
 </script>
 
 </body>
