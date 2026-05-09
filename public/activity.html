@@ -1,181 +1,643 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Activity Tracking - FitTracker</title>
-    <link rel="stylesheet" href="activity.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Activity Log | FitTracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #690500;
+      --primary-dark: #4f0400;
+      --primary-light: #8b0600;
+      --accent: #ff3b1f;
+      --primary-glow: rgba(105,5,0,0.10);
+      --text: #111827;
+      --muted: #6b7280;
+      --bg: #f0f2f7;
+      --border: #e5e7eb;
+      --card: #ffffff;
+      --shadow: 0 4px 24px rgba(17,24,39,0.07);
+      --shadow-lg: 0 12px 40px rgba(17,24,39,0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      display: flex; align-items: center; gap: 16px;
+      padding: 0 32px; height: 64px;
+      background: #fff; border-bottom: 2px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px; letter-spacing: 2px;
+      color: var(--primary); text-decoration: none;
+    }
+
+    .nav { margin-left: auto; display: flex; gap: 4px; align-items: center; }
+    .nav a {
+      text-decoration: none; color: var(--text);
+      font-weight: 700; font-size: 14px;
+      padding: 7px 14px; border-radius: 8px;
+      transition: background 0.18s, color 0.18s;
+    }
+    .nav a:hover { background: var(--bg); color: var(--primary); }
+    .nav .logout-btn {
+      background: var(--primary); color: #fff !important;
+      padding: 8px 18px; border-radius: 10px;
+      transition: background 0.18s, transform 0.14s;
+    }
+    .nav .logout-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+    /* ── PAGE LAYOUT ── */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px 60px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      margin-bottom: 32px;
+    }
+
+    .page-header .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 800;
+      color: var(--muted); text-decoration: none;
+      margin-bottom: 14px;
+      transition: color 0.15s;
+    }
+    .page-header .back-link:hover { color: var(--primary); }
+
+    .page-header h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(32px, 5vw, 52px);
+      letter-spacing: 1.5px; line-height: 1;
+      margin-bottom: 6px;
+    }
+    .page-header h1 span { color: var(--primary); }
+    .page-header p { color: var(--muted); font-size: 15px; font-weight: 600; }
+
+    /* ── ACTIVITY TYPE PICKER ── */
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .type-btn {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+      user-select: none;
+    }
+    .type-btn:hover { border-color: var(--primary); background: var(--primary-glow); transform: translateY(-2px); }
+    .type-btn.selected { border-color: var(--primary); background: var(--primary-glow); }
+    .type-btn.selected .tb-icon { transform: scale(1.15); }
+
+    .tb-icon { font-size: 26px; display: block; margin-bottom: 6px; transition: transform 0.2s; }
+    .tb-label { font-size: 11px; font-weight: 800; color: var(--text); line-height: 1.2; }
+
+    /* ── LOG FORM CARD ── */
+    .form-card {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      position: relative; overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .form-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .card-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px; letter-spacing: 1px;
+      color: var(--text); margin-bottom: 4px;
+    }
+    .card-desc { font-size: 13px; color: var(--muted); margin-bottom: 22px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px; margin-bottom: 20px;
+    }
+
+    .form-row { display: flex; flex-direction: column; gap: 6px; }
+
+    .form-row label {
+      font-size: 12px; font-weight: 800;
+      color: var(--text); text-transform: uppercase; letter-spacing: 0.8px;
+    }
+
+    .form-row input,
+    .form-row select {
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px; font-family: 'Nunito', sans-serif;
+      font-weight: 700; background: var(--bg);
+      color: var(--text); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      appearance: none;
+    }
+    .form-row input:focus,
+    .form-row select:focus {
+      border-color: var(--primary); background: #fff;
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .form-row.full { grid-column: 1 / -1; }
+
+    .form-footer { display: flex; align-items: center; gap: 14px; }
+
+    .log-btn {
+      background: var(--primary); color: #fff;
+      border: none; padding: 13px 32px;
+      border-radius: 10px; font-weight: 900;
+      font-size: 15px; font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(105,5,0,0.22);
+      transition: background 0.18s, transform 0.14s, box-shadow 0.14s;
+    }
+    .log-btn:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(105,5,0,0.32); }
+
+    .log-toast {
+      display: none; align-items: center; gap: 8px;
+      padding: 10px 16px;
+      background: #f0fdf4; border: 1.5px solid #bbf7d0;
+      border-radius: 10px; color: #15803d;
+      font-weight: 800; font-size: 14px;
+    }
+
+    /* ── SUMMARY STRIP ── */
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px; margin-bottom: 24px;
+    }
+
+    .sum-box {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 16px; padding: 18px;
+      text-align: center; box-shadow: var(--shadow);
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .sum-box::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .sum-box:hover { border-color: var(--primary); transform: translateY(-3px); }
+    .sum-box:hover::before { transform: scaleX(1); }
+
+    .sum-icon { font-size: 22px; margin-bottom: 6px; }
+    .sum-val {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 30px; color: var(--primary); letter-spacing: 1px; line-height: 1;
+    }
+    .sum-label { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px; }
+
+    /* ── HISTORY ── */
+    .history-card {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 20px; padding: 28px;
+      box-shadow: var(--shadow);
+      position: relative; overflow: hidden;
+    }
+    .history-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .history-header {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 20px;
+    }
+
+    .clear-btn {
+      font-size: 12px; font-weight: 800;
+      color: var(--muted); background: none;
+      border: 1.5px solid var(--border);
+      padding: 6px 14px; border-radius: 8px;
+      cursor: pointer; transition: color 0.2s, border-color 0.2s;
+    }
+    .clear-btn:hover { color: #d62828; border-color: #d62828; }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center; padding: 40px 20px;
+      color: var(--muted);
+    }
+    .empty-state .es-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+    .empty-state p { font-size: 15px; font-weight: 700; }
+
+    /* Log entries */
+    #activity-log {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+
+    .log-entry {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px; align-items: center;
+      padding: 16px 18px;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      transition: border-color 0.2s, transform 0.15s;
+      animation: slideIn 0.3s ease both;
+    }
+    .log-entry:hover { border-color: var(--primary); transform: translateX(4px); }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .entry-icon {
+      width: 46px; height: 46px;
+      background: var(--primary-glow);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      border: 1.5px solid rgba(105,5,0,0.12);
+    }
+
+    .entry-body {}
+    .entry-name {
+      font-size: 15px; font-weight: 900;
+      color: var(--text); margin-bottom: 3px;
+    }
+    .entry-meta {
+      font-size: 12px; color: var(--muted);
+      font-weight: 700; display: flex; gap: 12px; flex-wrap: wrap;
+    }
+    .entry-meta span { display: flex; align-items: center; gap: 4px; }
+
+    .entry-right { text-align: right; }
+    .entry-kcal {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px; color: var(--primary); letter-spacing: 1px; line-height: 1;
+    }
+    .entry-kcal-label { font-size: 11px; color: var(--muted); font-weight: 700; }
+
+    .entry-date {
+      font-size: 11px; color: var(--muted);
+      font-weight: 700; margin-top: 2px;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .page-header  { animation: fadeUp 0.4s ease both; }
+    .type-grid    { animation: fadeUp 0.4s 0.05s ease both; }
+    .form-card    { animation: fadeUp 0.4s 0.10s ease both; }
+    .summary-strip { animation: fadeUp 0.4s 0.15s ease both; }
+    .history-card { animation: fadeUp 0.4s 0.20s ease both; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .topbar { padding: 0 16px; }
+      .nav a:not(.logout-btn) { display: none; }
+      .page { padding: 24px 14px 48px; }
+      .type-grid { grid-template-columns: repeat(3, 1fr); }
+      .form-grid { grid-template-columns: 1fr 1fr; }
+      .summary-strip { grid-template-columns: 1fr 1fr; }
+      .log-entry { grid-template-columns: auto 1fr; }
+      .entry-right { display: none; }
+    }
+  </style>
 </head>
 <body>
 
-<header class="navbar">
-    <div class="logo">FitTracker</div>
-    <nav>
-        <a href="home.html">Home</a>
-        <a href="profile.html">Profile</a>
-        <a href="tracker.html">Nutrition</a>
-        <a href="Workout.html">Workout</a>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="activity.html" class="active">Activity</a>
-        <a href="settings.html">Settings</a>
-    </nav>
-    <div class="user">Admin ⌄</div>
+<!-- ── TOPBAR ── -->
+<header class="topbar">
+  <a class="brand" href="home.html">FitTracker</a>
+  <nav class="nav">
+    <a href="home.html">Home</a>
+    <a href="tracker.html">Nutrition</a>
+    <a href="Workout.html">Workouts</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="profile.html">Profile</a>
+    <a href="index.html" id="logout" class="logout-btn">Log Out</a>
+  </nav>
 </header>
 
-<section class="title-section">
-    <h1>ACTIVITY TRACKING</h1>
-</section>
+<div class="page">
 
-<section class="cards">
-    <div class="card"><h3>Total Activities</h3><p class="big" id="totalActivities">0</p><span>This Month</span></div>
-    <div class="card"><h3>Total Duration</h3><p class="big" id="totalDuration">0 min</p><span>This Month</span></div>
-    <div class="card"><h3>Calories Burned</h3><p class="big" id="totalCalories">0</p><span>This Month</span></div>
-    <div class="card"><h3>Longest Activity</h3><p class="big" id="longestActivity">0 min</p><span>This Month</span></div>
-</section>
+  <!-- ── PAGE HEADER ── -->
+  <div class="page-header">
+    <a class="back-link" href="dashboard.html">← Back to Dashboard</a>
+    <h1>Activity <span>Log</span></h1>
+    <p>Record your workouts, walks, and daily movement.</p>
+  </div>
 
-<section class="main">
-    <div class="activity-list">
-        <div class="section-header">
-            <h2>Activity List</h2>
-            <button class="btn" onclick="document.getElementById('quickAdd').scrollIntoView({behavior:'smooth'});">
-    + Add Activity
-</button>
+  <!-- ── ACTIVITY TYPE PICKER ── -->
+  <div class="type-grid" id="typeGrid">
+    <div class="type-btn selected" data-type="Walk"        data-icon="🚶"><span class="tb-icon">🚶</span><div class="tb-label">Walk</div></div>
+    <div class="type-btn"          data-type="Run"         data-icon="🏃"><span class="tb-icon">🏃</span><div class="tb-label">Run</div></div>
+    <div class="type-btn"          data-type="Cycle"       data-icon="🚴"><span class="tb-icon">🚴</span><div class="tb-label">Cycle</div></div>
+    <div class="type-btn"          data-type="Swim"        data-icon="🏊"><span class="tb-icon">🏊</span><div class="tb-label">Swim</div></div>
+    <div class="type-btn"          data-type="Gym Session" data-icon="🏋️"><span class="tb-icon">🏋️</span><div class="tb-label">Gym</div></div>
+    <div class="type-btn"          data-type="Custom"      data-icon="✏️"><span class="tb-icon">✏️</span><div class="tb-label">Custom</div></div>
+  </div>
+
+  <!-- ── LOG FORM ── -->
+  <div class="form-card">
+    <div class="card-title">Log an Activity</div>
+    <div class="card-desc">Fill in the details and hit Save to record your session.</div>
+
+    <form id="activity-form">
+      <div class="form-grid">
+
+        <div class="form-row" id="custom-name-row" style="display:none; grid-column: 1/-1;">
+          <label>Activity Name</label>
+          <input type="text" id="custom-name" placeholder="e.g. Basketball, Yoga, Hiking...">
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Activity</th>
-                    <th>Duration</th>
-                    <th>Calories</th>
-                    <th>Notes</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="activityTableBody"></tbody>
-        </table>
-    </div>
-
-    <div class="sidebar">
-        <div class="box">
-            <h3>Weekly Activity</h3>
-            <div class="bars">
-                <div style="height:40%"></div>
-                <div style="height:70%"></div>
-                <div style="height:30%"></div>
-                <div style="height:90%"></div>
-                <div style="height:60%"></div>
-                <div style="height:65%"></div>
-                <div style="height:25%"></div>
-            </div>
+        <div class="form-row">
+          <label>Duration (mins)</label>
+          <input type="number" id="duration" placeholder="e.g. 45" min="1" max="600" required>
         </div>
 
-        <div class="box">
-            <h3>Activity Goals</h3>
-            <p>Weekly Goal (5/7)</p>
-            <div class="progress"><div style="width:70%"></div></div>
-            <p>Monthly Goal (12/20)</p>
-            <div class="progress"><div style="width:60%"></div></div>
+        <div class="form-row">
+          <label>Distance (km) <span style="font-weight:600;color:var(--muted)">(optional)</span></label>
+          <input type="number" id="distance" placeholder="e.g. 5.2" min="0" step="0.1">
         </div>
-    </div>
-</section>
 
-<section class="quick-add" id="quickAdd">
-    <h2>Quick Add Activity</h2>
+        <div class="form-row">
+          <label>Calories Burned</label>
+          <input type="number" id="calories-burned" placeholder="Auto or enter manually" min="0">
+        </div>
 
-    <div class="form">
-        <input type="text" id="activity" placeholder="Activity Type">
-        <input type="number" id="duration" placeholder="Duration (min)">
-        <input type="number" id="calories" placeholder="Calories">
-        <input type="text" id="notes" placeholder="Notes">
-        <button class="btn" onclick="addActivity()">Add</button>
+        <div class="form-row">
+          <label>Intensity</label>
+          <select id="intensity">
+            <option value="Low">🟢 Low</option>
+            <option value="Moderate" selected>🟡 Moderate</option>
+            <option value="High">🔴 High</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label>Date</label>
+          <input type="date" id="activity-date">
+        </div>
+
+        <div class="form-row full">
+          <label>Notes <span style="font-weight:600;color:var(--muted)">(optional)</span></label>
+          <input type="text" id="notes" placeholder="e.g. Felt great, personal best!">
+        </div>
+
+      </div>
+
+      <div class="form-footer">
+        <button type="submit" class="log-btn">➕ Log Activity</button>
+        <div class="log-toast" id="log-toast">✅ Activity logged!</div>
+      </div>
+    </form>
+  </div>
+
+  <!-- ── SUMMARY STRIP ── -->
+  <div class="summary-strip">
+    <div class="sum-box">
+      <div class="sum-icon">📅</div>
+      <div class="sum-val" id="sum-total">0</div>
+      <div class="sum-label">Total Sessions</div>
     </div>
-</section>
+    <div class="sum-box">
+      <div class="sum-icon">⏱️</div>
+      <div class="sum-val" id="sum-mins">0</div>
+      <div class="sum-label">Total Minutes</div>
+    </div>
+    <div class="sum-box">
+      <div class="sum-icon">🔥</div>
+      <div class="sum-val" id="sum-kcal">0</div>
+      <div class="sum-label">Calories Burned</div>
+    </div>
+    <div class="sum-box">
+      <div class="sum-icon">📍</div>
+      <div class="sum-val" id="sum-km">0</div>
+      <div class="sum-label">Total km</div>
+    </div>
+  </div>
+
+  <!-- ── HISTORY ── -->
+  <div class="history-card">
+    <div class="history-header">
+      <div class="card-title">Activity History</div>
+      <button class="clear-btn" id="clear-btn">Clear All</button>
+    </div>
+    <div id="log-container"></div>
+  </div>
+
+</div>
 
 <script>
-async function loadActivities() {
-    const response = await fetch('/api/activity');
-    const data = await response.json();
+  // ── STATE ──
+  let selectedType = 'Walk';
+  let selectedIcon = '🚶';
 
-    const tbody = document.getElementById('activityTableBody');
-    tbody.innerHTML = '';
-
-    let totalDuration = 0;
-    let totalCalories = 0;
-    let longest = 0;
-
-    if (!data.activities || data.activities.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="6">No activities added yet.</td>
-            </tr>
-        `;
-    } else {
-        data.activities.forEach(item => {
-            const durationNum = parseInt(item.duration) || 0;
-            const caloriesNum = parseInt(item.calories) || 0;
-
-            totalDuration += durationNum;
-            totalCalories += caloriesNum;
-            if (durationNum > longest) longest = durationNum;
-
-            tbody.innerHTML += `
-                <tr>
-                    <td>${item.date ? item.date.split(' ')[0] : '-'}</td>
-                    <td>${item.activity || '-'}</td>
-                    <td>${item.duration || 0} min</td>
-                    <td>${item.calories || 0} kcal</td>
-                    <td>${item.notes || '-'}</td>
-                    <td>✅</td>
-                </tr>
-            `;
-        });
-    }
-
-    document.getElementById('totalActivities').innerText = data.activities.length;
-    document.getElementById('totalDuration').innerText = totalDuration + ' min';
-    document.getElementById('totalCalories').innerText = totalCalories;
-    document.getElementById('longestActivity').innerText = longest + ' min';
-}
-
-async function addActivity() {
-    const activity = document.getElementById('activity').value;
-    const duration = document.getElementById('duration').value;
-    const calories = document.getElementById('calories').value;
-    const notes = document.getElementById('notes').value;
-
-    if (!activity || !duration || !calories) {
-        alert('Please fill activity, duration, and calories.');
-        return;
-    }
-
-    const response = await fetch('/api/activity', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            user_email: 'test@fittracker.com',
-            activity,
-            duration,
-            calories,
-            notes
-        })
+  // ── TYPE PICKER ──
+  document.querySelectorAll('.type-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedType = btn.dataset.type;
+      selectedIcon = btn.dataset.icon;
+      // Show custom name field only for Custom
+      document.getElementById('custom-name-row').style.display =
+        selectedType === 'Custom' ? '' : 'none';
     });
+  });
 
-    const result = await response.json();
+  // ── SET TODAY'S DATE ──
+  document.getElementById('activity-date').value = new Date().toISOString().split('T')[0];
 
-    if (result.success) {
-        alert('Activity added successfully!');
-        document.getElementById('activity').value = '';
-        document.getElementById('duration').value = '';
-        document.getElementById('calories').value = '';
-        document.getElementById('notes').value = '';
-        loadActivities();
-    } else {
-        alert('Failed to add activity.');
+  // ── CALORIE ESTIMATOR (MET-based) ──
+  const MET = { Walk: 3.5, Run: 9.8, Cycle: 7.5, Swim: 8.0, 'Gym Session': 5.5, Custom: 5.0 };
+  const INTENSITY_MULT = { Low: 0.8, Moderate: 1.0, High: 1.25 };
+
+  function estimateCalories(type, duration, intensity) {
+    const profile = getProfile();
+    const weight  = profile.weight || 70;
+    const met     = (MET[type] || 5) * (INTENSITY_MULT[intensity] || 1);
+    return Math.round((met * weight * duration) / 60);
+  }
+
+  // ── AUTO-FILL CALORIES ──
+  ['duration', 'intensity'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      const dur = +document.getElementById('duration').value;
+      const int = document.getElementById('intensity').value;
+      if (dur > 0) {
+        document.getElementById('calories-burned').placeholder =
+          `~${estimateCalories(selectedType, dur, int)} kcal estimated`;
+      }
+    });
+  });
+
+  // ── STORAGE ──
+  function getLog()     { try { return JSON.parse(localStorage.getItem('ft_activity_log')) || []; } catch { return []; } }
+  function saveLog(log) { localStorage.setItem('ft_activity_log', JSON.stringify(log)); }
+  function getProfile() { try { return JSON.parse(localStorage.getItem('ft_profile'))    || {}; } catch { return {}; } }
+
+  // ── FORM SUBMIT ──
+  document.getElementById('activity-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const duration = +document.getElementById('duration').value;
+    if (!duration) return;
+
+    const intensity = document.getElementById('intensity').value;
+    const name = selectedType === 'Custom'
+      ? (document.getElementById('custom-name').value.trim() || 'Custom Activity')
+      : selectedType;
+
+    const calInput = +document.getElementById('calories-burned').value;
+    const calories = calInput || estimateCalories(selectedType, duration, intensity);
+
+    const entry = {
+      id:        Date.now(),
+      type:      selectedType,
+      icon:      selectedIcon,
+      name,
+      duration,
+      distance:  +document.getElementById('distance').value || 0,
+      calories,
+      intensity,
+      date:      document.getElementById('activity-date').value || new Date().toISOString().split('T')[0],
+      notes:     document.getElementById('notes').value.trim(),
+    };
+
+    const log = getLog();
+    log.unshift(entry); // newest first
+    saveLog(log);
+
+    // Reset form
+    this.reset();
+    document.getElementById('activity-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('custom-name-row').style.display = 'none';
+
+    renderLog();
+    renderSummary();
+
+    const toast = document.getElementById('log-toast');
+    toast.style.display = 'flex';
+    setTimeout(() => toast.style.display = 'none', 3000);
+  });
+
+  // ── CLEAR ALL ──
+  document.getElementById('clear-btn').addEventListener('click', () => {
+    if (confirm('Clear all activity history? This cannot be undone.')) {
+      saveLog([]);
+      renderLog();
+      renderSummary();
     }
-}
+  });
 
-loadActivities();
+  // ── FORMAT DATE ──
+  function fmtDate(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    const today = new Date(); today.setHours(0,0,0,0);
+    const diff  = Math.round((today - d) / 86400000);
+    if (diff === 0) return 'Today';
+    if (diff === 1) return 'Yesterday';
+    return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  // ── RENDER LOG ──
+  function renderLog() {
+    const log = getLog();
+    const container = document.getElementById('log-container');
+
+    if (log.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="es-icon">🏃</div>
+          <p>No activities logged yet.<br>Pick a type above and log your first session!</p>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = `<div id="activity-log">${
+      log.map(e => `
+        <div class="log-entry">
+          <div class="entry-icon">${e.icon}</div>
+          <div class="entry-body">
+            <div class="entry-name">${e.name}</div>
+            <div class="entry-meta">
+              <span>⏱️ ${e.duration} min</span>
+              ${e.distance ? `<span>📍 ${e.distance} km</span>` : ''}
+              <span>💥 ${e.intensity}</span>
+              ${e.notes ? `<span>📝 ${e.notes}</span>` : ''}
+            </div>
+            <div class="entry-date">${fmtDate(e.date)}</div>
+          </div>
+          <div class="entry-right">
+            <div class="entry-kcal">${e.calories.toLocaleString()}</div>
+            <div class="entry-kcal-label">kcal</div>
+          </div>
+        </div>`).join('')
+    }</div>`;
+  }
+
+  // ── RENDER SUMMARY ──
+  function renderSummary() {
+    const log = getLog();
+    const totalMins = log.reduce((s, e) => s + e.duration, 0);
+    const totalKcal = log.reduce((s, e) => s + e.calories, 0);
+    const totalKm   = log.reduce((s, e) => s + e.distance, 0);
+    document.getElementById('sum-total').textContent = log.length;
+    document.getElementById('sum-mins').textContent  = totalMins.toLocaleString();
+    document.getElementById('sum-kcal').textContent  = totalKcal.toLocaleString();
+    document.getElementById('sum-km').textContent    = totalKm.toFixed(1);
+  }
+
+  // ── LOGOUT ──
+  document.getElementById('logout').addEventListener('click', function(e) {
+    e.preventDefault();
+    localStorage.removeItem('ft_token');
+    localStorage.removeItem('ft_user');
+    localStorage.removeItem('ft_loggedInEmail');
+    window.location.href = 'index.html';
+  });
+
+  // ── INIT ──
+  renderLog();
+  renderSummary();
 </script>
 
 </body>

@@ -2,10 +2,14 @@
   "name": "fittracker-v3",
   "version": "1.0.0",
   "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "better-sqlite3": "^12.9.0",
     "body-parser": "^1.20.5",
     "cors": "^2.8.6",
-    "express": "^4.22.1"
+    "express": "^4.22.1",
+    "express-session": "^1.19.0"
   }
 }

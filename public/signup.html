@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up | FitTracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', sans-serif; }
 
@@ -21,10 +21,10 @@
     /* ── TOP BRAND BAR ── */
     .top-brand {
       display: flex; align-items: center; gap: 10px;
-      margin-bottom: 28px;
+      margin-bottom: 28px; text-decoration: none;
     }
     .top-brand img { width: 36px; height: 36px; }
-    .top-brand span { font-size: 24px; font-weight: 900; color: #690500; }
+    .top-brand span { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 1.5px; color: #690500; }
 
     .form-card {
       width: 100%; max-width: 520px;
@@ -119,6 +119,26 @@
       color: #d62828; font-size: 12px;
       margin-top: 5px; display: none;
     }
+    .error-msg a { color: #690500; font-weight: 800; }
+
+    /* ── EMAIL ALREADY EXISTS BANNER ── */
+    .email-exists-banner {
+      display: none;
+      background: #fff5f5;
+      border: 1.5px solid #d62828;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: #d62828;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+    .email-exists-banner a {
+      color: #690500;
+      font-weight: 900;
+      text-decoration: underline;
+    }
 
     /* ── PASSWORD STRENGTH ── */
     .strength-bar { display: flex; gap: 4px; margin-top: 8px; }
@@ -156,7 +176,7 @@
     .bmi-preview {
       background: linear-gradient(135deg, #690500, #a30d00);
       border-radius: 14px; padding: 16px 20px;
-      color: white; display: flex;
+      color: white;
       align-items: center; justify-content: space-between;
       margin-top: 14px; display: none;
     }
@@ -248,249 +268,254 @@
 <body>
 
   <!-- TOP BRAND -->
-  <div class="top-brand">
+  <a class="top-brand" href="index.html">
     <img src="assets/logo.png" alt="FitTracker">
     <span>FitTracker</span>
-  </div>
+  </a>
 
   <div class="form-card">
 
-      <!-- Step progress -->
-      <div class="step-progress" id="stepProgress">
-        <div class="step-dot-wrap">
-          <div class="step-dot active" id="dot-1"><span class="step-num">1</span><span class="step-label">Account</span></div>
-        </div>
-        <div class="step-line" id="line-1"></div>
-        <div class="step-dot-wrap">
-          <div class="step-dot" id="dot-2"><span class="step-num">2</span><span class="step-label">Body</span></div>
-        </div>
-        <div class="step-line" id="line-2"></div>
-        <div class="step-dot-wrap">
-          <div class="step-dot" id="dot-3"><span class="step-num">3</span><span class="step-label">Goals</span></div>
-        </div>
-        <div class="step-line" id="line-3"></div>
-        <div class="step-dot-wrap">
-          <div class="step-dot" id="dot-4"><span class="step-num">4</span><span class="step-label">Review</span></div>
+    <!-- Step progress -->
+    <div class="step-progress" id="stepProgress">
+      <div class="step-dot-wrap">
+        <div class="step-dot active" id="dot-1"><span class="step-num">1</span><span class="step-label">Account</span></div>
+      </div>
+      <div class="step-line" id="line-1"></div>
+      <div class="step-dot-wrap">
+        <div class="step-dot" id="dot-2"><span class="step-num">2</span><span class="step-label">Body</span></div>
+      </div>
+      <div class="step-line" id="line-2"></div>
+      <div class="step-dot-wrap">
+        <div class="step-dot" id="dot-3"><span class="step-num">3</span><span class="step-label">Goals</span></div>
+      </div>
+      <div class="step-line" id="line-3"></div>
+      <div class="step-dot-wrap">
+        <div class="step-dot" id="dot-4"><span class="step-num">4</span><span class="step-label">Review</span></div>
+      </div>
+    </div>
+
+    <!-- ── STEP 1: Account ── -->
+    <div class="step-panel active" id="step-1">
+      <div class="step-heading">
+        <h2>Create Your Account</h2>
+        <p>Start with your basic login details</p>
+      </div>
+
+      <div class="input-group">
+        <label>Full Name</label>
+        <input type="text" id="fullName" placeholder="e.g. Alex Johnson">
+        <span class="error-msg" id="err-fullName"></span>
+      </div>
+
+      <div class="input-group">
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="you@example.com" oninput="clearEmailExists()">
+        <span class="error-msg" id="err-email"></span>
+        <!-- Duplicate email banner -->
+        <div class="email-exists-banner" id="emailExistsBanner">
+          ⚠️ An account with this email already exists.
+          <a href="login.html">Log in instead →</a>
         </div>
       </div>
 
-      <!-- ── STEP 1: Account ── -->
-      <div class="step-panel active" id="step-1">
-        <div class="step-heading">
-          <h2>Create Your Account</h2>
-          <p>Start with your basic login details</p>
-        </div>
-
+      <div class="field-row">
         <div class="input-group">
-          <label>Full Name</label>
-          <input type="text" id="fullName" placeholder="e.g. Alex Johnson">
-          <span class="error-msg" id="err-fullName"></span>
+          <label>Date of Birth</label>
+          <input type="date" id="dob">
+          <span class="error-msg" id="err-dob"></span>
         </div>
-
         <div class="input-group">
-          <label>Email Address</label>
-          <input type="email" id="email" placeholder="you@example.com">
-          <span class="error-msg" id="err-email"></span>
+          <label>Gender</label>
+          <select id="gender">
+            <option value="">Select</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Prefer not to say</option>
+          </select>
+          <span class="error-msg" id="err-gender"></span>
         </div>
-
-        <div class="field-row">
-          <div class="input-group">
-            <label>Date of Birth</label>
-            <input type="date" id="dob">
-            <span class="error-msg" id="err-dob"></span>
-          </div>
-          <div class="input-group">
-            <label>Gender</label>
-            <select id="gender">
-              <option value="">Select</option>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Prefer not to say</option>
-            </select>
-            <span class="error-msg" id="err-gender"></span>
-          </div>
-        </div>
-
-        <div class="input-group">
-          <label>Password</label>
-          <div class="password-box">
-            <input type="password" id="password" placeholder="Create a strong password" oninput="checkStrength()">
-            <button type="button" class="toggle-btn" onclick="togglePass('password', this)">Show</button>
-          </div>
-          <div class="strength-bar" id="strengthBar">
-            <div class="strength-seg" id="s1"></div>
-            <div class="strength-seg" id="s2"></div>
-            <div class="strength-seg" id="s3"></div>
-            <div class="strength-seg" id="s4"></div>
-          </div>
-          <div class="strength-label" id="strengthLabel"></div>
-          <span class="error-msg" id="err-password"></span>
-        </div>
-
-        <div class="input-group">
-          <label>Confirm Password</label>
-          <div class="password-box">
-            <input type="password" id="confirmPassword" placeholder="Re-enter your password">
-            <button type="button" class="toggle-btn" onclick="togglePass('confirmPassword', this)">Show</button>
-          </div>
-          <span class="error-msg" id="err-confirmPassword"></span>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn-next" onclick="nextStep(1)">Continue →</button>
-        </div>
-
-        <p class="bottom-text">Already have an account? <a href="index.html">Log In</a></p>
       </div>
 
-      <!-- ── STEP 2: Body Metrics ── -->
-      <div class="step-panel" id="step-2">
-        <div class="step-heading">
-          <h2>Your Body Metrics</h2>
-          <p>Used to calculate your BMI, calorie targets, and personalised goals</p>
+      <div class="input-group">
+        <label>Password</label>
+        <div class="password-box">
+          <input type="password" id="password" placeholder="Create a strong password" oninput="checkStrength()">
+          <button type="button" class="toggle-btn" onclick="togglePass('password', this)">Show</button>
         </div>
-
-        <div class="field-row">
-          <div class="input-group">
-            <label>Height (cm)</label>
-            <input type="number" id="height" placeholder="e.g. 175" min="100" max="250" oninput="calcBMI()">
-            <span class="error-msg" id="err-height"></span>
-          </div>
-          <div class="input-group">
-            <label>Current Weight (kg)</label>
-            <input type="number" id="weight" placeholder="e.g. 72" min="30" max="300" step="0.1" oninput="calcBMI()">
-            <span class="error-msg" id="err-weight"></span>
-          </div>
+        <div class="strength-bar" id="strengthBar">
+          <div class="strength-seg" id="s1"></div>
+          <div class="strength-seg" id="s2"></div>
+          <div class="strength-seg" id="s3"></div>
+          <div class="strength-seg" id="s4"></div>
         </div>
+        <div class="strength-label" id="strengthLabel"></div>
+        <span class="error-msg" id="err-password"></span>
+      </div>
 
-        <div class="field-row">
-          <div class="input-group">
-            <label>Target Weight (kg)</label>
-            <input type="number" id="targetWeight" placeholder="e.g. 68" min="30" max="300" step="0.1">
-            <span class="error-msg" id="err-targetWeight"></span>
-          </div>
-          <div class="input-group">
-            <label>Daily Step Goal</label>
-            <select id="stepGoal">
-              <option value="5000">5,000 steps (light)</option>
-              <option value="8000" selected>8,000 steps (moderate)</option>
-              <option value="10000">10,000 steps (active)</option>
-              <option value="12000">12,000+ steps (very active)</option>
-            </select>
-          </div>
+      <div class="input-group">
+        <label>Confirm Password</label>
+        <div class="password-box">
+          <input type="password" id="confirmPassword" placeholder="Re-enter your password">
+          <button type="button" class="toggle-btn" onclick="togglePass('confirmPassword', this)">Show</button>
         </div>
+        <span class="error-msg" id="err-confirmPassword"></span>
+      </div>
 
+      <div class="btn-row">
+        <button class="btn-next" onclick="nextStep(1)">Continue →</button>
+      </div>
+
+      <p class="bottom-text">Already have an account? <a href="login.html">Log In</a></p>
+    </div>
+
+    <!-- ── STEP 2: Body Metrics ── -->
+    <div class="step-panel" id="step-2">
+      <div class="step-heading">
+        <h2>Your Body Metrics</h2>
+        <p>Used to calculate your BMI, calorie targets, and personalised goals</p>
+      </div>
+
+      <div class="field-row">
         <div class="input-group">
-          <label>Daily Water Goal (L)</label>
-          <select id="waterGoal">
-            <option value="1.5">1.5 L (minimum)</option>
-            <option value="2" selected>2.0 L (recommended)</option>
-            <option value="2.5">2.5 L (active)</option>
-            <option value="3">3.0 L (athlete)</option>
+          <label>Height (cm)</label>
+          <input type="number" id="height" placeholder="e.g. 175" min="100" max="250" oninput="calcBMI()">
+          <span class="error-msg" id="err-height"></span>
+        </div>
+        <div class="input-group">
+          <label>Current Weight (kg)</label>
+          <input type="number" id="weight" placeholder="e.g. 72" min="30" max="300" step="0.1" oninput="calcBMI()">
+          <span class="error-msg" id="err-weight"></span>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="input-group">
+          <label>Target Weight (kg)</label>
+          <input type="number" id="targetWeight" placeholder="e.g. 68" min="30" max="300" step="0.1">
+          <span class="error-msg" id="err-targetWeight"></span>
+        </div>
+        <div class="input-group">
+          <label>Daily Step Goal</label>
+          <select id="stepGoal">
+            <option value="5000">5,000 steps (light)</option>
+            <option value="8000" selected>8,000 steps (moderate)</option>
+            <option value="10000">10,000 steps (active)</option>
+            <option value="12000">12,000+ steps (very active)</option>
           </select>
         </div>
+      </div>
 
-        <!-- Live BMI preview -->
-        <div class="bmi-preview" id="bmiPreview">
-          <div>
-            <div style="font-size:12px; opacity:.75; margin-bottom:4px;">YOUR BMI</div>
-            <div class="bmi-num" id="bmiNum">–</div>
-          </div>
-          <div class="bmi-right">
-            <div class="bmi-cat" id="bmiCat">–</div>
-            <div class="bmi-sub" id="bmiSub">–</div>
-          </div>
+      <div class="input-group">
+        <label>Daily Water Goal (L)</label>
+        <select id="waterGoal">
+          <option value="1.5">1.5 L (minimum)</option>
+          <option value="2" selected>2.0 L (recommended)</option>
+          <option value="2.5">2.5 L (active)</option>
+          <option value="3">3.0 L (athlete)</option>
+        </select>
+      </div>
+
+      <!-- Live BMI preview -->
+      <div class="bmi-preview" id="bmiPreview">
+        <div>
+          <div style="font-size:12px; opacity:.75; margin-bottom:4px;">YOUR BMI</div>
+          <div class="bmi-num" id="bmiNum">–</div>
         </div>
-
-        <div class="btn-row">
-          <button class="btn-back" onclick="goBack(2)">← Back</button>
-          <button class="btn-next" onclick="nextStep(2)">Continue →</button>
+        <div class="bmi-right">
+          <div class="bmi-cat" id="bmiCat">–</div>
+          <div class="bmi-sub" id="bmiSub">–</div>
         </div>
       </div>
 
-      <!-- ── STEP 3: Goals & Activity ── -->
-      <div class="step-panel" id="step-3">
-        <div class="step-heading">
-          <h2>Your Goals & Activity</h2>
-          <p>We'll use this to set your calorie budget and workout plan</p>
-        </div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="goBack(2)">← Back</button>
+        <button class="btn-next" onclick="nextStep(2)">Continue →</button>
+      </div>
+    </div>
 
-        <div class="input-group">
-          <label>Primary Fitness Goal</label>
-          <div class="option-grid" id="goalGrid">
-            <div class="option-btn" data-val="Weight Loss"><div class="opt-icon">🔥</div><div class="opt-label">Weight Loss</div></div>
-            <div class="option-btn" data-val="Muscle Gain"><div class="opt-icon">💪</div><div class="opt-label">Muscle Gain</div></div>
-            <div class="option-btn" data-val="Maintain Weight"><div class="opt-icon">⚖️</div><div class="opt-label">Maintain Weight</div></div>
-            <div class="option-btn" data-val="Build Endurance"><div class="opt-icon">🏃</div><div class="opt-label">Build Endurance</div></div>
-            <div class="option-btn" data-val="Flexibility"><div class="opt-icon">🧘</div><div class="opt-label">Flexibility</div></div>
-            <div class="option-btn" data-val="General Health"><div class="opt-icon">❤️</div><div class="opt-label">General Health</div></div>
-          </div>
-          <span class="error-msg" id="err-goal"></span>
-        </div>
-
-        <div class="input-group" style="margin-top:20px;">
-          <label>Activity Level</label>
-          <div class="activity-grid" id="activityGrid">
-            <div class="activity-opt" data-val="1.2"><div class="act-title">🛋️ Sedentary</div><div class="act-desc">Little or no exercise, desk job</div></div>
-            <div class="activity-opt" data-val="1.375"><div class="act-title">🚶 Lightly Active</div><div class="act-desc">Light exercise 1–3 days/week</div></div>
-            <div class="activity-opt" data-val="1.55"><div class="act-title">🏋️ Moderately Active</div><div class="act-desc">Moderate exercise 3–5 days/week</div></div>
-            <div class="activity-opt" data-val="1.725"><div class="act-title">🏃 Very Active</div><div class="act-desc">Hard exercise 6–7 days/week</div></div>
-          </div>
-          <span class="error-msg" id="err-activity"></span>
-        </div>
-
-        <div class="input-group" style="margin-top:16px;">
-          <label>Preferred Workout Time</label>
-          <select id="workoutTime">
-            <option value="">Select preference</option>
-            <option>Early Morning (5–7 AM)</option>
-            <option>Morning (7–9 AM)</option>
-            <option>Midday (11 AM–1 PM)</option>
-            <option>Afternoon (3–5 PM)</option>
-            <option>Evening (6–8 PM)</option>
-            <option>Night (8–10 PM)</option>
-          </select>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn-back" onclick="goBack(3)">← Back</button>
-          <button class="btn-next" onclick="nextStep(3)">Continue →</button>
-        </div>
+    <!-- ── STEP 3: Goals & Activity ── -->
+    <div class="step-panel" id="step-3">
+      <div class="step-heading">
+        <h2>Your Goals & Activity</h2>
+        <p>We'll use this to set your calorie budget and workout plan</p>
       </div>
 
-      <!-- ── STEP 4: Review ── -->
-      <div class="step-panel" id="step-4">
-        <div class="step-heading">
-          <h2>Review Your Profile</h2>
-          <p>Make sure everything looks right before you begin</p>
+      <div class="input-group">
+        <label>Primary Fitness Goal</label>
+        <div class="option-grid" id="goalGrid">
+          <div class="option-btn" data-val="Weight Loss"><div class="opt-icon">🔥</div><div class="opt-label">Weight Loss</div></div>
+          <div class="option-btn" data-val="Muscle Gain"><div class="opt-icon">💪</div><div class="opt-label">Muscle Gain</div></div>
+          <div class="option-btn" data-val="Maintain Weight"><div class="opt-icon">⚖️</div><div class="opt-label">Maintain Weight</div></div>
+          <div class="option-btn" data-val="Build Endurance"><div class="opt-icon">🏃</div><div class="opt-label">Build Endurance</div></div>
+          <div class="option-btn" data-val="Flexibility"><div class="opt-icon">🧘</div><div class="opt-label">Flexibility</div></div>
+          <div class="option-btn" data-val="General Health"><div class="opt-icon">❤️</div><div class="opt-label">General Health</div></div>
         </div>
-
-        <div class="summary-grid" id="summaryGrid"></div>
-
-        <div class="input-group">
-          <label>Phone Number <span style="color:#aaa; font-weight:600;">(optional)</span></label>
-          <input type="tel" id="phone" placeholder="+61 4xx xxx xxx">
-        </div>
-
-        <div class="checkbox-group">
-          <input type="checkbox" id="terms">
-          <label for="terms">I agree to the <span>Terms & Conditions</span> and <span>Privacy Policy</span></label>
-        </div>
-        <span class="error-msg" id="err-terms"></span>
-
-        <div class="btn-row">
-          <button class="btn-back" onclick="goBack(4)">← Back</button>
-          <button class="btn-next" onclick="submitSignup()">🚀 Create Account</button>
-        </div>
+        <span class="error-msg" id="err-goal"></span>
       </div>
 
-      <!-- ── SUCCESS ── -->
-      <div class="success-screen" id="successScreen">
-        <div class="success-icon">🎉</div>
-        <h2 id="successName">Welcome!</h2>
-        <p>Your FitTracker account is ready.<br>Your goals and calorie targets have been set.</p>
-        <button class="go-btn" onclick="window.location.href='dashboard.html'">Go to Dashboard →</button>
+      <div class="input-group" style="margin-top:20px;">
+        <label>Activity Level</label>
+        <div class="activity-grid" id="activityGrid">
+          <div class="activity-opt" data-val="1.2"><div class="act-title">🛋️ Sedentary</div><div class="act-desc">Little or no exercise, desk job</div></div>
+          <div class="activity-opt" data-val="1.375"><div class="act-title">🚶 Lightly Active</div><div class="act-desc">Light exercise 1–3 days/week</div></div>
+          <div class="activity-opt" data-val="1.55"><div class="act-title">🏋️ Moderately Active</div><div class="act-desc">Moderate exercise 3–5 days/week</div></div>
+          <div class="activity-opt" data-val="1.725"><div class="act-title">🏃 Very Active</div><div class="act-desc">Hard exercise 6–7 days/week</div></div>
+        </div>
+        <span class="error-msg" id="err-activity"></span>
       </div>
+
+      <div class="input-group" style="margin-top:16px;">
+        <label>Preferred Workout Time</label>
+        <select id="workoutTime">
+          <option value="">Select preference</option>
+          <option>Early Morning (5–7 AM)</option>
+          <option>Morning (7–9 AM)</option>
+          <option>Midday (11 AM–1 PM)</option>
+          <option>Afternoon (3–5 PM)</option>
+          <option>Evening (6–8 PM)</option>
+          <option>Night (8–10 PM)</option>
+        </select>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-back" onclick="goBack(3)">← Back</button>
+        <button class="btn-next" onclick="nextStep(3)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 4: Review ── -->
+    <div class="step-panel" id="step-4">
+      <div class="step-heading">
+        <h2>Review Your Profile</h2>
+        <p>Make sure everything looks right before you begin</p>
+      </div>
+
+      <div class="summary-grid" id="summaryGrid"></div>
+
+      <div class="input-group">
+        <label>Phone Number <span style="color:#aaa; font-weight:600;">(optional)</span></label>
+        <input type="tel" id="phone" placeholder="+61 4xx xxx xxx">
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="terms">
+        <label for="terms">I agree to the <span>Terms & Conditions</span> and <span>Privacy Policy</span></label>
+      </div>
+      <span class="error-msg" id="err-terms"></span>
+
+      <div class="btn-row">
+        <button class="btn-back" onclick="goBack(4)">← Back</button>
+        <button class="btn-next" onclick="submitSignup()">🚀 Create Account</button>
+      </div>
+    </div>
+
+    <!-- ── SUCCESS ── -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">🎉</div>
+      <h2 id="successName">Welcome!</h2>
+      <p>Your FitTracker account is ready.<br>Your goals and calorie targets have been set.</p>
+      <button class="go-btn" onclick="window.location.href='home.html'">Go to Dashboard →</button>
+    </div>
 
   </div><!-- end form-card -->
 
@@ -499,6 +524,21 @@
   let selectedGoal     = '';
   let selectedActivity = '';
   let currentStep      = 1;
+
+  // ── HELPERS: Multi-account storage ──
+  // All accounts stored as an array under 'ft_accounts'
+  function getAccounts() {
+    try { return JSON.parse(localStorage.getItem('ft_accounts')) || []; }
+    catch { return []; }
+  }
+
+  function saveAccounts(accounts) {
+    localStorage.setItem('ft_accounts', JSON.stringify(accounts));
+  }
+
+  function emailExists(email) {
+    return getAccounts().some(a => a.email.toLowerCase() === email.toLowerCase());
+  }
 
   // ── GOAL SELECTOR ──
   document.querySelectorAll('#goalGrid .option-btn').forEach(btn => {
@@ -528,20 +568,18 @@
   // ── PASSWORD STRENGTH ──
   function checkStrength() {
     const val = document.getElementById('password').value;
-    const segs = [document.getElementById('s1'), document.getElementById('s2'),
-                  document.getElementById('s3'), document.getElementById('s4')];
+    const segs = ['s1','s2','s3','s4'].map(id => document.getElementById(id));
     const lbl  = document.getElementById('strengthLabel');
     let score = 0;
-    if (val.length >= 8)            score++;
-    if (/[A-Z]/.test(val))          score++;
-    if (/[0-9]/.test(val))          score++;
-    if (/[^A-Za-z0-9]/.test(val))   score++;
-
+    if (val.length >= 8)           score++;
+    if (/[A-Z]/.test(val))         score++;
+    if (/[0-9]/.test(val))         score++;
+    if (/[^A-Za-z0-9]/.test(val))  score++;
     const colors = ['#d62828','#f97316','#f59e0b','#22c55e'];
     const labels = ['Weak','Fair','Good','Strong'];
     segs.forEach((s, i) => s.style.background = i < score ? colors[score - 1] : '#e5e7eb');
-    lbl.textContent  = val ? labels[score - 1] || '' : '';
-    lbl.style.color  = val ? colors[score - 1] : '#aaa';
+    lbl.textContent = val ? labels[score - 1] || '' : '';
+    lbl.style.color = val ? colors[score - 1] : '#aaa';
   }
 
   // ── BMI CALCULATOR ──
@@ -572,39 +610,53 @@
   }
   function clearErr(id) {
     const el = document.getElementById('err-' + id);
-    if (el) { el.style.display = 'none'; }
+    if (el) el.style.display = 'none';
     const input = document.getElementById(id);
     if (input) input.classList.remove('invalid');
+  }
+  function clearEmailExists() {
+    document.getElementById('emailExistsBanner').style.display = 'none';
+    clearErr('email');
   }
 
   function validateStep1() {
     let ok = true;
     ['fullName','email','dob','gender','password','confirmPassword'].forEach(clearErr);
+    document.getElementById('emailExistsBanner').style.display = 'none';
 
     const name = document.getElementById('fullName').value.trim();
-    if (!name)                   { showErr('fullName', 'Full name is required.'); ok = false; }
+    if (!name) { showErr('fullName', 'Full name is required.'); ok = false; }
 
     const email = document.getElementById('email').value.trim();
-    if (!email)                  { showErr('email', 'Email is required.'); ok = false; }
-    else if (!/\S+@\S+\.\S+/.test(email)) { showErr('email', 'Enter a valid email address.'); ok = false; }
+    if (!email) {
+      showErr('email', 'Email is required.'); ok = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      showErr('email', 'Enter a valid email address.'); ok = false;
+    } else if (emailExists(email)) {
+      // ── DUPLICATE EMAIL CHECK ──
+      document.getElementById('email').classList.add('invalid');
+      document.getElementById('emailExistsBanner').style.display = 'block';
+      ok = false;
+    }
 
     const dob = document.getElementById('dob').value;
-    if (!dob)                    { showErr('dob', 'Date of birth is required.'); ok = false; }
-    else {
+    if (!dob) {
+      showErr('dob', 'Date of birth is required.'); ok = false;
+    } else {
       const age = new Date().getFullYear() - new Date(dob).getFullYear();
       if (age < 13 || age > 100) { showErr('dob', 'Please enter a valid date of birth.'); ok = false; }
     }
 
     const gender = document.getElementById('gender').value;
-    if (!gender)                 { showErr('gender', 'Please select a gender.'); ok = false; }
+    if (!gender) { showErr('gender', 'Please select a gender.'); ok = false; }
 
     const pass = document.getElementById('password').value;
-    if (!pass)                   { showErr('password', 'Password is required.'); ok = false; }
-    else if (pass.length < 8)    { showErr('password', 'Password must be at least 8 characters.'); ok = false; }
+    if (!pass)               { showErr('password', 'Password is required.'); ok = false; }
+    else if (pass.length < 8){ showErr('password', 'Password must be at least 8 characters.'); ok = false; }
 
     const conf = document.getElementById('confirmPassword').value;
-    if (!conf)                   { showErr('confirmPassword', 'Please confirm your password.'); ok = false; }
-    else if (conf !== pass)      { showErr('confirmPassword', 'Passwords do not match.'); ok = false; }
+    if (!conf)           { showErr('confirmPassword', 'Please confirm your password.'); ok = false; }
+    else if (conf !== pass){ showErr('confirmPassword', 'Passwords do not match.'); ok = false; }
 
     return ok;
   }
@@ -612,16 +664,12 @@
   function validateStep2() {
     let ok = true;
     ['height','weight','targetWeight'].forEach(clearErr);
-
     const h = document.getElementById('height').value;
     if (!h || h < 100 || h > 250) { showErr('height', 'Enter a valid height (100–250 cm).'); ok = false; }
-
     const w = document.getElementById('weight').value;
     if (!w || w < 30 || w > 300)  { showErr('weight', 'Enter a valid weight (30–300 kg).'); ok = false; }
-
     const t = document.getElementById('targetWeight').value;
     if (!t || t < 30 || t > 300)  { showErr('targetWeight', 'Enter a valid target weight.'); ok = false; }
-
     return ok;
   }
 
@@ -667,9 +715,7 @@
     if (from === 1 && !validateStep1()) return;
     if (from === 2 && !validateStep2()) return;
     if (from === 3 && !validateStep3()) return;
-
     if (from === 3) buildSummary();
-
     goToStep(from + 1);
   }
 
@@ -677,15 +723,12 @@
 
   function goToStep(n) {
     document.getElementById('step-' + currentStep).classList.remove('active');
-
-    // Update dots
     for (let i = 1; i <= 4; i++) {
       const dot  = document.getElementById('dot-' + i);
       const line = document.getElementById('line-' + i);
       dot.className = 'step-dot' + (i < n ? ' done' : i === n ? ' active' : '');
       if (line) line.className = 'step-line' + (i < n ? ' done' : '');
     }
-
     currentStep = n;
     document.getElementById('step-' + n).classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -696,7 +739,6 @@
     const t   = calcTargets();
     const bmi = (parseFloat(document.getElementById('weight').value) /
                  ((parseFloat(document.getElementById('height').value) / 100) ** 2)).toFixed(1);
-
     const items = [
       { label: 'Name',          val: document.getElementById('fullName').value },
       { label: 'Goal',          val: selectedGoal },
@@ -711,9 +753,7 @@
       { label: 'Step Goal',     val: parseInt(document.getElementById('stepGoal').value).toLocaleString() },
       { label: 'Water Goal',    val: document.getElementById('waterGoal').value + ' L' },
     ];
-
-    const grid = document.getElementById('summaryGrid');
-    grid.innerHTML = items.map(i => `
+    document.getElementById('summaryGrid').innerHTML = items.map(i => `
       <div class="summary-item">
         <div class="s-label">${i.label}</div>
         <div class="s-val">${i.val}</div>
@@ -728,58 +768,72 @@
       return;
     }
 
-    const targets = calcTargets();
-    const bmi = (parseFloat(document.getElementById('weight').value) /
-                 ((parseFloat(document.getElementById('height').value) / 100) ** 2)).toFixed(1);
+    const email = document.getElementById('email').value.trim();
 
-    // Build user object (matches what login expects)
+    // Final duplicate check (safety net in case data changed between steps)
+    if (emailExists(email)) {
+      goToStep(1);
+      setTimeout(() => {
+        document.getElementById('email').classList.add('invalid');
+        document.getElementById('emailExistsBanner').style.display = 'block';
+      }, 100);
+      return;
+    }
+
+    const targets = calcTargets();
+    const h = parseFloat(document.getElementById('height').value);
+    const w = parseFloat(document.getElementById('weight').value);
+    const bmi = (w / ((h / 100) ** 2)).toFixed(1);
+
     const user = {
       fullName:    document.getElementById('fullName').value.trim(),
-      email:       document.getElementById('email').value.trim(),
+      email:       email,
       password:    document.getElementById('password').value,
       dob:         document.getElementById('dob').value,
       gender:      document.getElementById('gender').value,
       phone:       document.getElementById('phone').value,
+      profile: {
+        dob:          document.getElementById('dob').value,
+        gender:       document.getElementById('gender').value,
+        phone:        document.getElementById('phone').value,
+        height:       h,
+        weight:       w,
+        targetWeight: parseFloat(document.getElementById('targetWeight').value),
+        stepGoal:     parseInt(document.getElementById('stepGoal').value),
+        waterGoal:    parseFloat(document.getElementById('waterGoal').value),
+        goal:         selectedGoal,
+        activity:     selectedActivity,
+        workoutTime:  document.getElementById('workoutTime').value,
+        bmi:          parseFloat(bmi),
+        fitnessLevel: 1,
+      },
+      goals: {
+        kcal:    targets.kcal,
+        protein: targets.protein,
+        carbs:   targets.carbs,
+        fat:     targets.fat,
+      },
+      dashboard: {
+        workout: 0, steps: 0, water: 0,
+        stepGoal:  parseInt(document.getElementById('stepGoal').value),
+        waterGoal: parseFloat(document.getElementById('waterGoal').value),
+      }
     };
-    localStorage.setItem('fittrackerUser', JSON.stringify(user));
+
+    // ── Save to accounts array ──
+    const accounts = getAccounts();
+    accounts.push(user);
+    saveAccounts(accounts);
+
+    // ── Set as currently logged-in user ──
+    localStorage.setItem('ft_loggedInEmail', email);
     localStorage.setItem('ft_user',  user.fullName);
     localStorage.setItem('ft_token', 'logged_in');
 
-    // Save full profile
-    const profile = {
-      dob:          user.dob,
-      gender:       user.gender,
-      phone:        user.phone,
-      height:       parseFloat(document.getElementById('height').value),
-      weight:       parseFloat(document.getElementById('weight').value),
-      targetWeight: parseFloat(document.getElementById('targetWeight').value),
-      stepGoal:     parseInt(document.getElementById('stepGoal').value),
-      waterGoal:    parseFloat(document.getElementById('waterGoal').value),
-      goal:         selectedGoal,
-      activity:     selectedActivity,
-      workoutTime:  document.getElementById('workoutTime').value,
-      bmi:          parseFloat(bmi),
-      fitnessLevel: 1,
-    };
-    localStorage.setItem('ft_profile', JSON.stringify(profile));
-
-    // Save calculated nutrition goals so the tracker picks them up
-    const goals = {
-      kcal:    targets.kcal,
-      protein: targets.protein,
-      carbs:   targets.carbs,
-      fat:     targets.fat,
-    };
-    localStorage.setItem('ft_goals', JSON.stringify(goals));
-
-    // Save dashboard baseline
-    const dash = {
-      workout: 0, steps: 0,
-      water:   0,
-      stepGoal:  profile.stepGoal,
-      waterGoal: profile.waterGoal,
-    };
-    localStorage.setItem('ft_dashboard', JSON.stringify(dash));
+    // Also write flat keys so existing pages (tracker, dashboard) still work
+    localStorage.setItem('ft_profile',  JSON.stringify(user.profile));
+    localStorage.setItem('ft_goals',    JSON.stringify(user.goals));
+    localStorage.setItem('ft_dashboard',JSON.stringify(user.dashboard));
 
     // Show success
     document.getElementById('step-4').classList.remove('active');

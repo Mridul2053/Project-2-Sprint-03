@@ -1,100 +1,213 @@
-﻿<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FitTracker — Login</title>
-  <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitTracker — Your Fitness Journey Starts Here</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; background: #f4f6f8; color: #222; }
+
+    /* NAV */
+    nav {
+      background: #fff;
+      padding: 1rem 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .brand { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 1.5px; color: #8B1A1A; text-decoration: none; }
+    .nav-links { display: flex; gap: 1.2rem; align-items: center; }
+    .nav-links a { text-decoration: none; color: #555; font-weight: 600; font-size: 0.95rem; }
+    .nav-links a:hover { color: #8B1A1A; }
+    .nav-links .btn-login {
+      background: #8B1A1A; color: #fff !important;
+      padding: 0.55rem 1.4rem; border-radius: 7px;
+      transition: background 0.2s;
+    }
+    .nav-links .btn-login:hover { background: #a52020; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #8B1A1A 0%, #c0392b 100%);
+      color: #fff; text-align: center;
+      padding: 6rem 2rem 5rem;
+    }
+    .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem); letter-spacing: 2px; font-weight: 400; margin-bottom: 1rem; line-height: 1.1; }
+    .hero p { font-size: 1.15rem; opacity: 0.9; margin-bottom: 2.5rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-white {
+      background: #fff; color: #8B1A1A;
+      padding: 0.85rem 2.2rem; border-radius: 8px;
+      font-weight: 800; font-size: 1rem; text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+    .btn-outline {
+      border: 2px solid rgba(255,255,255,0.8); color: #fff;
+      padding: 0.85rem 2.2rem; border-radius: 8px;
+      font-weight: 700; font-size: 1rem; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-outline:hover { background: rgba(255,255,255,0.15); }
+
+    /* STATS */
+    .stats {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 0;
+      background: #fff;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .stat { text-align: center; padding: 2rem 3rem; border-right: 1px solid #eee; }
+    .stat:last-child { border-right: none; }
+    .stat .num { font-family: 'Bebas Neue', sans-serif; font-size: 2.6rem; color: #8B1A1A; display: block; letter-spacing: 1px; }
+    .stat .lbl { font-size: 0.85rem; color: #888; font-weight: 600; }
+
+    /* FEATURES */
+    .section { max-width: 980px; margin: 0 auto; padding: 4rem 2rem; }
+    .section h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; letter-spacing: 1px; font-weight: 400; text-align: center; margin-bottom: 0.5rem; }
+    .section .sub { text-align: center; color: #777; margin-bottom: 2.5rem; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .card {
+      background: #fff; border-radius: 14px;
+      padding: 2rem 1.5rem; text-align: center;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.06);
+      transition: transform 0.2s, box-shadow 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); border-bottom-color: #8B1A1A; }
+    .card .icon { font-size: 2.8rem; margin-bottom: 1rem; }
+    .card h3 { font-weight: 800; font-size: 1.05rem; margin-bottom: 0.5rem; }
+    .card p { color: #666; font-size: 0.9rem; line-height: 1.6; }
+
+    /* CTA BANNER */
+    .cta-banner {
+      background: #fff; text-align: center;
+      padding: 4.5rem 2rem; border-top: 1px solid #eee;
+    }
+    .cta-banner h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; letter-spacing: 1px; font-weight: 400; margin-bottom: 0.7rem; }
+    .cta-banner p { color: #777; margin-bottom: 2rem; font-size: 1rem; }
+    .btn-red {
+      background: #8B1A1A; color: #fff;
+      padding: 0.9rem 2.5rem; border-radius: 8px;
+      font-weight: 800; font-size: 1rem; text-decoration: none;
+      display: inline-block; transition: background 0.2s, transform 0.15s;
+      margin: 0.3rem;
+    }
+    .btn-red:hover { background: #a52020; transform: translateY(-2px); }
+    .btn-red-outline {
+      border: 2px solid #8B1A1A; color: #8B1A1A;
+      padding: 0.9rem 2.5rem; border-radius: 8px;
+      font-weight: 800; font-size: 1rem; text-decoration: none;
+      display: inline-block; transition: all 0.2s;
+      margin: 0.3rem;
+    }
+    .btn-red-outline:hover { background: #8B1A1A; color: #fff; }
+
+    /* FOOTER */
+    footer {
+      background: #222; color: #aaa;
+      text-align: center; padding: 1.8rem 2rem;
+      font-size: 0.88rem;
+    }
+    footer a { color: #ccc; text-decoration: none; margin: 0 0.5rem; }
+    footer a:hover { color: #fff; }
+
+    @media (max-width: 640px) {
+      .cards { grid-template-columns: 1fr; }
+      .stat { padding: 1.5rem 1.5rem; border-right: none; border-bottom: 1px solid #eee; }
+      .nav-links a:not(.btn-login) { display: none; }
+    }
+  </style>
 </head>
 <body>
-  <main class="container">
+
+<!-- NAVBAR -->
+<nav>
+  <a class="brand" href="index.html">FitTracker</a>
+  <div class="nav-links">
+    <a href="tracker.html">Nutrition</a>
+    <a href="Workout.html">Workouts</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="login.html" class="btn-login">Log In</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Track Your Fitness.<br>Reach Your Goals.</h1>
+  <p>Log meals, build workouts, and monitor your progress — simple, fast, and built for results.</p>
+  <div class="hero-btns">
+    <a class="btn-white" href="signup.html">Get Started Free</a>
+    <a class="btn-outline" href="login.html">Log In</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><span class="num">10K+</span><span class="lbl">Active Users</span></div>
+  <div class="stat"><span class="num">500K+</span><span class="lbl">Workouts Logged</span></div>
+  <div class="stat"><span class="num">98%</span><span class="lbl">Goal Success Rate</span></div>
+  <div class="stat"><span class="num">Free</span><span class="lbl">To Get Started</span></div>
+</div>
+
+<!-- FEATURES -->
+<section class="section">
+  <h2>Everything You Need</h2>
+  <p class="sub">One app to track, plan, and progress.</p>
+  <div class="cards">
     <div class="card">
-      <img src="assets/logo.png" class="logo logo-lg" alt="Fitness Tracker Logo">
-      <h1>Welcome Back</h1>
-      <p class="subtitle">Track your fitness. Reach your goals.</p>
-
-      <form id="login-form" class="form" novalidate>
-        <input id="email" type="email" placeholder="Email" required>
-
-        <div class="password-wrap">
-          <input id="password" type="password" placeholder="Password" required>
-          <button type="button" class="toggle-password" onclick="togglePassword()">Show</button>
-        </div>
-
-        <button id="login-btn" type="submit">Log in</button>
-
-        <p class="hint">Demo: <code>demo@fittracker.app</code> / <code>Passw0rd!</code></p>
-        <p id="error" class="error" hidden></p>
-
-        <p class="signup-text">
-          Don’t have an account?
-          <a href="signup.html">Sign Up</a>
-        </p>
-      </form>
+      <div class="icon">🥗</div>
+      <h3>Nutrition Tracking</h3>
+      <p>Log meals and automatically track calories and macros based on your goals.</p>
     </div>
-  </main>
+    <div class="card">
+      <div class="icon">🏋️</div>
+      <h3>Workout Builder</h3>
+      <p>Create custom workout plans and log every set, rep, and personal record.</p>
+    </div>
+    <div class="card">
+      <div class="icon">📊</div>
+      <h3>Progress Dashboard</h3>
+      <p>Visual charts and daily insights so you always know where you stand.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🎯</div>
+      <h3>Goal Setting</h3>
+      <p>Set weight or strength goals and get a clear daily action plan to hit them.</p>
+    </div>
+    <div class="card">
+      <div class="icon">⚖️</div>
+      <h3>Weight Tracker</h3>
+      <p>Track body weight changes over time with trends and progress graphs.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🔥</div>
+      <h3>Activity Log</h3>
+      <p>Log any activity and see calories burned update in real time.</p>
+    </div>
+  </div>
+</section>
 
-  <footer class="footer">
-    <h3>FedUni</h3>
-    <p>470 Bourke Street · Melbourne 3000 · 1800 333 864 · <a href="mailto:info@feduni.com.au">info@feduni.com.au</a></p>
-  </footer>
+<!-- CTA -->
+<section class="cta-banner">
+  <h2>Ready to Start?</h2>
+  <p>Join thousands of people already crushing their fitness goals.</p>
+  <a class="btn-red" href="signup.html">Create Free Account</a>
+  <a class="btn-red-outline" href="login.html">Log In</a>
+</section>
 
-  <script src="app.js"></script>
-  <script>
-    document.getElementById("login-form").addEventListener("submit", function(e) {
-      e.preventDefault();
+<!-- FOOTER -->
+<footer>
+  <p>
+    <a href="index.html">Home</a>
+    <a href="tracker.html">Nutrition</a>
+    <a href="Workout.html">Workouts</a>
+    <a href="login.html">Login</a>
+    <a href="signup.html">Sign Up</a>
+  </p>
+  <p style="margin-top:0.8rem;">© 2025 FitTracker. Designed by your team.</p>
+</footer>
 
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const error = document.getElementById("error");
-
-      error.hidden = true;
-      error.textContent = "";
-
-      if (!email || !password) {
-        error.textContent = "Please enter your email and password.";
-        error.hidden = false;
-        return;
-      }
-
-      const savedUser = JSON.parse(localStorage.getItem("fittrackerUser"));
-
-      if (savedUser) {
-        if (email !== savedUser.email || password !== savedUser.password) {
-          error.textContent = "Invalid email or password.";
-          error.hidden = false;
-          return;
-        }
-
-        localStorage.setItem("ft_user", savedUser.fullName);
-        localStorage.setItem("ft_token", "logged_in");
-        window.location.href = "dashboard.html";
-        return;
-      }
-
-      if (email === "demo@fittracker.app" && password === "Passw0rd!") {
-        localStorage.setItem("ft_user", "Demo User");
-        localStorage.setItem("ft_token", "logged_in");
-        window.location.href = "dashboard.html";
-      } else {
-        error.textContent = "Invalid email or password.";
-        error.hidden = false;
-      }
-    });
-
-    function togglePassword() {
-      const passwordInput = document.getElementById("password");
-      const button = document.querySelector(".toggle-password");
-
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        button.textContent = "Hide";
-      } else {
-        passwordInput.type = "password";
-        button.textContent = "Show";
-      }
-    }
-  </script>
 </body>
 </html>
