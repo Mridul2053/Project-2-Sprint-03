@@ -505,7 +505,7 @@
 
       <div class="btn-row">
         <button class="btn-back" onclick="goBack(4)">← Back</button>
-        <button class="btn-next" onclick="submitSignup()">🚀 Create Account</button>
+        <button class="btn-next" onclick="submitSignup()" type="button">🚀 Create Account</button>
       </div>
     </div>
 
@@ -514,7 +514,7 @@
       <div class="success-icon">🎉</div>
       <h2 id="successName">Welcome!</h2>
       <p>Your FitTracker account is ready.<br>Your goals and calorie targets have been set.</p>
-      <button class="go-btn" onclick="window.location.href='home.html'">Go to Dashboard →</button>
+      <button class="go-btn" onclick="window.location.href='dashboard.html'">Go to Dashboard →</button>
     </div>
 
   </div><!-- end form-card -->
@@ -761,7 +761,7 @@
   }
 
   // ── SUBMIT ──
-  function submitSignup() {
+  async function submitSignup() {
     clearErr('terms');
     if (!document.getElementById('terms').checked) {
       showErr('terms', 'You must agree to the Terms & Conditions.');
@@ -785,61 +785,69 @@
     const w = parseFloat(document.getElementById('weight').value);
     const bmi = (w / ((h / 100) ** 2)).toFixed(1);
 
-    const user = {
-      fullName:    document.getElementById('fullName').value.trim(),
-      email:       email,
-      password:    document.getElementById('password').value,
-      dob:         document.getElementById('dob').value,
-      gender:      document.getElementById('gender').value,
-      phone:       document.getElementById('phone').value,
-      profile: {
-        dob:          document.getElementById('dob').value,
-        gender:       document.getElementById('gender').value,
-        phone:        document.getElementById('phone').value,
-        height:       h,
-        weight:       w,
-        targetWeight: parseFloat(document.getElementById('targetWeight').value),
-        stepGoal:     parseInt(document.getElementById('stepGoal').value),
-        waterGoal:    parseFloat(document.getElementById('waterGoal').value),
-        goal:         selectedGoal,
-        activity:     selectedActivity,
-        workoutTime:  document.getElementById('workoutTime').value,
-        bmi:          parseFloat(bmi),
-        fitnessLevel: 1,
-      },
-      goals: {
-        kcal:    targets.kcal,
-        protein: targets.protein,
-        carbs:   targets.carbs,
-        fat:     targets.fat,
-      },
-      dashboard: {
-        workout: 0, steps: 0, water: 0,
-        stepGoal:  parseInt(document.getElementById('stepGoal').value),
-        waterGoal: parseFloat(document.getElementById('waterGoal').value),
+    const fullName = document.getElementById('fullName').value.trim();
+    const password = document.getElementById('password').value;
+
+    // ── Disable button to prevent double-submit ──
+    const submitBtn = document.querySelector('#step-4 .btn-next');
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Creating account…'; }
+
+    try {
+      // ── Register on the server ──
+      const res  = await fetch('/register', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ name: fullName, email, password })
+      });
+      const data = await res.json();
+
+      if (!data.success) {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '🚀 Create Account'; }
+        showErr('terms', data.message || 'Registration failed. Please try again.');
+        return;
       }
-    };
 
-    // ── Save to accounts array ──
-    const accounts = getAccounts();
-    accounts.push(user);
-    saveAccounts(accounts);
+      // ── Log in immediately so session is active ──
+      const loginRes  = await fetch('/login', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email, password })
+      });
+      const loginData = await loginRes.json();
 
-    // ── Set as currently logged-in user ──
-    localStorage.setItem('ft_loggedInEmail', email);
-    localStorage.setItem('ft_user',  user.fullName);
-    localStorage.setItem('ft_token', 'logged_in');
+      if (loginData.success) {
+        // Save goals to server
+        await fetch('/api/goals', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ target_calories: targets.kcal, target_weight: parseFloat(document.getElementById('targetWeight').value) || null })
+        }).catch(() => {});
 
-    // Also write flat keys so existing pages (tracker, dashboard) still work
-    localStorage.setItem('ft_profile',  JSON.stringify(user.profile));
-    localStorage.setItem('ft_goals',    JSON.stringify(user.goals));
-    localStorage.setItem('ft_dashboard',JSON.stringify(user.dashboard));
+        // Save profile to server
+        await fetch('/api/settings', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ name: fullName, height: String(h), weight: String(w), goal: selectedGoal || 'General Fitness' })
+        }).catch(() => {});
+      }
 
-    // Show success
-    document.getElementById('step-4').classList.remove('active');
-    document.getElementById('stepProgress').style.display = 'none';
-    document.getElementById('successName').textContent = `Welcome, ${user.fullName.split(' ')[0]}! 👋`;
-    document.getElementById('successScreen').style.display = 'block';
+      // ── Also write to localStorage so home.html / profile.html work ──
+      localStorage.setItem('ft_loggedInEmail', email);
+      localStorage.setItem('ft_user',  fullName);
+      localStorage.setItem('ft_token', 'logged_in');
+      localStorage.setItem('ft_profile',  JSON.stringify({ height: h, weight: w, goal: selectedGoal, bmi: parseFloat(bmi) }));
+      localStorage.setItem('ft_goals',    JSON.stringify({ kcal: targets.kcal, protein: targets.protein, carbs: targets.carbs, fat: targets.fat }));
+
+      // ── Show success ──
+      document.getElementById('step-4').classList.remove('active');
+      document.getElementById('stepProgress').style.display = 'none';
+      document.getElementById('successName').textContent = `Welcome, ${fullName.split(' ')[0]}! 👋`;
+      document.getElementById('successScreen').style.display = 'block';
+
+    } catch (e) {
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '🚀 Create Account'; }
+      showErr('terms', 'Connection error. Make sure the server is running.');
+    }
   }
 </script>
 </body>

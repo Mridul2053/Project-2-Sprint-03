@@ -38,10 +38,10 @@ body {
   padding: 0 28px;
   height: 64px;
   border-bottom: 1px solid var(--border);
+  background: var(--surface);
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--surface);
 }
 
 .logo {
@@ -73,16 +73,15 @@ body {
 .navbar ul li a.active { color: var(--primary); background: rgba(105,5,0,.07); }
 
 .signin {
-  font-size: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 14px;
   color: var(--muted);
   font-weight: 600;
 }
 
-.signin a { color: var(--muted); text-decoration: none; }
-.signin a:hover { color: var(--primary); }
+.signin i { font-size: 20px; }
 
 /* ── BREADCRUMB ── */
 .breadcrumb {
@@ -224,12 +223,14 @@ body {
 .modal-content {
   background: var(--surface);
   width: 100%;
-  max-width: 520px;
+  max-width: 420px;
   border-radius: 16px;
   padding: 28px;
   position: relative;
   box-shadow: 0 20px 60px rgba(0,0,0,.2);
 }
+
+.small-modal { max-width: 420px; }
 
 .close-btn {
   position: absolute;
@@ -245,18 +246,12 @@ body {
 .close-btn:hover { color: var(--text); }
 
 .modal-content h2 {
-  margin-bottom: 6px;
+  margin-bottom: 20px;
   font-size: 24px;
   font-weight: 900;
 }
 
-.input-group { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
-
-.input-box {
-  flex: 1;
-  min-width: 130px;
-  margin-bottom: 16px;
-}
+.input-box { margin-bottom: 16px; }
 
 .input-box label {
   display: block;
@@ -285,7 +280,7 @@ body {
 
 .modal-buttons { display: flex; gap: 10px; margin-top: 4px; }
 
-.save-btn, .clear-btn {
+.save-btn {
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
@@ -293,12 +288,12 @@ body {
   font-size: 14px;
   font-weight: 800;
   font-family: 'Nunito', sans-serif;
+  background: var(--primary);
+  color: #fff;
+  transition: background .15s;
 }
 
-.save-btn { background: var(--primary); color: #fff; transition: background .15s; }
 .save-btn:hover { background: var(--primary-dark); }
-.clear-btn { background: var(--bg); color: var(--text); border: 1.5px solid var(--border); transition: background .15s; }
-.clear-btn:hover { background: var(--border); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
@@ -310,5 +305,4 @@ body {
   .hero h1 { font-size: 30px; }
   .day-title { font-size: 16px; }
   .modal-content { padding: 20px; }
-  .input-group { flex-direction: column; }
 }

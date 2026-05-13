@@ -3,89 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FitTracker Settings</title>
+  <title>FitTracker — Settings</title>
   <link rel="stylesheet" href="settings.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
+<!-- TOAST -->
+<div class="toast hidden" id="toast"></div>
+
+<!-- PASSWORD MODAL -->
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal">
+    <h3>Change Password</h3>
+
+    <label for="currentPassword">Current Password</label>
+    <input type="password" id="currentPassword" placeholder="Enter current password">
+
+    <label for="newPassword">New Password</label>
+    <input type="password" id="newPassword" placeholder="Min. 6 characters">
+
+    <label for="confirmPassword">Confirm New Password</label>
+    <input type="password" id="confirmPassword" placeholder="Repeat new password">
+
+    <div class="modal-actions">
+      <button class="outline-btn" id="cancelPasswordBtn">Cancel</button>
+      <button class="save-btn" id="submitPasswordBtn">Change Password</button>
+    </div>
+  </div>
+</div>
+
 <!-- HEADER -->
 <header class="topbar">
-
   <div class="brand">
-    <div class="logo">Logo</div>
+    <div class="logo">🏋️</div>
     <strong>FitTracker</strong>
   </div>
 
   <nav class="nav">
-    <a href="home.html">Home</a>
-    <a href="profile.html">Profile</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="workoutplan.html">Workout Plans</a>
     <a href="tracker.html">Nutrition</a>
     <a href="Workout.html">Workout</a>
-    <a href="dashboard.html">Dashboard</a>
+    <a href="activity.html">Activity</a>
+    <a href="profile.html">Profile</a>
     <a href="settings.html" class="active">Settings</a>
+    <a href="#" id="logoutNav" class="logout-btn">Log Out</a>
   </nav>
 
-  <div class="profile-icon">👤</div>
-
+  <div class="profile-icon" id="profileIcon">👤</div>
 </header>
 
 <!-- PAGE -->
 <main class="page">
 
   <h1>Settings</h1>
-
-  <p class="subtitle">
-    Manage your FitTracker preferences and account details.
-  </p>
+  <p class="subtitle">Manage your FitTracker preferences and account details.</p>
 
   <!-- GRID -->
   <section class="settings-grid">
 
     <!-- PROFILE SETTINGS -->
     <div class="card">
-
       <h2>Profile Settings</h2>
 
-      <label>Name</label>
-      <input type="text" id="name">
+      <label for="name">Name</label>
+      <input type="text" id="name" placeholder="Your full name">
 
-      <label>Email</label>
-      <input type="email" id="email">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="your@email.com" readonly>
 
-      <label>Weight</label>
-      <input type="number" id="weight">
+      <label for="age">Age</label>
+      <input type="number" id="age" placeholder="e.g. 25" min="1" max="120">
 
-      <label>Fitness Goal</label>
+      <label for="height">Height</label>
+      <input type="text" id="height" placeholder="e.g. 175 cm">
 
+      <label for="weight">Current Weight (kg)</label>
+      <input type="number" id="weight" placeholder="e.g. 70" step="0.1" min="1">
+
+      <label for="goal">Fitness Goal</label>
       <select id="goal">
-        <option>Weight Loss</option>
-        <option>Weight Gain</option>
-        <option>Muscle Gain</option>
-        <option>General Fitness</option>
+        <option value="Weight Loss">Weight Loss</option>
+        <option value="Weight Gain">Weight Gain</option>
+        <option value="Muscle Gain">Muscle Gain</option>
+        <option value="General Fitness">General Fitness</option>
       </select>
-
     </div>
 
     <!-- FITNESS GOALS -->
     <div class="card">
-
       <h2>Fitness Goals</h2>
 
-      <label>Daily Calories</label>
-      <input type="number" id="calories">
+      <label for="targetCalories">Daily Calorie Target (kcal)</label>
+      <input type="number" id="targetCalories" placeholder="e.g. 2200" min="500" max="10000">
 
-      <label>Water Intake (L)</label>
-      <input type="number" id="water">
+      <label for="targetWeight">Target Weight (kg)</label>
+      <input type="number" id="targetWeight" placeholder="e.g. 65" step="0.1" min="1">
 
-      <label>Step Goal</label>
-      <input type="number" id="steps">
-
+      <label for="targetWorkouts">Weekly Workout Goal</label>
+      <input type="number" id="targetWorkouts" placeholder="e.g. 4" min="1" max="14">
     </div>
 
     <!-- NOTIFICATIONS -->
     <div class="card">
-
       <h2>Notifications</h2>
 
       <div class="setting-row">
@@ -102,12 +124,10 @@
         <span>Meal Reminder</span>
         <button class="toggle on">ON</button>
       </div>
-
     </div>
 
     <!-- APPEARANCE -->
     <div class="card">
-
       <h2>Appearance</h2>
 
       <div class="setting-row">
@@ -119,37 +139,23 @@
         <span>Compact View</span>
         <button class="toggle off">OFF</button>
       </div>
-
     </div>
 
   </section>
 
   <!-- ACCOUNT -->
   <section class="card account-card">
-
     <h2>Account</h2>
 
     <div class="account-actions">
-
-      <button class="outline-btn" id="changePasswordBtn">
-        Change Password
-      </button>
-
-      <button class="danger-btn" id="logoutBtn">
-        Logout
-      </button>
-
+      <button class="outline-btn" id="changePasswordBtn">Change Password</button>
+      <button class="danger-btn" id="logoutBtn">Logout</button>
     </div>
-
   </section>
 
   <!-- SAVE BUTTON -->
   <div class="save-area">
-
-    <button class="save-btn" id="saveBtn">
-      Save Changes
-    </button>
-
+    <button class="save-btn" id="saveBtn">Save Changes</button>
   </div>
 
 </main>

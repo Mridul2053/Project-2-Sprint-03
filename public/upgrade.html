@@ -7,7 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-  body { font-family: 'Nunito', sans-serif; background: #f5f6fa; margin: 0; padding: 40px 20px; }
+  body { font-family: 'Nunito', sans-serif; background: #f5f6fa; margin: 0; padding: 0 0 40px; }
+  .topbar { display:flex; align-items:center; gap:12px; padding:0 32px; height:60px; background:#fff; border-bottom:1px solid #e5e7eb; position:sticky; top:0; z-index:100; }
+  .brand { font-size:22px; font-weight:900; color:#690500; text-decoration:none; margin-right:8px; }
+  .nav { display:flex; gap:4px; align-items:center; flex-wrap:wrap; }
+  .nav a { text-decoration:none; color:#111827; font-size:13px; font-weight:700; padding:5px 10px; border-radius:8px; }
+  .nav a:hover, .nav a.active { background:#f0f2f7; color:#690500; }
+  .nav .logout-btn { background:#690500; color:#fff !important; padding:5px 14px; border-radius:8px; margin-left:8px; }
+  .nav .logout-btn:hover { background:#4f0400; }
+  .content { padding: 40px 20px; }
   .upgrade-card { max-width: 460px; margin: 40px auto; background: #fff; border-radius: 16px;
                   padding: 32px; box-shadow: 0 4px 24px rgba(0,0,0,.08); }
   .upgrade-card h1 { margin: 0 0 8px; font-size: 28px; }
@@ -32,6 +40,21 @@
 </head>
 <body>
 
+<header class="topbar">
+  <a class="brand" href="dashboard.html">FitTracker</a>
+  <nav class="nav">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="workoutplan.html">Workout Plans</a>
+    <a href="tracker.html">Nutrition</a>
+    <a href="Workout.html">Workout</a>
+    <a href="activity.html">Activity</a>
+    <a href="profile.html">Profile</a>
+    <a href="settings.html">Settings</a>
+    <a href="#" id="logout" class="logout-btn">Log Out</a>
+  </nav>
+</header>
+
+<div class="content">
 <div class="upgrade-card">
   <h1>FitTracker Premium</h1>
   <p class="sub">Unlock the full experience.</p>
@@ -54,10 +77,17 @@
   </div>
 
   <div id="status"></div>
-  <a class="back" href="/">&larr; Back to app</a>
+  <a class="back" href="dashboard.html">&larr; Back to Dashboard</a>
+</div>
 </div>
 
 <script>
+document.getElementById('logout').addEventListener('click', async (e) => {
+  e.preventDefault();
+  await fetch('/logout', { method: 'POST' }).catch(() => {});
+  window.location.href = '/login.html';
+});
+
 function showStatus(msg, kind) {
   const el = document.getElementById('status');
   el.className = kind;

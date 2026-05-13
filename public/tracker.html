@@ -4,7 +4,15 @@
 <link rel="stylesheet" href="tracker.css">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script>document.addEventListener('DOMContentLoaded',()=>{if(!localStorage.getItem('ft_token'))location.href='index.html';});</script>
+<script>
+(async function(){
+  try{
+    const r=await fetch('/api/session');
+    const d=await r.json();
+    if(!d.success){location.href='/login.html';}
+  }catch(e){location.href='/login.html';}
+})();
+</script>
 </head><body>
 <header class="topbar">
   <a class="brand" href="home.html">
@@ -12,17 +20,20 @@
     <span class="brand-text">FitTracker</span>
   </a>
   <nav class="topnav">
-    <a href="home.html">Home</a>
-    <a href="tracker.html" class="active">Nutrition Tracker</a>
-    <a href="workout.html">Workout Builder</a>
     <a href="dashboard.html">Dashboard</a>
+    <a href="workoutplan.html">Workout Plans</a>
+    <a href="tracker.html" class="active">Nutrition</a>
+    <a href="Workout.html">Workout</a>
+    <a href="activity.html">Activity</a>
+    <a href="profile.html">Profile</a>
+    <a href="settings.html">Settings</a>
   </nav>
   <div class="date-controls">
     <button id="prev-day">◀</button>
     <input type="date" id="log-date">
     <button id="next-day">▶</button>
   </div>
-  <a id="logout" href="#">Log Out</a>
+  <a id="logout" href="#" class="logout-btn">Log Out</a>
 </header>
 <main class="wrap">
 <section class="summary">

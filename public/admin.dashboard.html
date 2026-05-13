@@ -144,256 +144,196 @@
 
 <script>
 let allUsers = [];
-let modalType = "";
+let modalType = '';
 
-async function loadUsers() {
-
+// ─── Auth guard ────────────────────────────────────────────────────
+async function checkAdminSession() {
   try {
-
-    const res = await fetch("/api/admin/users");
-
-    const users = await res.json();
-
-    allUsers = users;
-
-    displayUsers(users);
-
-    document.getElementById("totalUsers").innerText =
-      users.length;
-
-    document.getElementById("activeUsers").innerText =
-      users.length;
-
-  } catch (error) {
-
-    console.error(error);
-
-  users.forEach(user => {
-    const date = new Date(user.joined_date).toLocaleDateString("en-GB");
-
-    table.innerHTML += `
-      <tr>
-        <td>${user.id}</td>
-        <td>${user.name}</td>
-        <td>${user.email}</td>
-        <td>${date}</td>
-        <td>${user.status}</td>
-        <td>
-          <button class="delete-btn" onclick="deleteUser(${user.id})">Delete</button>
-        </td>
-      </tr>
-    `;
-  });
+    const res  = await fetch('/api/admin/stats');
+    if (res.status === 403 || res.status === 401) {
+      window.location.href = 'admin.login.html';
+    }
+  } catch (e) {
+    console.error('Admin session check failed', e);
+  }
 }
 
+function logoutAdmin() {
+  fetch('/admin-logout', { method: 'POST' })
+    .finally(() => {
+      localStorage.removeItem('adminName');
+      window.location.href = 'admin.login.html';
+    });
+}
+
+// ─── Display users ─────────────────────────────────────────────────
+function displayUsers(users) {
+  const tbody = document.getElementById('userTable');
+  if (!users || users.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;">No users found.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = users.map(user => {
+    const joined = user.created_at
+      ? new Date(user.created_at).toLocaleDateString('en-GB')
+      : '—';
+    return `
+      <tr>
+        <td>${user.id}</td>
+        <td>${user.name || '—'}</td>
+        <td>${user.email}</td>
+        <td>${joined}</td>
+        <td>${user.goal || '—'}</td>
+        <td><button class="delete-btn" onclick="confirmDeleteUser(${user.id})">Delete</button></td>
+      </tr>`;
+  }).join('');
+}
+
+// ─── Load users ────────────────────────────────────────────────────
+async function loadUsers() {
+  try {
+    const res  = await fetch('/api/admin/users');
+    const data = await res.json();
+    if (!data.success) { console.error('Failed to load users:', data.message); return; }
+    allUsers = data.users;
+    displayUsers(allUsers);
+  } catch (e) {
+    console.error('loadUsers error:', e);
+  }
+}
+
+// ─── Load stats ────────────────────────────────────────────────────
+async function loadStats() {
+  try {
+    const res  = await fetch('/api/admin/stats');
+    const data = await res.json();
+    if (!data.success) return;
+    const s = data.stats;
+    document.getElementById('totalUsers').innerText    = s.totalUsers    ?? 0;
+    document.getElementById('activeUsers').innerText   = s.totalUsers    ?? 0;
+    document.getElementById('totalWorkouts').innerText = s.totalWorkouts ?? 0;
+    document.getElementById('totalPlans').innerText    = s.totalSubscriptions ?? 0;
+  } catch (e) {
+    console.error('loadStats error:', e);
+  }
+}
+
+// ─── Search ────────────────────────────────────────────────────────
 function searchUsers() {
-  const keyword = document.getElementById("searchInput").value.toLowerCase();
-
-  const filtered = allUsers.filter(user =>
-    user.name.toLowerCase().includes(keyword) ||
-    user.email.toLowerCase().includes(keyword) ||
-    user.status.toLowerCase().includes(keyword)
+  const kw = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = allUsers.filter(u =>
+    (u.name  || '').toLowerCase().includes(kw) ||
+    (u.email || '').toLowerCase().includes(kw) ||
+    (u.goal  || '').toLowerCase().includes(kw)
   );
-
   displayUsers(filtered);
 }
 
-async function loadStats() {
-  const res = await fetch("http://localhost:5000/api/admin/stats");
-  const data = await res.json();
-
-  document.getElementById("totalUsers").innerText = data.totalUsers;
-  document.getElementById("activeUsers").innerText = data.activeUsers;
-  document.getElementById("totalWorkouts").innerText = data.totalWorkouts;
-  document.getElementById("totalPlans").innerText = data.totalPlans;
-}
-
+// ─── Modal helpers ─────────────────────────────────────────────────
 function openModal(title, bodyHtml, buttonText, type) {
   modalType = type;
-  document.getElementById("modalTitle").innerText = title;
-  document.getElementById("modalBody").innerHTML = bodyHtml;
-  document.querySelector(".modal-submit").innerText = buttonText;
-  document.getElementById("customModal").style.display = "flex";
+  document.getElementById('modalTitle').innerText           = title;
+  document.getElementById('modalBody').innerHTML            = bodyHtml;
+  document.querySelector('.modal-submit').innerText         = buttonText;
+  document.getElementById('customModal').style.display      = 'flex';
 }
 
 function closeModal() {
-  document.getElementById("customModal").style.display = "none";
+  document.getElementById('customModal').style.display = 'none';
 }
 
+// ─── Quick action modals ───────────────────────────────────────────
 function openAddUserModal() {
-  openModal(
-    "Add User",
-    `
-      <label>User Name</label>
-      <input id="modalName" type="text" placeholder="e.g. John Smith">
-
-      <label>Email</label>
-      <input id="modalEmail" type="email" placeholder="e.g. john@email.com">
-
-      <label>Status</label>
-      <input id="modalStatus" type="text" placeholder="Active or De-Active">
-    `,
-    "Add",
-    "addUser"
-  );
+  openModal('Add New User',
+    `<label>Name</label>
+     <input id="modalName" type="text" placeholder="e.g. John Smith">
+     <label>Email</label>
+     <input id="modalEmail" type="email" placeholder="e.g. john@email.com">
+     <label>Password</label>
+     <input id="modalPass" type="password" placeholder="Min. 6 characters">`,
+    'Add', 'addUser');
 }
 
 function openWorkoutModal() {
-  openModal(
-    "Add Workout",
-    `
-      <label>Workout Name</label>
-      <input id="modalTitleInput" type="text" placeholder="e.g. Cable Row">
-
-      <label>Category</label>
-      <input id="modalCategory" type="text" placeholder="e.g. Back">
-    `,
-    "Add",
-    "addWorkout"
-  );
+  openModal('Feature Unavailable',
+    '<p class="report-message">Adding workouts via admin panel is not yet supported.</p>',
+    'Close', 'info');
 }
 
 function openNutritionModal() {
-  openModal(
-    "Add Nutrition Item",
-    `
-      <label>Nutrition Name</label>
-      <input id="modalName" type="text" placeholder="e.g. Chicken Salad">
-
-      <label>Calories</label>
-      <input id="modalCalories" type="number" placeholder="e.g. 350">
-    `,
-    "Add",
-    "addNutrition"
-  );
+  openModal('Feature Unavailable',
+    '<p class="report-message">Adding nutrition items via admin panel is not yet supported.</p>',
+    'Close', 'info');
 }
 
 function openDeleteWorkoutModal() {
-  openModal(
-    "Delete Workout",
-    `
-      <label>Workout ID</label>
-      <input id="modalId" type="number" placeholder="Enter workout ID">
-    `,
-    "Delete",
-    "deleteWorkout"
-  );
+  openModal('Feature Unavailable',
+    '<p class="report-message">Deleting workouts via admin panel is not yet supported.</p>',
+    'Close', 'info');
 }
 
 function openDeleteNutritionModal() {
-  openModal(
-    "Delete Nutrition",
-    `
-      <label>Nutrition ID</label>
-      <input id="modalId" type="number" placeholder="Enter nutrition ID">
-    `,
-    "Delete",
-    "deleteNutrition"
-  );
+  openModal('Feature Unavailable',
+    '<p class="report-message">Deleting nutrition items via admin panel is not yet supported.</p>',
+    'Close', 'info');
 }
 
 function openReportsModal() {
-  openModal(
-    "Reports",
-    `
-      <p class="report-message">Reports feature coming soon.</p>
-    `,
-    "Done",
-    "reports"
-  );
+  openModal('Reports',
+    '<p class="report-message">Reports feature coming soon.</p>',
+    'Done', 'info');
 }
 
+// ─── Delete user ───────────────────────────────────────────────────
+function confirmDeleteUser(id) {
+  openModal('Delete User',
+    `<p class="report-message">Are you sure you want to delete this user? This cannot be undone.</p>
+     <input id="deleteUserId" type="hidden" value="${id}">`,
+    'Delete', 'deleteUser');
+}
+
+// ─── Submit modal ──────────────────────────────────────────────────
 async function submitModal() {
-  if (modalType === "addUser") {
-    const name = document.getElementById("modalName").value;
-    const email = document.getElementById("modalEmail").value;
-    const status = document.getElementById("modalStatus").value;
-
-    if (!name || !email || !status) {
-      alert("Please fill all fields");
-      return;
-    }
-
-    await fetch("http://localhost:5000/api/users", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ name, email, status })
-    });
-
-    alert("User added successfully");
-    loadUsers();
-    loadStats();
+  if (modalType === 'info' || modalType === 'reports') {
+    closeModal();
+    return;
   }
 
-  if (modalType === "addWorkout") {
-    const title = document.getElementById("modalTitleInput").value;
-    const category = document.getElementById("modalCategory").value;
+  if (modalType === 'addUser') {
+    const name  = document.getElementById('modalName').value.trim();
+    const email = document.getElementById('modalEmail').value.trim();
+    const pass  = document.getElementById('modalPass').value;
 
-    if (!title || !category) {
-      alert("Please fill all fields");
-      return;
+    if (!name || !email || !pass) { alert('Please fill all fields.'); return; }
+    if (pass.length < 6) { alert('Password must be at least 6 characters.'); return; }
+
+    try {
+      const res  = await fetch('/register', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ name, email, password: pass })
+      });
+      const data = await res.json();
+      alert(data.message || (data.success ? 'User added.' : 'Failed to add user.'));
+      if (data.success) { loadUsers(); loadStats(); }
+    } catch (e) {
+      alert('Error adding user.');
     }
-
-    await fetch("http://localhost:5000/api/workouts", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ title, category })
-    });
-
-    alert("Workout added successfully");
-    loadStats();
+    closeModal();
+    return;
   }
 
-  if (modalType === "addNutrition") {
-    const name = document.getElementById("modalName").value;
-    const calories = document.getElementById("modalCalories").value;
-
-    if (!name || !calories) {
-      alert("Please fill all fields");
-      return;
+  if (modalType === 'deleteUser') {
+    const id = document.getElementById('deleteUserId').value;
+    try {
+      const res  = await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      alert(data.message || 'User deleted.');
+      loadUsers();
+      loadStats();
+    } catch (e) {
+      alert('Error deleting user.');
     }
-
-    await fetch("http://localhost:5000/api/nutrition", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ name, calories })
-    });
-
-    alert("Nutrition item added successfully");
-  }
-
-  if (modalType === "deleteWorkout") {
-    const id = document.getElementById("modalId").value;
-
-    if (!id) {
-      alert("Please enter workout ID");
-      return;
-    }
-
-    await fetch(`http://localhost:5000/api/workouts/${id}`, {
-      method: "DELETE"
-    });
-
-    alert("Workout deleted");
-    loadStats();
-  }
-
-  if (modalType === "deleteNutrition") {
-    const id = document.getElementById("modalId").value;
-
-    if (!id) {
-      alert("Please enter nutrition ID");
-      return;
-    }
-
-    await fetch(`http://localhost:5000/api/nutrition/${id}`, {
-      method: "DELETE"
-    });
-
-    alert("Nutrition deleted");
-  }
-
-  if (modalType === "reports") {
     closeModal();
     return;
   }
@@ -401,40 +341,13 @@ async function submitModal() {
   closeModal();
 }
 
-async function deleteUser(id) {
-  openModal(
-    "Delete User",
-    `
-      <p class="report-message">Are you sure you want to delete this user?</p>
-      <input id="deleteUserId" type="hidden" value="${id}">
-    `,
-    "Delete",
-    "deleteUser"
-  );
-}
-
-document.addEventListener("click", async function(e) {
-  if (e.target.classList.contains("modal-submit") && modalType === "deleteUser") {
-    const id = document.getElementById("deleteUserId").value;
-
-    await fetch(`http://localhost:5000/api/users/${id}`, {
-      method: "DELETE"
-    });
-
-    alert("User deleted");
-    closeModal();
-    loadUsers();
-    loadStats();
-  }
-});
-
+// ─── Init ──────────────────────────────────────────────────────────
 function showAdminName() {
-  const name = localStorage.getItem("adminName");
-  if (name) {
-    document.getElementById("adminName").innerText = "👤 " + name;
-  }
+  const name = localStorage.getItem('adminName');
+  if (name) document.getElementById('adminName').innerText = '👤 ' + name;
 }
 
+checkAdminSession();
 showAdminName();
 loadUsers();
 loadStats();

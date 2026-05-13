@@ -346,12 +346,14 @@
 <header class="topbar">
   <a class="brand" href="home.html">FitTracker</a>
   <nav class="nav">
-    <a href="home.html">Home</a>
-    <a href="tracker.html">Nutrition</a>
-    <a href="Workout.html">Workouts</a>
     <a href="dashboard.html">Dashboard</a>
+    <a href="workoutplan.html">Workout Plans</a>
+    <a href="tracker.html">Nutrition</a>
+    <a href="Workout.html">Workout</a>
+    <a href="activity.html" class="active">Activity</a>
     <a href="profile.html">Profile</a>
-    <a href="index.html" id="logout" class="logout-btn">Log Out</a>
+    <a href="settings.html">Settings</a>
+    <a href="#" id="logout" class="logout-btn">Log Out</a>
   </nav>
 </header>
 
@@ -627,12 +629,13 @@
   }
 
   // ── LOGOUT ──
-  document.getElementById('logout').addEventListener('click', function(e) {
+  document.getElementById('logout').addEventListener('click', async function(e) {
     e.preventDefault();
     localStorage.removeItem('ft_token');
     localStorage.removeItem('ft_user');
     localStorage.removeItem('ft_loggedInEmail');
-    window.location.href = 'index.html';
+    await fetch('/logout', { method: 'POST' }).catch(() => {});
+    window.location.href = '/login.html';
   });
 
   // ── INIT ──

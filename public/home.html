@@ -58,12 +58,12 @@
     .nav a:hover { background: var(--bg); color: var(--primary); }
     .nav .nav-strong { color: var(--primary); }
     .nav .nav-active { background: var(--primary-glow); color: var(--primary); }
-    .nav .nav-cta {
+    .nav .nav-cta, .nav .logout-btn {
       background: var(--primary); color: #fff !important;
       padding: 8px 18px; border-radius: 10px;
       transition: background 0.18s, transform 0.14s;
     }
-    .nav .nav-cta:hover { background: var(--primary-light); transform: translateY(-1px); }
+    .nav .nav-cta:hover, .nav .logout-btn:hover { background: var(--primary-light); transform: translateY(-1px); }
 
     .nav-toggle {
       display: none; margin-left: auto; font-size: 20px;
@@ -329,13 +329,14 @@
     <span class="brand-text">FitTracker</span>
   </a>
   <nav class="nav" id="mainNav">
-    <a href="home.html" class="nav-active">Home</a>
-    <a href="tracker.html" class="nav-strong">Nutrition</a>
-    <a href="Workout.html">Workouts</a>
     <a href="dashboard.html">Dashboard</a>
+    <a href="workoutplan.html">Workout Plans</a>
+    <a href="tracker.html">Nutrition</a>
+    <a href="Workout.html">Workout</a>
+    <a href="activity.html">Activity</a>
     <a href="profile.html">Profile</a>
-    <a href="admin.login.html">Admin Login</a>
-    <a href="index.html" id="logoutBtn" class="nav-cta">Log Out</a>
+    <a href="settings.html">Settings</a>
+    <a href="#" id="logoutBtn" class="logout-btn">Log Out</a>
   </nav>
   <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
 </header>
@@ -534,12 +535,13 @@
   });
 
   // ── LOGOUT ──
-  document.getElementById('logoutBtn').addEventListener('click', (e) => {
+  document.getElementById('logoutBtn').addEventListener('click', async (e) => {
     e.preventDefault();
     localStorage.removeItem('ft_token');
     localStorage.removeItem('ft_user');
     localStorage.removeItem('ft_loggedInEmail');
-    window.location.href = 'index.html';
+    await fetch('/logout', { method: 'POST' }).catch(() => {});
+    window.location.href = '/login.html';
   });
 
   // ── DATA HELPERS ──
@@ -657,7 +659,25 @@ function getTodayMacros() {
     document.getElementById('hero-cal-bar').style.width      = pct(calories, calGoal) + '%';
   }
 
-  render();
+  // ── SESSION CHECK ──
+  (async function() {
+    try {
+      const r = await fetch('/api/session');
+      const d = await r.json();
+      if (!d.success) { window.location.href = '/login.html'; return; }
+      // ALWAYS overwrite with server session so demo doesn't show real user data
+      if (d.user) {
+        localStorage.setItem('ft_user', d.user.name || '');
+        const stored = JSON.parse(localStorage.getItem('fittrackerUser') || '{}');
+        stored.email    = d.user.email || '';
+        stored.fullName = d.user.name  || '';
+        localStorage.setItem('fittrackerUser', JSON.stringify(stored));
+      }
+    } catch (e) {
+      window.location.href = '/login.html';
+    }
+    render();
+  })();
 </script>
 </body>
 </html>

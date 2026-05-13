@@ -42,12 +42,13 @@
 
   <script src="app.js"></script>
   <script>
-    document.getElementById("login-form").addEventListener("submit", function(e) {
+    document.getElementById("login-form").addEventListener("submit", async function(e) {
       e.preventDefault();
 
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const error = document.getElementById("error");
+      const email    = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const error    = document.getElementById("error");
+      const btn      = document.getElementById("login-btn");
 
       error.hidden = true;
       error.textContent = "";
@@ -58,28 +59,48 @@
         return;
       }
 
-      const savedUser = JSON.parse(localStorage.getItem("fittrackerUser"));
+      btn.disabled = true;
+      btn.textContent = "Logging in…";
 
-      if (savedUser) {
-        if (email !== savedUser.email || password !== savedUser.password) {
-          error.textContent = "Invalid email or password.";
+      try {
+        // Call the server — this creates the session so Workout.html works
+        const res  = await fetch("/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+          error.textContent = data.message || "Invalid email or password.";
           error.hidden = false;
           return;
         }
 
-        localStorage.setItem("ft_user", savedUser.fullName);
+        // Set localStorage so dashboard/tracker/home pages also work
         localStorage.setItem("ft_token", "logged_in");
-        window.location.href = "home.html";
-        return;
-      }
+        localStorage.setItem("ft_user",  data.user.name || data.user.email);
+        localStorage.setItem("ft_loggedInEmail", data.user.email);
 
-      if (email === "demo@fittracker.app" && password === "Passw0rd!") {
-        localStorage.setItem("ft_user", "Demo User");
-        localStorage.setItem("ft_token", "logged_in");
+        // Also sync with any localStorage account that matches
+        try {
+          const accounts = JSON.parse(localStorage.getItem("fittrackerAccounts") || "[]");
+          const match    = accounts.find(a => a.email === data.user.email);
+          if (match) {
+            if (match.profile)   localStorage.setItem("ft_profile",   JSON.stringify(match.profile));
+            if (match.goals)     localStorage.setItem("ft_goals",     JSON.stringify(match.goals));
+            if (match.dashboard) localStorage.setItem("ft_dashboard", JSON.stringify(match.dashboard));
+          }
+        } catch {}
+
         window.location.href = "home.html";
-      } else {
-        error.textContent = "Invalid email or password.";
+
+      } catch {
+        error.textContent = "Connection error. Make sure the server is running.";
         error.hidden = false;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Log in";
       }
     });
 

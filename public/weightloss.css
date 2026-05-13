@@ -38,10 +38,10 @@ body {
   padding: 0 28px;
   height: 64px;
   border-bottom: 1px solid var(--border);
+  background: var(--surface);
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--surface);
 }
 
 .logo {
@@ -73,16 +73,15 @@ body {
 .navbar ul li a.active { color: var(--primary); background: rgba(105,5,0,.07); }
 
 .signin {
-  font-size: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 14px;
   color: var(--muted);
   font-weight: 600;
 }
 
-.signin a { color: var(--muted); text-decoration: none; }
-.signin a:hover { color: var(--primary); }
+.signin i { font-size: 20px; }
 
 /* ── BREADCRUMB ── */
 .breadcrumb {
@@ -231,6 +230,8 @@ body {
   box-shadow: 0 20px 60px rgba(0,0,0,.2);
 }
 
+.small-modal { max-width: 420px; }
+
 .close-btn {
   position: absolute;
   right: 18px;
@@ -245,7 +246,7 @@ body {
 .close-btn:hover { color: var(--text); }
 
 .modal-content h2 {
-  margin-bottom: 6px;
+  margin-bottom: 20px;
   font-size: 24px;
   font-weight: 900;
 }
@@ -283,7 +284,7 @@ body {
 
 .input-box input:focus { border-color: var(--primary); background: #fff; }
 
-.modal-buttons { display: flex; gap: 10px; margin-top: 4px; }
+.modal-buttons { display: flex; gap: 10px; margin-bottom: 18px; }
 
 .save-btn, .clear-btn {
   padding: 10px 20px;
@@ -300,6 +301,36 @@ body {
 .clear-btn { background: var(--bg); color: var(--text); border: 1.5px solid var(--border); transition: background .15s; }
 .clear-btn:hover { background: var(--border); }
 
+.details-list { display: flex; flex-direction: column; gap: 10px; }
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.detail-text { font-size: 15px; font-weight: 600; }
+
+.delete-line-btn {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #fee2e2;
+  color: #dc2626;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  transition: background .15s;
+}
+
+.delete-line-btn:hover { background: #fecaca; }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .header { height: auto; padding: 14px 16px; flex-wrap: wrap; gap: 12px; }
@@ -310,5 +341,5 @@ body {
   .hero h1 { font-size: 30px; }
   .day-title { font-size: 16px; }
   .modal-content { padding: 20px; }
-  .input-group { flex-direction: column; }
+  .detail-item { flex-direction: column; align-items: flex-start; }
 }

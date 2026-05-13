@@ -378,14 +378,16 @@
     FitTracker
   </a>
   <nav class="topnav">
-    <a href="home.html">Home</a>
-    <a href="tracker.html">Nutrition Tracker</a>
-    <a href="workoutplan.html">Workout Builder</a>
     <a href="dashboard.html">Dashboard</a>
+    <a href="workoutplan.html">Workout Plans</a>
+    <a href="tracker.html">Nutrition</a>
+    <a href="Workout.html">Workout</a>
+    <a href="activity.html">Activity</a>
     <a href="profile.html" class="active">Profile</a>
+    <a href="settings.html">Settings</a>
   </nav>
   <div class="topbar-right">
-    <a href="index.html" class="logout-link" id="logout-btn">Log Out</a>
+    <a href="#" class="logout-link" id="logout-btn">Log Out</a>
   </div>
 </header>
 
@@ -647,7 +649,7 @@
         </div>
         <div class="field">
           <label>Email</label>
-          <input type="email" id="settingsEmail" placeholder="your@email.com">
+          <input type="email" id="settingsEmail" placeholder="your@email.com" readonly style="opacity:.7;cursor:default;">
         </div>
       </div>
       <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;">
@@ -976,16 +978,22 @@
       showToast('🗑️ All data cleared.'); setTimeout(() => location.reload(), 1200);
     }
   }
-  function confirmLogout() {
-    if (confirm('Log out and clear all data?')) { localStorage.clear(); window.location.href = 'index.html'; }
+  async function confirmLogout() {
+    if (confirm('Log out?')) {
+      localStorage.removeItem('ft_token');
+      localStorage.removeItem('ft_user');
+      await fetch('/logout', { method: 'POST' }).catch(() => {});
+      window.location.href = '/login.html';
+    }
   }
 
   /* ── LOGOUT ── */
-  document.getElementById('logout-btn').addEventListener('click', e => {
+  document.getElementById('logout-btn').addEventListener('click', async e => {
     e.preventDefault();
     localStorage.removeItem('ft_token');
     localStorage.removeItem('ft_user');
-    window.location.href = 'index.html';
+    await fetch('/logout', { method: 'POST' }).catch(() => {});
+    window.location.href = '/login.html';
   });
 
   /* ── TOAST ── */
@@ -996,7 +1004,26 @@
   }
 
   /* ── INIT ── */
-  loadAll();
+  (async function() {
+    try {
+      const r = await fetch('/api/session');
+      const d = await r.json();
+      if (!d.success) { window.location.href = '/login.html'; return; }
+      // ALWAYS overwrite name/email from server session so demo account
+      // doesn't show a previously logged-in user's data
+      if (d.user) {
+        localStorage.setItem('ft_user', d.user.name || '');
+        const stored = JSON.parse(localStorage.getItem('fittrackerUser') || '{}');
+        stored.email    = d.user.email || '';
+        stored.fullName = d.user.name  || '';
+        localStorage.setItem('fittrackerUser', JSON.stringify(stored));
+      }
+    } catch (e) {
+      window.location.href = '/login.html';
+      return;
+    }
+    loadAll();
+  })();
 </script>
 </body>
 </html>

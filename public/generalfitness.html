@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>General Fitness - FitTracker</title>
+  <link rel="stylesheet" href="generalfitness.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="container">
+
+    <header class="header">
+      <div class="logo"><a href="workoutplan.html" style="text-decoration:none;color:inherit;">FitTracker</a></div>
+      <nav class="navbar">
+        <ul>
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li><a href="workoutplan.html" class="active">Workout Plans</a></li>
+          <li><a href="tracker.html">Nutrition</a></li>
+          <li><a href="Workout.html">Workout</a></li>
+          <li><a href="activity.html">Activity</a></li>
+          <li><a href="profile.html">Profile</a></li>
+          <li><a href="settings.html">Settings</a></li>
+        </ul>
+      </nav>
+      <div class="signin" id="user-area">
+        <i class="fa-solid fa-circle-user"></i>
+        <span id="nav-username">Loading...</span>
+        <a href="#" id="logout-link" style="margin-left:12px;color:inherit;font-size:13px;">(Log Out)</a>
+      </div>
+    </header>
+
+    <section class="breadcrumb">
+      <p><a href="workoutplan.html">Plans</a> &gt; General Fitness</p>
+    </section>
+
+    <section class="hero">
+      <h1>General Fitness</h1>
+      <p style="color:var(--muted);font-size:15px;margin-top:8px;">Click any exercise to log it directly, or use the <a href="Workout.html" style="color:var(--primary);font-weight:700;">Workout Builder</a>.</p>
+    </section>
+
+    <!-- Day 1 -->
+    <section class="workout-section">
+      <div class="day-title">Day 1 – Light Cardio</div>
+      <div class="day-content">
+        <div class="exercise-list">
+          <button class="exercise-link" onclick="openModal('Brisk Walking')">• Brisk Walking</button>
+          <button class="exercise-link" onclick="openModal('Jumping Jacks')">• Jumping Jacks</button>
+          <button class="exercise-link" onclick="openModal('Light Jogging')">• Light Jogging</button>
+        </div>
+        <div class="side-box">
+          <img src="assets/Jumping jacks.webp" alt="Light Cardio" class="exercise-img" onerror="this.style.display='none'" />
+          <button class="add-btn" onclick="openModal('Jumping Jacks')">+ Add to Log</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 2 -->
+    <section class="workout-section">
+      <div class="day-title">Day 2 – Full Body Basics</div>
+      <div class="day-content">
+        <div class="exercise-list">
+          <button class="exercise-link" onclick="openModal('Bodyweight Squats')">• Bodyweight Squats</button>
+          <button class="exercise-link" onclick="openModal('Wall Push-Ups')">• Wall Push-Ups</button>
+          <button class="exercise-link" onclick="openModal('Lunges')">• Lunges</button>
+        </div>
+        <div class="side-box">
+          <img src="assets/wall pushup.webp" alt="Full Body Basics" class="exercise-img" onerror="this.style.display='none'" />
+          <button class="add-btn" onclick="openModal('Bodyweight Squats')">+ Add to Log</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 3 -->
+    <section class="workout-section">
+      <div class="day-title">Day 3 – Flexibility &amp; Stretching</div>
+      <div class="day-content">
+        <div class="exercise-list">
+          <button class="exercise-link" onclick="openModal('Hamstring Stretch')">• Hamstring Stretch</button>
+          <button class="exercise-link" onclick="openModal('Shoulder Stretch')">• Shoulder Stretch</button>
+          <button class="exercise-link" onclick="openModal('Child Pose')">• Child Pose</button>
+        </div>
+        <div class="side-box">
+          <img src="assets/Child pose.webp" alt="Stretching Workout" class="exercise-img" onerror="this.style.display='none'" />
+          <button class="add-btn" onclick="openModal('Hamstring Stretch')">+ Add to Log</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 4 -->
+    <section class="workout-section">
+      <div class="day-title">Day 4 – Core &amp; Stability</div>
+      <div class="day-content">
+        <div class="exercise-list">
+          <button class="exercise-link" onclick="openModal('Bird Dog')">• Bird Dog</button>
+          <button class="exercise-link" onclick="openModal('Glute Bridge')">• Glute Bridge</button>
+          <button class="exercise-link" onclick="openModal('Side Plank')">• Side Plank</button>
+        </div>
+        <div class="side-box">
+          <img src="assets/side plank 1.webp" alt="Core and Stability" class="exercise-img" onerror="this.style.display='none'" />
+          <button class="add-btn" onclick="openModal('Bird Dog')">+ Add to Log</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Day 5 -->
+    <section class="workout-section">
+      <div class="day-title">Day 5 – Active Recovery</div>
+      <div class="day-content">
+        <div class="exercise-list">
+          <button class="exercise-link" onclick="openModal('Walking')">• Walking</button>
+          <button class="exercise-link" onclick="openModal('Light Cycling')">• Light Cycling</button>
+          <button class="exercise-link" onclick="openModal('Deep Breathing')">• Deep Breathing</button>
+        </div>
+        <div class="side-box">
+          <img src="assets/cycling.webp" alt="Active Recovery" class="exercise-img" onerror="this.style.display='none'" />
+          <button class="add-btn" onclick="openModal('Walking')">+ Add to Log</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <h3>Ready to train?</h3>
+      <p>Click any exercise above to log it, or head to the <a href="Workout.html" style="color:var(--primary);font-weight:700;">Workout Builder</a> for full tracking.</p>
+    </footer>
+
+  </div>
+
+  <!-- MODAL -->
+  <div id="workoutModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle">Exercise</h2>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">Log this exercise to your workout</p>
+
+      <div class="input-group">
+        <div class="input-box">
+          <label>Sets</label>
+          <input type="number" id="setsInput" placeholder="e.g. 3" min="0" />
+        </div>
+        <div class="input-box">
+          <label>Reps</label>
+          <input type="number" id="repsInput" placeholder="e.g. 10" min="0" />
+        </div>
+        <div class="input-box">
+          <label>Weight</label>
+          <input type="text" id="weightInput" placeholder="e.g. 60kg" />
+        </div>
+      </div>
+
+      <div class="input-box" style="margin-bottom:18px;">
+        <label>Notes (optional)</label>
+        <input type="text" id="notesInput" placeholder="e.g. Felt strong today" />
+      </div>
+
+      <div id="modalStatus" style="display:none;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:14px;font-weight:700;"></div>
+
+      <div class="modal-buttons">
+        <button class="save-btn" id="saveBtn" onclick="saveExercise()">Save to Log</button>
+        <button class="clear-btn" onclick="clearForm()">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  let currentExercise = '';
+
+  function openModal(name) {
+    currentExercise = name;
+    document.getElementById('modalTitle').textContent = name;
+    document.getElementById('workoutModal').style.display = 'flex';
+    document.getElementById('setsInput').value   = '';
+    document.getElementById('repsInput').value   = '';
+    document.getElementById('weightInput').value = '';
+    document.getElementById('notesInput').value  = '';
+    document.getElementById('modalStatus').style.display = 'none';
+  }
+
+  function closeModal() {
+    document.getElementById('workoutModal').style.display = 'none';
+  }
+
+  function clearForm() {
+    document.getElementById('setsInput').value   = '';
+    document.getElementById('repsInput').value   = '';
+    document.getElementById('weightInput').value = '';
+    document.getElementById('notesInput').value  = '';
+    document.getElementById('modalStatus').style.display = 'none';
+  }
+
+  async function saveExercise() {
+    const sets   = parseInt(document.getElementById('setsInput').value)   || 0;
+    const reps   = parseInt(document.getElementById('repsInput').value)   || 0;
+    const weight = document.getElementById('weightInput').value.trim();
+    const notes  = document.getElementById('notesInput').value.trim();
+
+    const btn = document.getElementById('saveBtn');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    try {
+      const r = await fetch('/api/workouts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: currentExercise, sets, reps, weight, notes })
+      });
+      const d = await r.json();
+      if (!d.success) throw new Error(d.message || 'Could not save');
+      showStatus('✓ Logged to your workout!', 'ok');
+      setTimeout(closeModal, 1200);
+    } catch(e) {
+      showStatus(e.message || 'Could not save', 'err');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Save to Log';
+    }
+  }
+
+  function showStatus(msg, type) {
+    const el = document.getElementById('modalStatus');
+    el.style.display  = 'block';
+    el.style.background = type === 'ok' ? '#dcfce7' : '#fee2e2';
+    el.style.color      = type === 'ok' ? '#16a34a' : '#dc2626';
+    el.textContent = msg;
+  }
+
+  window.addEventListener('click', function(e) {
+    const modal = document.getElementById('workoutModal');
+    if (e.target === modal) closeModal();
+  });
+
+  async function checkSession() {
+    const res  = await fetch('/api/session');
+    const data = await res.json();
+    if (!data.success) { window.location.href = '/login.html'; return; }
+    document.getElementById('nav-username').textContent = data.user.name || data.user.email;
+  }
+
+  document.getElementById('logout-link').addEventListener('click', async function(e) {
+    e.preventDefault();
+    await fetch('/logout', { method: 'POST' });
+    window.location.href = '/login.html';
+  });
+
+  checkSession();
+  </script>
+</body>
+</html>

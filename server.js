@@ -112,6 +112,13 @@ db.exec(`
   );
 `);
 
+// Schema migrations for existing databases
+try {
+  db.exec("ALTER TABLE users ADD COLUMN created_at TEXT");
+  db.exec("UPDATE users SET created_at = datetime('now') WHERE created_at IS NULL");
+} catch {}
+try { db.exec("ALTER TABLE meals ADD COLUMN meal_type TEXT DEFAULT 'other'"); } catch {}
+
 // ═══════════════════════════════════════════════════════════════
 //  HELPERS
 // ═══════════════════════════════════════════════════════════════
@@ -147,10 +154,15 @@ app.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, 'public', 'index.html'))
 );
 
-// Redirect bare /login, /register etc. → their .html counterparts if needed
-app.get('/login',    (req, res) => res.redirect('/login.html'));
-app.get('/register', (req, res) => res.redirect('/register.html'));
-app.get('/dashboard',(req, res) => res.redirect('/dashboard.html'));
+// Redirect bare paths → their .html counterparts
+app.get('/login',        (req, res) => res.redirect('/login.html'));
+app.get('/register',     (req, res) => res.redirect('/register.html'));
+app.get('/dashboard',    (req, res) => res.redirect('/dashboard.html'));
+app.get('/workoutplan',   (req, res) => res.redirect('/workoutplan.html'));
+app.get('/generalfitness', (req, res) => res.redirect('/generalfitness.html'));
+app.get('/musclegain',   (req, res) => res.redirect('/musclegain.html'));
+app.get('/weightloss',   (req, res) => res.redirect('/weightloss.html'));
+
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.dashboard.html'));
 });
@@ -351,20 +363,33 @@ app.delete('/api/activity/:id', requireAuth, (req, res) => {
 
 /** POST /api/meals  —  log a meal */
 app.post('/api/meals', requireAuth, (req, res) => {
-  const { meal_name, calories, protein, carbs, fats } = req.body;
+  const { meal_name, calories, protein, carbs, fats, meal_type } = req.body;
   if (!meal_name)
     return res.status(400).json({ success: false, message: 'Meal name is required' });
-  db.prepare('INSERT INTO meals(user_id,meal_name,calories,protein,carbs,fats) VALUES(?,?,?,?,?,?)')
-    .run(req.session.user.id, meal_name, calories || 0, protein || 0, carbs || 0, fats || 0);
+  db.prepare('INSERT INTO meals(user_id,meal_name,calories,protein,carbs,fats,meal_type) VALUES(?,?,?,?,?,?,?)')
+    .run(req.session.user.id, meal_name, calories || 0, protein || 0, carbs || 0, fats || 0, meal_type || 'other');
   res.json({ success: true, message: 'Meal logged!' });
 });
 
-/** GET /api/meals  —  all meals for current user */
+/** GET /api/meals  —  meals for current user; supports ?date=YYYY-MM-DD */
 app.get('/api/meals', requireAuth, (req, res) => {
-  const meals = db.prepare(
-    'SELECT * FROM meals WHERE user_id=? ORDER BY id DESC'
-  ).all(req.session.user.id);
+  const meals = req.query.date
+    ? db.prepare("SELECT * FROM meals WHERE user_id=? AND date(date)=? ORDER BY id DESC").all(req.session.user.id, req.query.date)
+    : db.prepare('SELECT * FROM meals WHERE user_id=? ORDER BY id DESC').all(req.session.user.id);
   res.json({ success: true, meals });
+});
+
+/** PUT /api/meals/:id  —  edit a meal */
+app.put('/api/meals/:id', requireAuth, (req, res) => {
+  const { meal_name, calories, protein, carbs, fats, meal_type } = req.body;
+  if (!meal_name)
+    return res.status(400).json({ success: false, message: 'Meal name is required' });
+  const r = db.prepare(
+    'UPDATE meals SET meal_name=?,calories=?,protein=?,carbs=?,fats=?,meal_type=? WHERE id=? AND user_id=?'
+  ).run(meal_name, calories || 0, protein || 0, carbs || 0, fats || 0, meal_type || 'other', req.params.id, req.session.user.id);
+  r.changes
+    ? res.json({ success: true, message: 'Meal updated' })
+    : res.status(404).json({ success: false, message: 'Meal not found' });
 });
 
 /** GET /api/meals/today  —  today's meals + macro totals */
@@ -580,8 +605,10 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`\n🚀  FitTracker  →  http://localhost:${PORT}`);
-  console.log(`    Landing page : http://localhost:${PORT}/`);
-  console.log(`    Login        : http://localhost:${PORT}/login.html`);
-  console.log(`    Admin        : admin@fittracker.com / admin123`);
-  console.log(`    Demo user    : demo@fittracker.app  / Passw0rd!\n`);
+  console.log(`    Landing page   : http://localhost:${PORT}/`);
+  console.log(`    Login          : http://localhost:${PORT}/login.html`);
+  console.log(`    Dashboard      : http://localhost:${PORT}/dashboard.html`);
+  console.log(`    Workout Plans  : http://localhost:${PORT}/workoutplan.html`);
+  console.log(`    Admin          : admin@fittracker.com / admin123`);
+  console.log(`    Demo user      : demo@fittracker.app  / Passw0rd!\n`);
 });
